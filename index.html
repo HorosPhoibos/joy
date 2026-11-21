@@ -1,0 +1,1449 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hi, Joy! 🍓</title>
+<meta name="description" content="Sebuah dunia kecil dari blok, dibikin pelan-pelan buat Joy.">
+<meta name="theme-color" content="#ffd6e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#4b2632; --soft:#7a5560; --berry:#e8475f; --pink:#ff8fab; --pink2:#ffc2d1; --leaf:#4fa35c;
+  --cream:#fff8f3; --card:rgba(255,250,247,.9); --line:rgba(232,71,95,.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;color:var(--ink);font-family:'Nunito',system-ui,sans-serif;background:#ffd6e4;overflow-x:hidden}
+h1,h2,h3,.px,.kicker,.pill,.sign{font-family:'Pixelify Sans',system-ui,sans-serif;font-weight:700;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0}
+details summary{cursor:pointer;font-weight:800;margin-top:12px;color:var(--ink)}
+button{font-family:inherit;cursor:pointer;color:inherit}
+#sky{position:fixed;inset:0;z-index:0;background:#ffd6e4;transition:background .3s}
+#three{position:fixed;inset:0;width:100vw;height:100vh;z-index:1;display:block;pointer-events:none}
+body.no3d #three{display:none}
+body.no3d #sky{background:linear-gradient(#ffd6e4,#ffe9d6)}
+
+/* bar atas */
+.hud{position:fixed;top:calc(10px + env(safe-area-inset-top));left:12px;right:12px;z-index:20;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.hud > *{pointer-events:auto}
+.pill{background:rgba(255,250,247,.92);border:2px solid var(--line);border-radius:999px;padding:7px 12px;font-family:'Pixelify Sans';font-size:15px;box-shadow:0 4px 14px rgba(200,60,90,.12)}
+#musicBtn{min-width:44px;min-height:40px}
+#musicBtn.on{background:var(--berry);color:#fff;border-color:var(--berry)}
+
+main{position:relative;z-index:3}
+.ch{position:relative;min-height:190vh}
+.ch.short{min-height:150vh}
+.stick{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:70px 14px calc(16px + env(safe-area-inset-bottom));pointer-events:none}
+.stick > *{pointer-events:auto}
+.card{width:min(500px,100%);background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:0 10px 30px rgba(180,50,80,.14);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);max-height:58vh;overflow:auto}
+.kicker{font-family:'Pixelify Sans';font-size:12.5px;letter-spacing:.12em;color:var(--berry);text-transform:uppercase}
+.card h2{font-size:clamp(25px,7vw,34px);margin:2px 0 6px;line-height:1.05}
+.card p{font-size:16px;line-height:1.6;margin:8px 0;color:var(--soft)}
+.card p b{color:var(--ink)}
+.small{font-size:13.5px;color:var(--soft)}
+.card p.diary{font-style:italic;color:var(--ink);border-left:3px solid var(--pink);padding:2px 0 2px 10px;background:linear-gradient(90deg,#fff0f3,transparent)}
+.btn{background:var(--berry);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-weight:800;font-size:15px;box-shadow:0 3px 0 #b9314a}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #b9314a}
+.btn.soft{background:#fff;color:var(--berry);border:2px solid var(--line);box-shadow:none}
+.btn[disabled]{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+@media (min-width:900px){
+  .stick{align-items:flex-start;justify-content:center;padding-left:6vw}
+  .card{width:min(440px,38vw);max-height:80vh}
+}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
+.rv.in{opacity:1;transform:none}
+
+/* hero */
+#hero .stick{justify-content:space-between}
+.heroTop{text-align:center;margin-top:8px}
+.title{font-size:clamp(34px,10vw,64px);margin:0;line-height:.95;color:var(--berry);text-shadow:3px 3px 0 #fff,6px 6px 0 rgba(232,71,95,.2)}
+.heroSub{font-size:15.5px;margin-top:8px;color:var(--ink);background:rgba(255,250,247,.75);display:inline-block;padding:6px 12px;border-radius:12px}
+.scrollhint{font-family:'Pixelify Sans';font-size:13px;color:var(--soft);margin-top:10px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(5px)}}
+.today{background:#fff0f3;border:2px dashed var(--pink);border-radius:12px;padding:10px 12px;margin:10px 0 4px;font-size:15.5px;line-height:1.5}
+.chat{display:flex;gap:6px;margin-top:10px}
+.chat input{flex:1;min-width:0;border:2px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;font-size:16px;background:#fff}
+
+/* hiou */
+.hiou{height:12px;margin:12px 0;border-top:3px solid #f2e6d6;border-bottom:3px solid #f2e6d6;background:
+ linear-gradient(135deg,#b4232c 25%,transparent 25%) -6px 0/12px 12px,
+ linear-gradient(225deg,#b4232c 25%,transparent 25%) -6px 0/12px 12px,
+ linear-gradient(315deg,#b4232c 25%,transparent 25%) 0 0/12px 12px,
+ linear-gradient(45deg,#b4232c 25%,#221c22 25%) 0 0/12px 12px}
+
+/* napas */
+.breath{display:flex;align-items:center;gap:14px;margin:10px 0}
+.orb{width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#9fd8c8);border:2px solid #6cbfa9;transition:transform 4s ease-in-out;flex:none}
+.stretch{margin:6px 0 0;padding-left:20px;font-size:14.5px;color:var(--soft);line-height:1.55}
+
+/* checklist */
+.checks{list-style:none;padding:0;margin:8px 0}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:7px 8px;border-radius:10px;cursor:pointer;font-size:15px;line-height:1.4}
+.checks li::before{content:'';flex:none;width:18px;height:18px;border:2px solid var(--pink);border-radius:5px;background:#fff;margin-top:1px}
+.checks li.on{background:#fff0f3}
+.checks li.on::before{background:var(--berry) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 5l2 2 4-4' stroke='white' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") center/14px no-repeat;border-color:var(--berry)}
+
+/* bagian bawah (tidak sticky) */
+.flow{position:relative;padding:40vh 14px 30px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.flow + .flow{padding-top:20px}
+@media (min-width:900px){.flow{align-items:flex-start;padding-left:6vw}}
+.flow .card{max-height:none}
+.envs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.env{position:relative;background:#fffaf2;border:2px solid #f1c9a8;border-radius:10px;padding:26px 10px 12px;text-align:left;font-size:14px;line-height:1.35;min-height:78px;box-shadow:0 3px 0 #ecd2b8}
+.env::before{content:'';position:absolute;left:0;right:0;top:0;height:22px;background:linear-gradient(160deg,transparent 49%,#f6dcc3 50%) left/50% 100% no-repeat,linear-gradient(200deg,transparent 49%,#f6dcc3 50%) right/50% 100% no-repeat;border-radius:8px 8px 0 0}
+.env::after{content:'🍓';position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:14px}
+.env.read{opacity:.75}
+.env.read::after{content:'💌'}
+.env.lock::after{content:'🔒'}
+.env b{display:block;font-size:11px;color:var(--berry);font-family:'Pixelify Sans';letter-spacing:.06em}
+textarea{width:100%;border:2px solid var(--line);border-radius:12px;padding:10px;font:inherit;font-size:16px;min-height:84px;resize:vertical;background:#fff}
+.moonReply{margin-top:10px;font-size:15.5px;min-height:1.4em;font-style:italic;color:var(--ink)}
+label.ck{display:flex;gap:8px;align-items:center;font-size:14px;margin:8px 0;color:var(--soft)}
+label.ck input{width:18px;height:18px;accent-color:var(--berry)}
+
+/* foto */
+.photoBox{background:#fff;border:2px dashed var(--pink);border-radius:12px;min-height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:10px 0;touch-action:none}
+.photoBox canvas{width:100%;height:auto;display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:14px;font-weight:700}
+.chip.on{background:var(--berry);color:#fff;border-color:var(--berry)}
+.status{font-size:14px;margin-top:8px;min-height:1.2em}
+.note{width:100%;border:2px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;font-size:16px}
+
+/* surat */
+.letter{background:#fffaf0;background-image:repeating-linear-gradient(transparent 0 29px,#f3dccb 29px 30px);border:2px solid #f1c9a8;border-radius:6px;padding:18px 18px 22px;line-height:30px;font-size:16.5px;color:#4b2632}
+.letter p{margin:0 0 30px;line-height:30px;color:#4b2632}
+.sign{text-align:right;font-family:'Pixelify Sans'}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(60,20,35,.45);display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.paper{width:min(460px,100%);max-height:86vh;overflow:auto;background:#fffaf0;border:2px solid #f1c9a8;border-radius:10px;padding:20px 20px 16px;box-shadow:0 20px 50px rgba(0,0,0,.25);animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.85);opacity:0}}
+.paper h3{margin:0 0 10px;color:var(--berry);font-size:22px}
+.paper p{font-size:16px;line-height:1.65;margin:0 0 12px}
+.paper .sign{margin-top:6px}
+.paper .close{margin-top:8px;width:100%}
+
+.hudR{display:flex;gap:8px;align-items:center}
+#np{font-family:'Pixelify Sans';font-size:12.5px;color:#fff;background:rgba(75,38,50,.72);padding:5px 10px;border-radius:999px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .4s;max-width:52vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#np.on{opacity:1;transform:none}
+#np.pop{animation:np .6s}
+@keyframes np{30%{transform:scale(1.08)}}
+#load{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:20px;background:#ffd6e4;background-image:radial-gradient(#ffc2d1 2px,transparent 2px);background-size:22px 22px;transition:opacity .6s}
+#load.out{opacity:0;pointer-events:none}
+.lbox{width:min(360px,100%);text-align:center}
+.lt{font-family:'Pixelify Sans';font-weight:700;font-size:44px;color:var(--berry);text-shadow:3px 3px 0 #fff;animation:bob 1.8s ease-in-out infinite}
+.lsub{margin:6px 0 16px;color:var(--ink);font-size:15px}
+.lbar{height:18px;border:3px solid var(--ink);border-radius:4px;background:#fff;padding:2px}
+.lbar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--berry) 0 10px,#ff6f86 10px 12px);transition:width .25s}
+.ltip{min-height:44px;margin:14px 0 6px;font-size:14px;color:var(--soft)}
+.lgo{opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;pointer-events:none}
+.lgo.on{opacity:1;transform:none;pointer-events:auto}
+.btn.big{font-family:'Pixelify Sans';font-size:22px;padding:12px 36px;border-radius:14px}
+.lmute{display:block;cursor:pointer;margin:12px auto 0;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:14px}
+.lnote{margin-top:12px;font-size:12.5px;color:var(--soft)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120px);z-index:60;background:#4b2632;color:#fff;padding:10px 16px;border-radius:12px;font-size:14.5px;transition:transform .35s;max-width:90vw;text-align:center}
+#toast.on{transform:translateX(-50%) translateY(0)}
+#bubble{position:fixed;z-index:15;pointer-events:none;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:5px 10px;font-family:'Pixelify Sans';font-size:15px;transform:translate(-50%,-100%);opacity:0;transition:opacity .2s;white-space:nowrap}
+#bubble.on{opacity:1}
+#bubble::after{content:'';position:absolute;left:50%;bottom:-8px;margin-left:-6px;border:6px solid transparent;border-top-color:var(--ink);border-bottom:0}
+.fx{position:fixed;top:-20px;z-index:55;pointer-events:none;font-size:20px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(300deg)}}
+.banner{display:none;margin:0 auto 8px;background:#2f6b3a;color:#fff;border-radius:10px;padding:6px 12px;font-family:'Pixelify Sans';font-size:14px;text-align:center}
+.banner.on{display:inline-block}
+footer{position:relative;z-index:3;text-align:center;padding:10px 16px 50px;font-size:13px;color:#fff;opacity:.85}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<canvas id="three"></canvas>
+<div id="bubble"></div>
+<div id="load">
+  <div class="lbox">
+    <div class="lt">Hi, Joy! 🍓</div>
+    <div class="lsub" id="lsub">lagi nyusun blok-blok dunia kecilmu…</div>
+    <div class="lbar"><i id="lbar"></i></div>
+    <div class="ltip" id="ltip"></div>
+    <div id="lgo" class="lgo">
+      <button class="btn big" id="play">▶ main</button>
+      <button class="lmute" id="playMute">masuk tanpa suara</button>
+      <div class="lnote">🎧 nyalain suara ya. tiap pulau punya lagunya sendiri</div>
+    </div>
+  </div>
+</div>
+
+<div class="hud">
+  <button class="pill" id="berryPill" title="stroberi tersembunyi">🍓 <span id="berryN">0</span>/7</button>
+  <div class="hudR"><span id="np"></span><button class="pill" id="musicBtn" aria-label="nyalakan musik">♪</button></div>
+</div>
+
+<main>
+  <!-- 0. halo -->
+  <section class="ch short" id="hero" data-st="0">
+    <div class="stick">
+      <div class="heroTop">
+        <div class="banner" id="banner"></div><br>
+        <h1 class="title" id="title">Hi, Joy! 🍓</h1>
+        <div class="heroSub" id="greet">Halo, Joy 🍓</div>
+      </div>
+      <div class="card rv">
+        <div class="kicker">🍓 joy's world · <span id="visit"></span></div>
+        <div class="today"><b>Pesan hari ini:</b> <span id="daily"></span></div>
+        <p class="small">Dunia kecil dari blok, khusus buat kamu. Scroll pelan-pelan, pencet-pencet bendanya, cari 7 stroberi yang ngumpet 😌</p>
+        <div class="row" style="margin-top:8px"><button class="btn soft" id="affBtn">🍓 kasih aku semangat</button></div>
+        <div class="chat">
+          <input id="chatIn" maxlength="40" placeholder="ketik sesuatu ke Joy kecil…" autocomplete="off">
+          <button class="btn" id="chatGo">kirim</button>
+        </div>
+        <div class="scrollhint">scroll ↓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. siantar -->
+  <section class="ch" data-st="1">
+    <div class="stick">
+      <div class="card rv">
+        <div class="kicker">bab 1 · dari siantar</div>
+        <h2>Satu koper, satu keberanian</h2>
+        <p class="diary">Pagi itu aku berangkat dari Pematangsiantar. Koperku cuma satu, tapi rasanya berat. Isinya baju, buku, dan semua doa orang rumah.</p>
+        <p>Joy, kamu mungkin udah lupa seberani apa kamu hari itu. <b>Berani bukan berarti nggak takut.</b> Berani itu tetap berangkat walaupun takut. Dan kamu berangkat.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. jakarta -->
+  <section class="ch" data-st="2">
+    <div class="stick">
+      <div class="card rv">
+        <div class="kicker">bab 2 · jakarta</div>
+        <h2>Kota besar, Joy nggak kecil</h2>
+        <p class="diary">Jakarta panas, ramai, dan nggak ada yang kenal aku. Kamar kosku kecil. Malam pertama aku nangis diam-diam.</p>
+        <p>Tapi lihat sekarang: kamu masih di sini. Masih bangun tiap pagi, masih berangkat, masih bisa ketawa walaupun capek. <b>Itu namanya bertahan, dan kamu jago.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. praktik -->
+  <section class="ch" data-st="3">
+    <div class="stick">
+      <div class="card rv">
+        <div class="kicker">bab 3 · kkn, skripsi, sempro</div>
+        <h2>Nggak dikasih jeda</h2>
+        <p class="diary">Selasa malam baru nyampe, Rabu udah lanjut KKN. Bimbingan skripsi susah dijadwalin, dosennya juga nggak online-online. Desember sempro. Hufttt.</p>
+        <p>Joy, kamu bukan malas. Kamu lagi capek beneran. <b>Burnout itu sinyal buat istirahat, bukan tanda kamu gagal.</b> Kamu yang biasa bantu orang lain pulih, sekarang gantian: <b>pasiennya kamu.</b></p>
+        <p class="small" id="sempro" style="margin:4px 0"></p>
+        <div class="breath">
+          <div class="orb" id="orb"></div>
+          <div><button class="btn" id="breathBtn">jeda 1 menit</button><div class="small" id="breathTxt" style="margin-top:6px">tarik napas bareng bulatannya</div></div>
+        </div>
+        <details><summary>peregangan kecil 🤸‍♀️</summary>
+        <ul class="stretch">
+          <li>putar bahu ke belakang 5 kali</li>
+          <li>miringkan kepala kiri–kanan, tahan pelan</li>
+          <li>regangkan jari & pergelangan (habis nulis laporan 😮‍💨)</li>
+          <li>minum air. iya, sekarang.</li>
+        </ul></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. capek -->
+  <section class="ch" data-st="4">
+    <div class="stick">
+      <div class="card rv">
+        <div class="kicker">bab 4 · hari capek</div>
+        <h2>Istirahat juga berjuang</h2>
+        <p class="diary">Ada hari yang aku cuma pengen rebahan, buka Roblox, dan pura-pura dunia nggak punya tugas.</p>
+        <p>Nggak apa-apa. <b>Kamu nggak harus produktif buat jadi berharga.</b> Capek itu tanda kamu udah jalan jauh, bukan tanda kamu lemah. <span class="small">(tapi jangan main sampai subuh ya 😤)</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. sabar -->
+  <section class="ch" data-st="5">
+    <div class="stick">
+      <div class="card rv">
+        <div class="kicker">bab 5 · stroberi yang matang pelan</div>
+        <h2>Yang baik pantas ditunggu</h2>
+        <p class="diary">Dia yang ngedeketin duluan. Giliran aku udah luluh sedikit, dia tiba-tiba hilang tanpa kabar. Kenapa cowok bisa gitu sih?</p>
+        <p>Joy, orang yang ngilang tanpa kabar nggak lagi ngasih tahu nilaimu. Dia cuma nunjukin batas kemampuannya. <b>Kamu nggak kurang apa-apa, dan kamu bukan pilihan cadangan buat siapa pun.</b> Stroberi yang paling manis itu yang matangnya pelan. Nggak perlu buru-buru.</p>
+        <div class="row"><button class="btn" id="waterBtn">siram stroberinya 💧</button><span class="small" id="plantTxt"></span></div>
+        <details><summary>Tanda orang yang pantas buat kamu</summary>
+        <ul class="checks" id="checks">
+          <li>Konsisten, bukan cuma manis di awal</li>
+          <li>Nggak ngilang tanpa kabar</li>
+          <li>Bikin kamu tenang, bukan nebak-nebak perasaannya</li>
+          <li>Menghormati imanmu dan keluargamu</li>
+          <li>Dukung mimpimu jadi fisioterapis</li>
+          <li>Nggak minta kamu jadi orang lain biar disayang</li>
+          <li>Tetap sabar waktu kamu lagi capek dan rewel 😝</li>
+        </ul></details>
+        <p class="small" id="checksDone" style="display:none">Jangan turunin standar ini ya. Orang yang kayak gitu ada kok. Kadang cuma butuh waktu buat kelihatan. 🍓</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. kangen rumah -->
+  <section class="ch" data-st="6">
+    <div class="stick">
+      <div class="card rv">
+        <div class="kicker">bab 6 · kangen rumah</div>
+        <h2>Malam yang jauh</h2>
+        <p class="diary">Aku pulang untuk ngantar opung terakhir kali. Terus balik lagi ke Jakarta, karena hidup jalan terus. Tapi ada malam yang rasanya jauh sekali dari rumah.</p>
+        <p>Nggak apa-apa, Joy. <b>Kangen itu bentuk lain dari sayang.</b> Kamu udah menjaga opung dengan tulus. Sekarang gantian: <b>jaga dirimu juga.</b> Di sini kamu nggak harus kelihatan kuat.</p>
+        <div class="row"><button class="btn soft" id="candleBtn">nyalakan lilin</button></div>
+        <p class="small" id="candleTxt" style="display:none">Lilinnya menyala. Ambil waktu sebanyak yang kamu butuh. Sayang yang kamu bawa dari rumah nggak pernah padam. 🤍</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. amplop -->
+  <section class="flow" id="amplop" data-st="7">
+    <div class="card rv">
+      <div class="kicker">bab 7 · kotak surat</div>
+      <h2>Buka kalau…</h2>
+      <p class="small">Simpan buat nanti. Buka pas kamu butuh, nggak harus sekarang semua.</p>
+      <div class="envs" id="envs"></div>
+    </div>
+  </section>
+
+  <section class="flow" data-st="7">
+    <div class="card rv">
+      <div class="kicker">🌙 tulis ke bulan</div>
+      <h2>Titip ke bulan</h2>
+      <p class="small" id="moonInfo"></p>
+      <textarea id="moonTxt" maxlength="500" placeholder="tulis apa aja. yang ribut di kepala, yang lucu, yang nyebelin…"></textarea>
+      <label class="ck" id="moonSendWrap"><input type="checkbox" id="moonSend"> kirim juga ke penjaga bulan</label>
+      <p class="small" style="margin:0" id="moonSendNote">Kalau nggak dicentang, tulisanmu cuma dibaca bulan dan nggak dikirim ke mana-mana. Kalau dicentang, tulisanmu sampai ke <b>penjaga bulan</b>: orang yang bikin dunia kecil ini. Cuma dia, nggak ke tempat lain.</p>
+      <div class="row" style="margin-top:10px"><button class="btn" id="moonGo">titip 🌙</button></div>
+      <div class="moonReply" id="moonReply"></div>
+    </div>
+  </section>
+
+  <section class="flow" data-st="7">
+    <div class="card rv">
+      <div class="kicker">📸 simpan momen</div>
+      <h2>Momen kecil hari ini</h2>
+      <p class="small">Pilih foto, kasih filter & stiker, terus simpan ke galeri. Mau dikirim ke bulan juga boleh.</p>
+      <div class="row"><label class="btn" for="pfile">pilih foto 📷</label><input type="file" id="pfile" accept="image/*" hidden></div>
+      <div class="photoBox" id="pbox"><span class="small">belum ada foto</span></div>
+      <div id="pTools" style="display:none">
+        <div class="small">filter</div><div class="chips" id="pFilters"></div>
+        <div class="small">stiker (pencet buat nambah, geser di foto)</div><div class="chips" id="pStickers"></div>
+        <input class="note" id="pNote" maxlength="200" placeholder="catatan kecil (boleh kosong)">
+        <div class="row" style="margin-top:10px"><button class="btn" id="pSave">simpan ke galeri</button><button class="btn soft" id="pSend">kirim ke bulan 🌙</button></div>
+        <p class="small" id="pSendNote" style="margin:8px 0 0">Kalau dikirim ke bulan, foto & catatanmu sampai ke penjaga bulan (orang yang bikin dunia kecil ini). Cuma dia, nggak dipajang di mana-mana.</p>
+        <div class="status" id="pStatus"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flow" data-st="7">
+    <div class="card rv">
+      <div class="kicker">⏳ kapsul waktu</div>
+      <h2>Surat untuk Joy yang nanti</h2>
+      <div id="capWrite">
+        <p class="small">Tulis surat buat dirimu sendiri di masa depan. Suratnya dikunci, baru bisa dibuka di tanggal yang kamu pilih. Cuma tersimpan di HP ini, nggak dikirim ke siapa pun.</p>
+        <textarea id="capTxt" maxlength="2000" placeholder="Halo Joy yang nanti. Sekarang aku lagi…"></textarea>
+        <div class="chips" id="capWhen"></div>
+        <div class="row" style="margin-top:8px"><button class="btn" id="capGo">kunci suratnya 🔒</button></div>
+      </div>
+      <div id="capLocked" style="display:none"></div>
+    </div>
+  </section>
+
+  <section class="flow" data-st="7" id="akhir">
+    <div class="card rv">
+      <div class="kicker">untuk joy</div>
+      <div class="hiou"></div>
+      <div class="letter">
+        <p>Joy,</p>
+        <p>Kamu yang dulu berangkat dari Siantar bawa satu koper, sekarang udah sejauh ini. Mungkin kamu nggak merasa hebat. Mungkin kamu cuma merasa capek.</p>
+        <p>Tapi coba lihat lagi jalan yang barusan kamu lewati: rumah, kota besar, klinik, kamar kecil, kebun, bukit malam. Semua itu kamu lewati. Sebagian sambil nangis, dan itu tetap dihitung.</p>
+        <p>Kamu nggak harus selalu kuat. Kamu cukup terus jadi Joy: yang lucu, yang sabar sama pasien, yang kangen rumah, yang jatuh lalu bangun lagi.</p>
+        <p>Bulan yang kamu lihat malam ini sama dengan yang bersinar di atas Siantar. Rumah nggak sejauh itu. Dan kamu nggak pernah benar-benar sendirian.</p>
+        <p class="sign">🍓</p>
+      </div>
+      <div class="hiou"></div>
+      <p class="small" style="text-align:center">Horas, Joy.</p>
+    </div>
+  </section>
+</main>
+<footer>dibikin dari blok-blok kecil · 🍓<br><button id="liteBtn" class="lmute" style="color:#fff">⚡ mode ringan (buat HP yang ngos-ngosan)</button></footer>
+
+<div class="modal" id="modal"><div class="paper" id="paper"></div></div>
+<div id="toast"></div>
+
+<script type="module">
+/* ======== PENGATURAN ======== */
+const WORKER_URL = '';        // isi setelah Cloudflare Worker dipasang, mis. 'https://kotak-joy.namamu.workers.dev'
+const BIRTHDAY = null;        // ulang tahun Joy, format 'MM-DD', mis. '04-17'
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => t * t * (3 - 2 * t);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('joy_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('joy_' + k, JSON.stringify(v)); } catch (e) {} },
+};
+let toastT;
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2800); }
+function rain(list, n = 30) {
+  for (let i = 0; i < n; i++) {
+    const e = document.createElement('div'); e.className = 'fx'; e.textContent = list[i % list.length];
+    e.style.left = Math.random() * 100 + 'vw'; e.style.animationDuration = (2.6 + Math.random() * 2) + 's'; e.style.animationDelay = Math.random() * .8 + 's';
+    document.body.appendChild(e); setTimeout(() => e.remove(), 5500);
+  }
+}
+
+/* ======== waktu & sapaan ======== */
+const now = new Date(), H = now.getHours(), M = now.getMonth(), D = now.getDate();
+const mmdd = String(M + 1).padStart(2, '0') + '-' + String(D).padStart(2, '0');
+const isDec = M === 11, isXmas = isDec && D >= 24 && D <= 26, isBday = BIRTHDAY && BIRTHDAY === mmdd;
+let greet;
+if (now.getDay() === 0 && H >= 5 && H < 12) greet = 'Selamat hari Minggu, Joy. Selamat beribadah 🤍';
+else if (H >= 23 || H < 4) greet = 'Joy… udah jam segini. Tidur dek 😤';
+else if (H < 10) greet = 'Selamat pagi, Joy ☀️ udah sarapan?';
+else if (H < 15) greet = 'Selamat siang, Joy. Jangan lupa minum.';
+else if (H < 18) greet = 'Selamat sore, Joy. Hari ini berat nggak?';
+else greet = 'Selamat malam, Joy. Kamu udah berjuang seharian 🌙';
+$('#greet').textContent = greet;
+if (isBday) { $('#banner').textContent = '🎂 Selamat ulang tahun, Joy!'; $('#banner').classList.add('on'); setTimeout(() => rain(['🎂', '🍓', '🎉', '💗'], 40), 600); }
+else if (isXmas) { $('#banner').textContent = '🎄 Selamat Natal, Joy!'; $('#banner').classList.add('on'); }
+else if (isDec) { $('#banner').textContent = '🎄 Desember! bulan Natal'; $('#banner').classList.add('on'); }
+
+const DAILY = [
+  'Kamu nggak harus kuat setiap hari. Hari ini cukup jadi Joy aja.',
+  'Minum air. Iya, sekarang. Ditungguin.',
+  'Pasienmu beruntung dapat terapis yang sabar kayak kamu.',
+  'Jakarta itu besar, tapi kamu nggak kecil di dalamnya.',
+  'Capek itu tanda kamu udah jalan jauh, bukan tanda kamu lemah.',
+  'Makan sesuatu yang enak hari ini. Kamu pantas dapat hadiah kecil.',
+  'Kalau mulai ragu sama diri sendiri: kamu nyampe Jakarta sendirian. Itu berani.',
+  'Ceritamu penting. Yang panjang juga. Terutama yang panjang.',
+  'Pelan-pelan juga sampai.',
+  'Kamu boleh istirahat tanpa harus merasa bersalah.',
+  'Senyummu itu termasuk hal baik di dunia.',
+  'Kalau hari ini nggak sesuai rencana, besok masih ada halaman baru.',
+  'Doa dari rumah ikut kamu ke mana-mana.',
+  'Jangan lupa stretching. Kamu yang paling tahu caranya 😌',
+  'Orang yang tepat nggak akan bikin kamu nebak-nebak perasaannya.',
+  'Main Roblox sebentar boleh. Asal jangan sampai subuh.',
+  'Kamu lebih hebat dari yang kamu kira hari ini.',
+  'Satu hal kecil yang berhasil hari ini? Itu tetap dihitung.',
+  'Hari ini ada yang mikirin kamu dari jauh. Serius.',
+  'Kalau mau nangis, nangis aja. Habis itu cuci muka, terus lanjut lagi.',
+  'Kamu nggak ngerepotin. Chat aja kalau butuh.',
+  'Hari ini kamu nggak harus nyelesain semuanya. Satu-satu aja.',
+  'Tangan yang bantu orang jalan lagi itu tangan yang hebat. Itu tanganmu.',
+  'Kamu pantas diperlakukan dengan lembut, termasuk oleh dirimu sendiri.',
+  'Ada orang di Siantar yang bangga tiap dengar namamu.',
+  'Kacamatamu cocok banget. Sekadar info aja.',
+  'Nggak apa-apa jalan pelan, asal nggak berhenti terlalu lama.',
+  'Kalau hari ini ada yang jahat sama kamu, itu bukan salahmu.',
+  'Ketawa kamu itu nular. Jangan disimpan-simpan.',
+  'Tidur cukup juga termasuk belajar. Otaknya lagi nyimpen materi.',
+  'Kamu udah sejauh ini sendirian. Bayangin sejauh apa nanti.',
+  'Doa kecil hari ini: semoga harimu ringan dan orang-orang di sekitarmu baik.',
+  'Jangan bandingin bab 1-mu sama bab 20 orang lain.',
+  'Yang baik buat kamu nggak akan bikin kamu ngemis perhatian.',
+  'Sarapan dulu. Perut kenyang, hati lebih tenang.',
+  'Hari Senin pun bisa dikalahin. Kamu lebih kuat dari Senin.',
+  'Kalau lagi kangen rumah, berarti hatimu masih terhubung ke sana. Itu indah.',
+  'Ada orang-orang yang lega tiap tahu kamu baik-baik aja.',
+  'Kamu bukan beban. Kamu berkat.',
+  'Kalau jatuh, nggak apa-apa. Kamu tahu caranya bangun, kan kamu fisioterapis.',
+  'Pelan-pelan, Joy. Dunia nggak lari ke mana-mana.',
+  'KKN, skripsi, sempro. Satu-satu aja. Kamu nggak harus beres semuanya hari ini.',
+  'Dosen belum bales bukan berarti kamu gagal. Antre itu juga bagian dari jalan.',
+  'Kamu udah tulus menjaga orang lain. Hari ini, jaga dirimu juga.',
+  'Yang hilang tanpa kabar nggak pantas dapat tempat di pikiranmu malam ini.',
+  'Desember nanti, kamu bakal berdiri di depan penguji dan baik-baik aja. Lihat aja.',
+];
+const AFFIRM = [
+  'Kamu berani. Kamu udah buktiin itu.', 'Kamu cukup. Dari dulu.', 'Kamu boleh capek dan tetap hebat.',
+  'Hari ini kamu nggak sendirian.', 'Kamu lebih kuat dari minggu lalu.', 'Kamu pantas disayang tanpa syarat.',
+  'Langkah kecil tetap langkah.', 'Kamu bisa ngelewatin hari ini. Satu jam satu jam.', 'Nggak ada yang bisa gantiin kamu.',
+  'Kamu cantik, apalagi pas ketawa.', 'Kamu bakal jadi fisioterapis yang hebat.', 'Dunia lebih baik karena ada kamu di dalamnya.',
+  'Kamu nggak telat. Kamu lagi di waktumu sendiri.', 'Istirahat bukan kemunduran.', 'Kamu berhak bahagia hari ini juga, bukan nanti-nanti.',
+  'Kamu nggak harus sempurna. Cukup jujur dan berusaha.', 'Kesalahan kemarin bukan identitasmu.', 'Kamu dikangenin di Siantar.',
+  'Kamu boleh minta tolong. Itu juga berani.', 'Kamu bukan pilihan kedua. Buat siapa pun.', 'Hatimu baik. Jaga ya.',
+  'Hari ini pasti ada satu hal kecil yang bisa disyukuri.', 'Kamu udah jauh lebih maju dari yang kamu sadari.', 'Napas dulu. Kamu aman.',
+  'Ada yang bangga sama kamu hari ini. Banget.', 'Kamu itu stroberi di antara daun-daun. Kelihatan manisnya.', 'Semua yang kamu pelajari sekarang nanti nolong banyak orang.',
+  'Kamu nggak lemah karena nangis. Kamu manusia.', 'Kamu pantas dapat orang yang sabar.', 'Besok boleh lebih baik, hari ini boleh cukup.',
+  'Kamu bisa. Kalau belum bisa, nanti bisa.', 'Kamu itu hadiah buat orang-orang di sekitarmu.', 'Jangan lupa: kamu juga pasien buat dirimu sendiri. Rawat ya.',
+  'Tuhan nggak pernah ninggalin kamu, bahkan di kos yang sepi.', 'Senyum dikit. Nah. Itu dia.', 'Kamu, Joy, adalah kabar baik.',
+];
+let affI = Math.floor(Math.random() * AFFIRM.length), affN = 0;
+$('#affBtn').onclick = () => {
+  affI = (affI + 1 + Math.floor(Math.random() * 3)) % AFFIRM.length; affN++;
+  const t = affN === 15 ? 'Udah 15 kali minta semangat. Bonus: kamu hebat banget, beneran. 🍓🍓🍓' : AFFIRM[affI];
+  $('.today').innerHTML = '<b>Buat kamu:</b> '; $('.today').append(t); blip(1046 + (affN % 5) * 110, .05);
+  if (world) { world.say(['💗', '✨', '💪', '🍓', '🫶'][affN % 5]); world.emote('jump'); }
+  if (affN === 15) rain(['🍓', '💗', '✨'], 30);
+};
+// tanggal & jam spesial
+if (!isBday && !isDec) {
+  const SPECIAL = { '01-01': '🎆 Selamat tahun baru, Joy!', '02-14': '💗 Hari kasih sayang. Kamu disayang, btw.', '04-01': '🤡 Hari ini jangan percaya siapa-siapa. Kecuali website ini.', '08-17': '🇮🇩 Merdeka! Merdeka juga dari overthinking.' };
+  if (SPECIAL[mmdd]) { $('#banner').textContent = SPECIAL[mmdd]; $('#banner').classList.add('on'); }
+  else if (now.getDay() === 5 && H >= 16) { $('#banner').textContent = '🎉 Jumat sore! bentar lagi weekend'; $('#banner').classList.add('on'); }
+  else if (H >= 2 && H < 4) { $('#banner').textContent = '🌙 jam 2-an pagi? kok belum tidur…'; $('#banner').classList.add('on'); }
+}
+const dayNum = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
+$('#daily').textContent = DAILY[(dayNum + now.getFullYear()) % DAILY.length];
+let visits = store.get('visits', 0);
+try { if (!sessionStorage.getItem('joy_v')) { visits++; store.set('visits', visits); sessionStorage.setItem('joy_v', '1'); } } catch (e) { visits = Math.max(1, visits); }
+$('#visit').textContent = visits <= 1 ? 'kunjungan pertama, halo!' : 'kunjungan ke-' + visits;
+const MILE = { 3: 'Balik lagi! dunia kecil ini senang 🍓', 7: 'Kunjungan ke-7. Kayak jumlah stroberinya 👀', 10: 'Kunjungan ke-10! kamu pelanggan setia nih 🏅', 25: '25 kali mampir. Ini udah kayak rumah kedua ya 🏡', 50: '50 kali?! dunia kecil ini terharu 🥹', 100: '100 KUNJUNGAN. Joy, kamu luar biasa 🎉' };
+if (MILE[visits]) setTimeout(() => { toast(MILE[visits]); if (visits >= 10) rain(['🍓', '🎉'], 20); }, 1500);
+
+/* fase bulan asli */
+const SYN = 29.530588853, NEW0 = Date.UTC(2000, 0, 6, 18, 14);
+const moonP = (((now.getTime() - NEW0) / 864e5) % SYN + SYN) % SYN / SYN;
+const moonLit = Math.round((1 - Math.cos(2 * Math.PI * moonP)) / 2 * 100);
+const moonName = moonP < .03 || moonP > .97 ? 'bulan baru (lagi sembunyi)' : moonP < .22 ? 'bulan sabit awal' : moonP < .28 ? 'bulan separuh' : moonP < .47 ? 'bulan cembung' : moonP < .53 ? 'bulan purnama' : moonP < .72 ? 'bulan cembung akhir' : moonP < .78 ? 'bulan separuh akhir' : 'bulan sabit akhir';
+$('#moonInfo').textContent = `Malam ini ${moonName}, ${moonLit}% terang. Bulan di atas rumah itu bentuknya sama kayak yang di langitmu sekarang.`;
+
+/* ======== stroberi tersembunyi ======== */
+let found = new Set(store.get('berries', []));
+function updBerry() { $('#berryN').textContent = found.size; }
+updBerry();
+$('#berryPill').onclick = () => toast(found.size >= 7 ? 'Semua stroberi udah ketemu 🍓 pencet lagi buat baca suratnya' : `Ada 7 stroberi ngumpet di dunia ini. Udah ketemu ${found.size}. Pencet stroberinya kalau lihat.`);
+$('#berryPill').ondblclick = () => { if (found.size >= 7) secretLetter(); };
+function gotBerry(id) {
+  if (found.has(id)) return;
+  found.add(id); store.set('berries', [...found]); updBerry(); sfx('berry');
+  if (found.size >= 7) { setTimeout(secretLetter, 700); rain(['🍓'], 24); }
+  else toast(`🍓 ketemu! (${found.size}/7)`);
+}
+function secretLetter() {
+  openModal(`<h3>🍓 7/7. Surat rahasia</h3>
+  <p>Kamu nemuin semua stroberinya. Teliti, sabar, nggak gampang nyerah. Persis kayak kamu di klinik.</p>
+  <p>Ini beberapa hal yang benar tentang kamu, walaupun kamu suka lupa:</p>
+  <p>Kamu berani. Kamu baik. Kamu nggak telat. Kamu dicintai lebih dari yang kamu tahu. Dan kamu cukup, persis seperti sekarang.</p>
+  <p>Screenshot halaman ini, simpan, buka lagi pas kamu lupa. 🍓</p>`);
+}
+
+/* ======== modal ======== */
+function openModal(html) { $('#paper').innerHTML = html + '<button class="btn close" id="mClose">tutup</button>'; $('#modal').classList.add('on'); $('#mClose').onclick = closeModal; }
+function closeModal() { $('#modal').classList.remove('on'); }
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ======== amplop ======== */
+const ENV = [
+  { k: 'capek', t: 'capek banget', h: 'Kalau lagi capek banget', b: ['Taruh dulu semuanya sebentar. Tarik napas yang panjang.', 'Kamu udah bawa banyak hal hari ini. Tugas, pasien, pikiran, kangen. Wajar kalau pundakmu berat.', 'Kamu boleh berhenti sebentar. Itu bukan nyerah, cuma ngecas.', 'Daftar kecil buat malam ini: minum air, makan, mandi air hangat, tidur. Sisanya biar besok.', 'Kamu tetap berharga, bahkan di hari yang rasanya nggak ngapa-ngapain.'] },
+  { k: 'siantar', t: 'kangen Siantar', h: 'Kalau kangen Siantar', b: ['Kangen rumah artinya kamu punya rumah yang layak dikangenin. Itu hal yang baik.', 'Coba telepon orang rumah. Nggak harus ada kabar penting. "Lagi apa?" juga cukup.', 'Atau masak sesuatu yang rasanya kayak rumah, biarpun cuma mi instan pakai telur.', 'Jakarta mungkin nggak akan pernah jadi Siantar. Tapi pelan-pelan kamu bisa punya tempat-tempat kecil di sini yang bikin tenang.', 'Dan suatu hari kamu pulang bawa cerita, gelar, dan versi dirimu yang lebih kuat. Horas.'] },
+  { k: 'opung', t: 'kangen opung', h: 'Kalau kangen opung', b: ['Nggak usah buru-buru "baik-baik aja". Duka itu nggak punya jadwal.', 'Coba ingat satu hal kecil tentang opung. Suaranya, masakannya, caranya manggil namamu. Pegang itu baik-baik. Itu punyamu selamanya.', 'Sayang yang opung kasih ikut membentuk Joy yang sekarang. Yang itu nggak ikut pergi.', 'Kamu udah menjaga beliau dengan tulus sampai akhir. Sekarang, pelan-pelan, belajar menjaga dirimu dengan tulus yang sama.', 'Kalau mau nangis, nangis aja. Kalau mau cerita, cerita ke orang yang kamu percaya. Kamu nggak harus kuat sendirian.'], soft: true },
+  { k: 'ujian', t: 'mau ujian / praktik', h: 'Kalau mau ujian atau praktik', b: ['Kamu udah belajar. Kamu udah latihan. Tanganmu udah tahu caranya.', 'Sebelum masuk: tarik napas 4 hitungan, buang 6 hitungan. Dua kali.', 'Nilai itu ngukur satu hari, bukan ngukur kamu.', 'Apa pun hasilnya nanti, kamu tetap orang yang sama: yang sabar, yang peduli, yang mau belajar. Semangat, bu fisioterapis 💪'] },
+  { k: 'sendiri', t: 'ngerasa sendirian di Jakarta', h: 'Kalau ngerasa sendirian', b: ['Merantau sendirian itu nggak gampang, dan kamu ngelakuinnya tiap hari.', 'Sepi di kamar kos itu nyata. Tapi sepi bukan berarti nggak ada yang sayang.', 'Ada orang di Siantar yang nyebut namamu di doa mereka. Ada teman yang senang lihat kamu datang. Ada pasien yang ingat tanganmu yang sabar.', 'Malam ini, chat satu orang yang kamu percaya. Nggak perlu alasan. Kamu nggak ngerepotin.'] },
+  { k: 'cukup', t: 'ngerasa nggak cukup baik', h: 'Kalau ngerasa nggak cukup baik', b: ['Hei. Siapa bilang?', 'Kamu tiap hari sabar ngajarin orang berdiri lagi, langkah demi langkah. Coba kasih kesabaran yang sama ke dirimu sendiri.', 'Kamu nggak harus sempurna buat berharga. Kamu udah berharga dari awal, sebelum kamu ngapa-ngapain.'] },
+  { k: 'cowok', t: 'habis di-ghosting', h: 'Kalau habis di-ghosting', b: ['Nangis dulu nggak apa-apa. Ngomel juga boleh 😭', 'Dia yang mulai, dia juga yang hilang. Itu bukan kesalahanmu karena udah membuka hati.', 'Tapi dengar ya: cara dia memperlakukan kamu itu cerita tentang dia, bukan tentang nilai kamu. Kamu nggak kurang apa-apa.', 'Jangan kejar orang yang bikin kamu ragu. Yang tepat datang dengan sabar, dan nggak bikin kamu bertanya-tanya.', 'Hari ini, sayangi dirimu dulu. Yang lain bisa nunggu.'] },
+  { k: 'burnout', t: 'ngerasa burnout', h: 'Kalau burnout', b: ['Hei. Kamu nggak lebay. Pulang dari duka, langsung KKN, skripsi nunggu, dosen susah dihubungi. Itu berat beneran.', 'Burnout bukan tanda kamu lemah. Itu tanda kamu udah terlalu lama kuat tanpa jeda.', 'Coba cari satu jeda kecil hari ini: 15 menit tanpa HP, tidur siang, atau makan pelan-pelan tanpa mikirin tugas.', 'Bilang "nggak" ke satu hal yang bisa ditunda. Kamu boleh milih dirimu dulu.', 'Satu-satu ya. KKN dulu, skripsi nanti. Nggak semua harus beres minggu ini.'] },
+  { k: 'sempro', t: 'mau sempro', h: 'Buat Joy yang mau sempro', b: ['Kamu udah sampai di tahap ini. Itu artinya kamu udah ngelewatin banyak banget hal.', 'Kamu yang paling kenal penelitianmu. Dosen penguji nanya bukan buat ngejatuhin, tapi biar skripsimu makin kuat.', 'Kalau ada pertanyaan yang belum bisa dijawab: "Terima kasih masukannya, Pak/Bu, akan saya pelajari lagi." Itu jawaban yang sah dan sopan.', 'Sebelum masuk: tarik napas 4, buang 6. Rapikan kacamata. Kamu siap. 🎓'] },
+  { k: 'dosen', t: 'dosen nggak bales-bales', h: 'Kalau dosen nggak bales', b: ['Hufttt. Iya, ini nyebelin. 😮‍💨', 'Tips kecil: kirim pesan singkat dan jelas (nama, NIM, keperluan, usulan 2–3 pilihan waktu). Kalau 2–3 hari belum dibalas, follow up dengan sopan.', 'Sambil nunggu, kerjakan bagian yang nggak perlu persetujuan dulu. Biar waktunya nggak hilang.', 'Lambatnya dosen bukan ukuran kemampuanmu. Kamu tetap jalan, walau jalannya ngantre. 🐸'] },
+  { k: 'tidur', t: 'nggak bisa tidur', h: 'Kalau nggak bisa tidur', b: ['Habis baca ini, taruh HP-nya ya 😤', 'Coba napas 4-7-8: tarik 4 hitungan, tahan 7, buang 8. Ulangi empat kali.', 'Lemaskan rahang, turunkan bahu, buka kepalan tangan.', 'Pikiran yang ribut boleh dititip ke bulan di bawah. Biar bulan yang jagain. Selamat tidur, Joy.'], music: true },
+  { k: 'kesel', t: 'lagi kesel sama orang', h: 'Kalau lagi kesel', b: ['Boleh kesel. Kamu manusia, bukan robot sabar.', 'Tulis semua omelanmu di kotak "titip ke bulan" di bawah. Bulan nggak bakal ngadu.', 'Habis itu minum air dingin, tarik napas, dan ingat: kamu nggak harus menang di setiap drama. Cukup jaga damaimu sendiri.'] },
+  { k: 'nyerah', t: 'pengen nyerah sama kuliah', h: 'Kalau pengen nyerah', b: ['Sebelum mutusin apa-apa, istirahat dulu. Keputusan besar jangan diambil pas lagi capek banget.', 'Ingat kenapa kamu mulai: kamu pengen bantu orang bisa gerak lagi. Itu alasan yang indah.', 'Bayangin nanti: seseorang bisa jalan lagi, bisa gendong cucunya lagi, karena tanganmu. Itu yang lagi kamu perjuangin.', 'Kamu nggak harus kuat sendirian. Cerita ke dosen, teman, atau keluarga. Minta tolong itu bukan kalah. 🤍'] },
+  { k: 'bosan', t: 'lagi bosan', h: 'Misi anti-bosan 🎮', b: ['Pilih satu, kerjain:', '① cari 7 stroberi yang ngumpet di dunia ini (udah ketemu berapa?)', '② ketik "dance" ke Joy kecil di atas', '③ foto langit hari ini, kasih stiker, simpan', '④ main Roblox 20 menit, terus ganti baju avatarmu jadi stroberi', '⑤ pencet judul "Hi, Joy!" lima kali. Ada sesuatu. 👀'] },
+  { k: 'jelek', t: 'ngerasa jelek', h: 'Kalau ngerasa jelek', b: ['Itu kata siapa? Cermin yang lagi capek nggak bisa dipercaya.', 'Kacamata itu cocok banget di kamu. Senyummu itu salah satu yang paling manis di dunia.', 'Hari ini kamu nggak perlu kelihatan sempurna. Cukup jadi Joy. Dan Joy itu udah cantik. 🍓'] },
+  { k: 'peluk', t: 'pengen dipeluk', h: 'Kalau pengen dipeluk', b: ['Sini. Lingkarkan tanganmu ke bahumu sendiri. Beneran, sekarang.', 'Tahan pelan-pelan sambil napas panjang. Badanmu tahu cara menenangkan diri, kamu cuma perlu ngasih kesempatan.', 'Kamu pantas dipeluk. Hari ini, dan setiap hari. 🫂'] },
+  { k: 'minggu', t: 'hari Minggu', h: 'Selamat hari Minggu', b: ['Selamat beribadah, Joy. Semoga khotbah hari ini pas banget sama yang lagi kamu butuhin.', 'Habis ibadah, istirahat ya. Minggu itu hari buat ngecas, bukan buat ngejar tugas (sedikit boleh lah).', 'Semoga minggu depan lebih ringan. 🤍'], lock: () => now.getDay() !== 0, lockMsg: 'Amplop ini cuma kebuka hari Minggu ⛪' },
+  { k: 'senang', t: 'lagi senang!', h: 'YEEEY', b: ['Rayain! Senang itu juga perlu dirayain, bukan cuma ditunggu habis.', 'Tulis momen ini di kapsul waktu di bawah, biar Joy yang nanti ikut senang.', 'Kamu pantas dapat hari-hari kayak gini lebih sering. 🎉'], party: true },
+  { k: 'natal', t: 'udah Desember', h: 'Selamat menyambut Natal', b: ['Natal pertama tanpa opung mungkin terasa beda. Nggak apa-apa kalau rasanya campur aduk.', 'Semoga di tengah lagu-lagu Natal kamu tetap ngerasain damai yang nggak tergantung keadaan.', 'Selamat Natal, Joy. Kamu adalah salah satu hadiah baik di tahun ini. 🎄'], lock: () => !isDec, lockMsg: 'Amplop ini kebuka sendiri pas Desember 🎄' },
+  { k: 'ultah', t: 'hari ulang tahunmu', h: 'Selamat ulang tahun, Joy 🎂', b: ['Selamat ulang tahun! Satu tahun lagi kamu bertahan, tumbuh, dan tetap baik.', 'Semoga tahun ini lebih banyak hari yang ringan, praktik yang lancar, dan orang-orang yang tulus di sekitarmu.', 'Dunia beruntung kamu lahir. 🍓'], lock: () => !isBday, lockMsg: 'Amplop ini cuma bisa dibuka pas hari ulang tahunmu 🎂', party: true },
+];
+let readEnv = new Set(store.get('env', []));
+function renderEnvs() {
+  const box = $('#envs'); box.innerHTML = '';
+  ENV.forEach(e => {
+    const b = document.createElement('button'); const locked = e.lock && e.lock();
+    b.className = 'env' + (locked ? ' lock' : readEnv.has(e.k) ? ' read' : '');
+    b.innerHTML = `<b>BUKA KALAU…</b>${e.t}`;
+    b.onclick = () => {
+      if (locked) { toast(e.lockMsg); return; }
+      readEnv.add(e.k); store.set('env', [...readEnv]); renderEnvs(); sfx('paper');
+      openModal(`<h3>${e.h}</h3>${e.b.map(p => `<p>${p}</p>`).join('')}<p class="sign">🍓</p>${e.music && !musicOn ? '<button class="btn soft" style="width:100%" id="envMusic">nyalakan musik kotak 🎵</button>' : ''}`);
+      if (e.party) rain(['🍓', '🎉', '💗', '✨'], 34);
+      const em = $('#envMusic'); if (em) em.onclick = () => { toggleMusic(); em.remove(); };
+    };
+    box.appendChild(b);
+  });
+}
+renderEnvs();
+
+/* ======== musik: satu lagu orisinal per pulau ======== */
+let actx, master, musicBus, sfxBus, noiseBuf, musicOn = false, schedT;
+let cur = 0, loopStart = 0, ei = 0, switching = false, wantSince = 0, lastWant = 0;
+const NOTE = { C: 0, 'C#': 1, Db: 1, D: 2, Eb: 3, E: 4, F: 5, 'F#': 6, G: 7, Ab: 8, A: 9, Bb: 10, B: 11 };
+const SCALES = { maj: [0, 2, 4, 5, 7, 9, 11], min: [0, 2, 3, 5, 7, 8, 10] };
+function chordOf(name) { const m = name.match(/^([A-G][b#]?)(m(?!aj))?(maj7|7)?$/); const iv = [0, m[2] ? 3 : 4, 7]; if (m[3] === 'maj7') iv.push(11); else if (m[3] === '7') iv.push(10); return { pc: NOTE[m[1]], iv }; }
+function rng(seed) { let x = seed * 9973 + 7; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
+// lagu 0: tema utama "Hi, Joy!" (ditulis tangan)
+const MEL = [[81,1],[84,1],[81,1],[79,2],[77,1],[76,1],[79,1],[82,1],[81,3],[77,1],[81,1],[86,1],[84,2],[81,1],[79,1],[81,1],[76,1],[77,3],
+  [84,1],[86,1],[84,1],[81,2],[77,1],[82,1],[81,1],[79,1],[76,2],[72,1],[74,1],[77,1],[81,1],[79,1.5],[81,.5],[82,1],[81,1],[79,1],[76,1],[77,3]];
+const BASS = [53, 48, 48, 53, 50, 53, 48, 53, 53, 53, 46, 48, 50, 55, 48, 53];
+const SONGS = [
+  { name: 'Hi, Joy!', bpm: 84, beats: 3 },
+  { name: 'Pagi di Siantar', bpm: 96, beats: 4, key: 'G', ch: ['G', 'D', 'Em', 'C', 'G', 'C', 'D', 'G'], lead: 'box', acc: 'pluck', oct: 74, dens: .55, bass: 'walk', seed: 3 },
+  { name: 'Kota Besar, Hati Tenang', bpm: 76, beats: 4, key: 'C', ch: ['Fmaj7', 'Em7', 'Dm7', 'Cmaj7', 'Fmaj7', 'Em7', 'Dm7', 'G7'], lead: 'ep', acc: 'ep', oct: 72, dens: .4, bass: 'lofi', drums: true, seed: 7 },
+  { name: 'Tarik Napas', bpm: 62, beats: 4, key: 'C', ch: ['C', 'Am', 'F', 'G', 'C', 'Am', 'F', 'C'], lead: 'bell', pad: true, oct: 72, dens: .22, bass: 'long', seed: 11 },
+  { name: 'Rebahan', bpm: 66, beats: 3, key: 'F', ch: ['F', 'Dm', 'Bb', 'C', 'F', 'Dm', 'Bb', 'F'], lead: 'box', acc: 'box', oct: 72, dens: .4, bass: 'long', seed: 5 },
+  { name: 'Stroberi Matang Pelan', bpm: 104, beats: 4, key: 'D', ch: ['D', 'A', 'Bm', 'G', 'D', 'A', 'G', 'D'], lead: 'box', acc: 'pluck', oct: 74, dens: .7, bass: 'bounce', seed: 21 },
+  { name: 'Malam yang Jauh', bpm: 56, beats: 4, key: 'A', scale: 'min', ch: ['Am', 'F', 'C', 'G', 'Am', 'F', 'G', 'Am'], lead: 'bell', pad: true, oct: 69, dens: .2, bass: 'long', seed: 2 },
+  { name: 'Di Bawah Bulan yang Sama', bpm: 70, beats: 3, key: 'Bb', ch: ['Bb', 'Gm', 'Eb', 'F', 'Bb', 'Gm', 'Eb', 'F'], lead: 'celesta', acc: 'celesta', pad: true, oct: 70, dens: .45, bass: 'long', seed: 9 },
+];
+function buildSong(S, idx) {
+  if (S.ev) return S;
+  const ev = [];
+  if (idx === 0) {
+    let t = 0; MEL.forEach(([m, d]) => { ev.push({ t, m, v: .17, d: 1.6, i: 'box' }); t += d; });
+    BASS.forEach((r, k) => { ev.push({ t: k * 3, m: r, v: .09, d: 1.4, i: 'box' }); ev.push({ t: k * 3 + 1, m: r + 7, v: .05, d: .9, i: 'box' }); ev.push({ t: k * 3 + 2, m: r + 12, v: .05, d: .9, i: 'box' }); });
+    S.ev = ev.sort((a, b) => a.t - b.t); S.len = 48; return S;
+  }
+  const B = S.beats, key = NOTE[S.key], sc = SCALES[S.scale || 'maj'], n8 = B * 2;
+  const pool = []; for (let m = S.oct - 4; m <= S.oct + 16; m++) if (sc.includes(((m - key) % 12 + 12) % 12)) pool.push(m);
+  const tonic = pool.reduce((a, m) => ((m - key) % 12 === 0 && Math.abs(m - S.oct - 3) < Math.abs(a - S.oct - 3)) ? m : a, pool[0]);
+  function genBar(R, chord, last, prev) {
+    const out = []; const pcs = chord.iv.map(i => (chord.pc + i) % 12);
+    if (last) { out.push({ p: 0, m: tonic }); return { out, prev: tonic }; }
+    for (let i = 0; i < n8; i++) {
+      const pr = i === 0 ? .92 : i % 2 === 0 ? S.dens : S.dens * .45; if (R() > pr) continue;
+      let m;
+      if (i % 2 === 0) { const ct = pool.filter(x => pcs.includes(x % 12)); ct.sort((a, b) => Math.abs(a - prev) - Math.abs(b - prev)); m = ct[Math.min(ct.length - 1, R() < .7 ? 0 : 1)]; }
+      else { const k = pool.indexOf(prev); m = pool[Math.max(0, Math.min(pool.length - 1, (k < 0 ? 5 : k) + (R() < .5 ? 1 : -1)))]; }
+      out.push({ p: i, m }); prev = m;
+    }
+    return { out, prev };
+  }
+  const nb = S.ch.length, bars = nb * 2; let prev = tonic + 4; const phrase = [];
+  const RA = rng(S.seed), RB = rng(S.seed + 50);
+  for (let b = 0; b < bars; b++) {
+    if (b >= nb && b < nb + nb / 2) { phrase.push(phrase[b - nb]); continue; }
+    const r = genBar(b < nb ? RA : RB, chordOf(S.ch[b % nb]), b === bars - 1, prev); prev = r.prev; phrase.push(r.out);
+  }
+  phrase.forEach((notes, b) => {
+    const t0 = b * B, chord = chordOf(S.ch[b % nb]);
+    notes.forEach((nt, k) => { const nx = notes[k + 1] ? notes[k + 1].p : n8; ev.push({ t: t0 + nt.p / 2, m: nt.m, v: .13, d: Math.max(.5, (nx - nt.p) / 2 * 60 / S.bpm * 2.2), i: S.lead }); });
+    const root = 36 + ((chord.pc - 0) % 12 + 12) % 12, five = root + 7;
+    if (S.bass === 'walk') { ev.push({ t: t0, m: root, v: .09, d: 1.2, i: 'pluck' }); ev.push({ t: t0 + 2, m: five, v: .07, d: 1, i: 'pluck' }); }
+    else if (S.bass === 'lofi') { ev.push({ t: t0, m: root, v: .1, d: 1.6, i: 'ep' }); ev.push({ t: t0 + 2.5, m: root, v: .07, d: 1, i: 'ep' }); }
+    else if (S.bass === 'bounce') for (let k = 0; k < B; k++) ev.push({ t: t0 + k, m: k % 2 ? five : root, v: .08, d: .5, i: 'pluck' });
+    else ev.push({ t: t0, m: root, v: .08, d: B * 60 / S.bpm * 1.2, i: S.pad ? 'pad' : 'box' });
+    if (S.pad) chord.iv.slice(0, 3).forEach(iv => ev.push({ t: t0, m: 55 + ((chord.pc + iv - 7) % 12 + 12) % 12, v: .03, d: B * 60 / S.bpm, i: 'pad' }));
+    if (S.acc) for (let k = 1; k < B; k++) ev.push({ t: t0 + k, m: 60 + ((chord.pc + chord.iv[k % chord.iv.length]) % 12), v: .045, d: .9, i: S.acc });
+    if (S.drums) for (let k = 0; k < B * 2; k++) {
+      const tt = t0 + k / 2 + (k % 2 ? .08 : 0);
+      if (k === 0 || k === 5) ev.push({ t: tt, i: 'kick', v: .22 });
+      if (k === 2 || k === 6) ev.push({ t: tt, i: 'snare', v: .05 });
+      ev.push({ t: tt, i: 'hat', v: k % 2 ? .015 : .025 });
+    }
+  });
+  S.ev = ev.sort((a, b) => a.t - b.t); S.len = bars * B; return S;
+}
+function osc(type, f, time, dur, peak, bus, att = .005) {
+  const o = actx.createOscillator(), g = actx.createGain(); o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(.0001, time); g.gain.exponentialRampToValueAtTime(Math.max(.0002, peak), time + att); g.gain.exponentialRampToValueAtTime(.0001, time + dur);
+  o.connect(g).connect(bus); o.start(time); o.stop(time + dur + .05); return o;
+}
+function noise(time, dur, vol, type, freq, bus) {
+  const s = actx.createBufferSource(); s.buffer = noiseBuf; const f = actx.createBiquadFilter(); f.type = type; f.frequency.value = freq; const g = actx.createGain();
+  g.gain.setValueAtTime(vol, time); g.gain.exponentialRampToValueAtTime(.0001, time + dur); s.connect(f).connect(g).connect(bus); s.start(time, Math.random()); s.stop(time + dur + .02);
+}
+function play(e, time, bus = musicBus) {
+  const f = e.m ? 440 * 2 ** ((e.m - 69) / 12) : 0, v = e.v, d = e.d || .8;
+  switch (e.i) {
+    case 'box': osc('sine', f, time, d, v, bus); osc('sine', f * 4.02, time, .35, v * .16, bus); break;
+    case 'bell': osc('sine', f, time, d * 1.3, v, bus); osc('sine', f * 2.76, time, .5, v * .25, bus); osc('sine', f * 5.4, time, .2, v * .08, bus); break;
+    case 'celesta': osc('sine', f, time, d, v, bus); osc('triangle', f * 2, time, .4, v * .18, bus); osc('sine', f * 3, time, .25, v * .1, bus); break;
+    case 'ep': { osc('sine', f, time, d * 1.2, v, bus, .012); osc('sine', f * 2.002, time, d * .6, v * .22, bus, .01); osc('triangle', f * .999, time, d * .8, v * .15, bus, .015); break; }
+    case 'pluck': {
+      const o = actx.createOscillator(), lp = actx.createBiquadFilter(), g = actx.createGain(); o.type = 'triangle'; o.frequency.value = f; lp.type = 'lowpass';
+      lp.frequency.setValueAtTime(3200, time); lp.frequency.exponentialRampToValueAtTime(500, time + .25);
+      g.gain.setValueAtTime(.0001, time); g.gain.exponentialRampToValueAtTime(v * 1.3, time + .004); g.gain.exponentialRampToValueAtTime(.0001, time + Math.min(d, .9));
+      o.connect(lp).connect(g).connect(bus); o.start(time); o.stop(time + 1); break; }
+    case 'pad': {
+      const lp = actx.createBiquadFilter(), g = actx.createGain(); lp.type = 'lowpass'; lp.frequency.value = 900;
+      g.gain.setValueAtTime(.0001, time); g.gain.linearRampToValueAtTime(v, time + .8); g.gain.setValueAtTime(v, time + Math.max(.8, d - .2)); g.gain.linearRampToValueAtTime(.0001, time + d + 1.2);
+      [-6, 6].forEach(c => { const o = actx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = c; o.connect(lp); o.start(time); o.stop(time + d + 1.3); });
+      lp.connect(g).connect(bus); break; }
+    case 'kick': { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.setValueAtTime(130, time); o.frequency.exponentialRampToValueAtTime(45, time + .13);
+      g.gain.setValueAtTime(v, time); g.gain.exponentialRampToValueAtTime(.0001, time + .25); o.connect(g).connect(bus); o.start(time); o.stop(time + .3); break; }
+    case 'snare': noise(time, .16, v, 'bandpass', 1800, bus); break;
+    case 'hat': noise(time, .04, v, 'highpass', 7000, bus); break;
+  }
+}
+function sfx(k) {
+  if (!actx || !musicOn) return; const t = actx.currentTime;
+  if (k === 'berry') [76, 79, 84, 88].forEach((m, i) => play({ i: 'celesta', m, v: .12, d: .7 }, t + i * .07, sfxBus));
+  else if (k === 'paper') { noise(t, .18, .05, 'bandpass', 2500, sfxBus); play({ i: 'bell', m: 84, v: .07, d: .8 }, t + .12, sfxBus); }
+  else if (k === 'step') noise(t, .05, .025, 'lowpass', 900, sfxBus);
+  else if (k === 'drop') play({ i: 'box', m: 84 + Math.floor(Math.random() * 8), v: .05, d: .3 }, t, sfxBus);
+  else if (k === 'kwek') { play({ i: 'pluck', m: 62, v: .12, d: .15 }, t, sfxBus); play({ i: 'pluck', m: 57, v: .1, d: .2 }, t + .11, sfxBus); }
+  else if (k === 'party') [72, 76, 79, 84, 79, 84, 88].forEach((m, i) => play({ i: 'box', m, v: .1, d: .5 }, t + i * .09, sfxBus));
+}
+function blip(f, v, delay = 0) { if (!actx || !musicOn) return; play({ i: 'box', m: 69 + 12 * Math.log2(f / 440), v, d: .4 }, actx.currentTime + delay, sfxBus); }
+function startSong(k, t) { cur = k; buildSong(SONGS[k], k); loopStart = t; ei = 0; nowPlaying(); }
+function nowPlaying() { const el = $('#np'); el.textContent = '♪ ' + SONGS[cur].name; el.classList.toggle('on', musicOn); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+function sched() {
+  const now = actx.currentTime;
+  const want = Math.round(clamp(readScroll(), 0, 7));
+  if (want !== lastWant) { lastWant = want; wantSince = now; }
+  if (!switching && want !== cur && now - wantSince > 1) {
+    switching = true; musicBus.gain.cancelScheduledValues(now); musicBus.gain.setValueAtTime(musicBus.gain.value, now); musicBus.gain.linearRampToValueAtTime(.0001, now + .8);
+    setTimeout(() => { const t = actx.currentTime; startSong(want, t + .1); musicBus.gain.cancelScheduledValues(t); musicBus.gain.setValueAtTime(.0001, t); musicBus.gain.linearRampToValueAtTime(1, t + 1.2); switching = false; }, 900);
+  }
+  if (switching) return;
+  const S = SONGS[cur], spb = 60 / S.bpm;
+  while (loopStart + S.ev[ei].t * spb < now + .3) {
+    const e = S.ev[ei]; play(e, Math.max(now, loopStart + e.t * spb));
+    if (++ei >= S.ev.length) { ei = 0; loopStart += S.len * spb; }
+  }
+}
+/* iPhone: Web Audio ikut dibisukan tombol silent. Audio <audio> sunyi yang diputar saat tap
+   memindahkan sesi ke mode "playback", jadi musik tetap bunyi. */
+let silentEl;
+function silentWavUrl() {
+  const sr = 8000, n = sr / 2, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+  const w = (o, s) => [...s].forEach((ch, i) => v.setUint8(o + i, ch.charCodeAt(0)));
+  w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+  return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+}
+function iosAudio(on) {
+  try { if (navigator.audioSession) navigator.audioSession.type = on ? 'playback' : 'auto'; } catch (e) {}
+  if (!silentEl) { silentEl = document.createElement('audio'); silentEl.src = silentWavUrl(); silentEl.loop = true; silentEl.setAttribute('playsinline', ''); silentEl.preload = 'auto'; silentEl.style.display = 'none'; document.body.appendChild(silentEl); }
+  if (on) { const p = silentEl.play(); if (p && p.catch) p.catch(() => {}); } else silentEl.pause();
+}
+function toggleMusic(force) {
+  const on = typeof force === 'boolean' ? force : !musicOn; if (on === musicOn) return; musicOn = on; iosAudio(musicOn);
+  if (!actx) {
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    master = actx.createGain(); master.gain.value = 0; musicBus = actx.createGain(); sfxBus = actx.createGain(); sfxBus.gain.value = .9;
+    noiseBuf = actx.createBuffer(1, actx.sampleRate * 2, actx.sampleRate); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+    const dl = actx.createDelay(1), fb = actx.createGain(), wet = actx.createGain(), lp = actx.createBiquadFilter(), comp = actx.createDynamicsCompressor();
+    lp.type = 'lowpass'; lp.frequency.value = 4200; dl.delayTime.value = .36; fb.gain.value = .3; wet.gain.value = .28;
+    musicBus.connect(master); sfxBus.connect(master);
+    master.connect(lp); lp.connect(comp); lp.connect(dl); dl.connect(fb).connect(dl); dl.connect(wet).connect(comp); comp.connect(actx.destination);
+  }
+  actx.resume();
+  const t = actx.currentTime;
+  master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t);
+  if (musicOn) { master.gain.linearRampToValueAtTime(.85, t + .5); musicBus.gain.value = 1; switching = false; lastWant = Math.round(clamp(readScroll(), 0, 7)); startSong(lastWant, t + .15); clearInterval(schedT); schedT = setInterval(sched, 80); }
+  else { master.gain.linearRampToValueAtTime(0, t + .5); setTimeout(() => { if (!musicOn) clearInterval(schedT); }, 600); }
+  $('#musicBtn').classList.toggle('on', musicOn); $('#musicBtn').textContent = musicOn ? '♪ on' : '♪'; nowPlaying();
+  store.set('music', musicOn);
+}
+$('#musicBtn').onclick = () => toggleMusic();
+
+/* sempro bulan Desember */
+{ const el = $('#sempro'); if (el) { const y = now.getFullYear(); const dec = new Date(y, 11, 1); const days = Math.ceil((dec - now) / 864e5);
+  el.textContent = M === 11 ? '🎓 Bulan sempro! Kamu udah sejauh ini, kamu siap.' : days > 0 && days < 60 ? `🎓 ${days} hari lagi masuk Desember, bulan sempro. Pelan-pelan, satu bab satu bab.` : ''; } }
+/* ======== napas ======== */
+let breathing = false;
+$('#breathBtn').onclick = async () => {
+  if (breathing) return; breathing = true; $('#breathBtn').disabled = true;
+  const orb = $('#orb'), txt = $('#breathTxt'), wait = ms => new Promise(r => setTimeout(r, ms));
+  for (let i = 0; i < 4; i++) {
+    txt.textContent = `tarik… (${i + 1}/4)`; orb.style.transitionDuration = '4s'; orb.style.transform = 'scale(1.55)'; await wait(4000);
+    txt.textContent = 'tahan…'; await wait(4000);
+    txt.textContent = 'buang pelan…'; orb.style.transitionDuration = '6s'; orb.style.transform = 'scale(1)'; await wait(6000);
+  }
+  txt.textContent = 'udah. kamu baik-baik aja 🤍'; breathing = false; $('#breathBtn').disabled = false; $('#breathBtn').textContent = 'lagi?';
+};
+
+/* ======== checklist & tanaman ======== */
+$$('#checks li').forEach(li => li.onclick = () => {
+  li.classList.toggle('on'); blip(880, .04);
+  const all = $$('#checks li').every(l => l.classList.contains('on'));
+  $('#checksDone').style.display = all ? '' : 'none';
+});
+const PLANT_TXT = ['baru tunas…', 'daunnya nambah', 'sabar ya…', 'berbunga! 🌼', 'buahnya masih hijau. belum waktunya.', 'mulai merah…', 'nah, manis. yang baik memang pantas ditunggu 🍓'];
+let plantStage = store.get('plant', 0);
+$('#plantTxt').textContent = PLANT_TXT[plantStage];
+$('#waterBtn').onclick = () => {
+  if (plantStage >= 6) { toast('udah matang 🍓 (siram lagi besok-besok ya)'); return; }
+  plantStage++; store.set('plant', plantStage); $('#plantTxt').textContent = PLANT_TXT[plantStage]; [0, 1, 2].forEach(k => setTimeout(() => sfx('drop'), k * 160));
+  if (world) world.water();
+};
+
+/* ======== lilin ======== */
+let candleLit = false;
+$('#candleBtn').onclick = () => {
+  candleLit = !candleLit; $('#candleTxt').style.display = candleLit ? '' : 'none';
+  $('#candleBtn').textContent = candleLit ? 'lilinnya menyala 🕯️' : 'nyalakan lilin';
+};
+
+/* ======== chat ke Joy kecil ======== */
+function joySays(text) { if (world && !document.body.classList.contains('no3d')) world.say(text); else toast(text); }
+function chat() {
+  const raw = $('#chatIn').value.trim(); const q = raw.toLowerCase(); if (!q) return; $('#chatIn').value = '';
+  let r = 'hehe 🍓', act = 'jump';
+  if (/horas/.test(q)) { r = 'Horas! 👋'; act = 'wave'; }
+  else if (/mauliate|diatei|makasih|terima kasih/.test(q)) { r = 'Diatei tupa juga! 🤍'; act = 'wave'; }
+  else if (/roblox|obby/.test(q)) { r = 'ayo main! 🎮'; act = 'dance'; }
+  else if (/dance|joget|nari/.test(q)) { r = '♪ ♪ ♪'; act = 'dance'; }
+  else if (/capek|lelah|cape/.test(q)) { r = 'sini scroll, ada amplopnya 🤍'; act = 'none'; }
+  else if (/kangen|rindu/.test(q)) { r = 'peluk dari jauh 🫂'; act = 'none'; }
+  else if (/sayang|love|suka/.test(q)) { r = 'eh? 😳'; act = 'blush'; }
+  else if (/fisio|praktik|ujian/.test(q)) { r = 'semangat bu terapis! 🩺'; act = 'jump'; }
+  else if (/natal/.test(q)) { r = 'Selamat Natal! 🎄'; act = 'jump'; }
+  else if (/joyce/.test(q)) { r = 'Joy aja 😤'; act = 'wave'; }
+  else if (/sempro|skripsi|penguji/.test(q)) { r = 'kamu pasti bisa, calon S.Ft! 🎓'; act = 'jump'; }
+  else if (/dosen/.test(q)) { r = 'hufttt… sabar ya 😮‍💨'; act = 'none'; }
+  else if (/kkn/.test(q)) { r = 'semangat KKN-nya! jangan lupa makan 🍚'; act = 'jump'; }
+  else if (/burn ?out|stres|stress/.test(q)) { r = 'istirahat dulu ya, kamu udah keren 🤍'; act = 'none'; }
+  else if (/ghost|hilang|ngilang/.test(q)) { r = 'yang hilang biarin hilang 🙅‍♀️'; act = 'wave'; }
+  else if (/kodok|katak|frog/.test(q)) { r = 'kwek! 🐸'; act = 'frog'; }
+  else if (/semangat/.test(q)) { r = 'SEMANGAT!! 💪🍓'; act = 'jump'; }
+  else if (/lapar|laper|makan/.test(q)) { r = 'makan dulu sana! 🍜'; act = 'jump'; }
+  else if (/ngantuk|tidur|bobo/.test(q)) { r = 'bobo sana, mimpi indah 💤'; act = 'none'; }
+  else if (/sedih|nangis|galau/.test(q)) { r = 'sini… peluk 🫂 ada amplopnya di bawah'; act = 'none'; }
+  else if (/takut|cemas|panik/.test(q)) { r = 'napas dulu. kamu aman 🤍'; act = 'none'; }
+  else if (/bosan|bosen|gabut/.test(q)) { r = 'cari stroberi yuk! 🍓'; act = 'jump'; }
+  else if (/gagal|bodoh|bego/.test(q)) { r = 'hei, jangan ngomong gitu ke diri sendiri 😤'; act = 'none'; }
+  else if (/cantik|imut|lucu/.test(q)) { r = 'hehe makasih, kamu juga 😳'; act = 'blush'; }
+  else if (/kacamata/.test(q)) { r = 'kacamata ini identitas 👓'; act = 'wave'; }
+  else if (/siantar/.test(q)) { r = 'kampung halaman tercinta 🏡'; act = 'wave'; }
+  else if (/jakarta/.test(q)) { r = 'panas, tapi aku kuat 😎'; act = 'jump'; }
+  else if (/gkps|gereja|ibadah/.test(q)) { r = 'selamat beribadah 🤍'; act = 'none'; }
+  else if (/opung/.test(q)) { r = '🤍'; act = 'none'; }
+  else if (/cowok|cowo|gebetan|mantan|jomblo/.test(q)) { r = 'standar tinggi, inget bab 5! 🙅‍♀️'; act = 'wave'; }
+  else if (/rahasia|secret|hint/.test(q)) { r = 'coba pencet-pencet benda di dunia 👀'; act = 'jump'; }
+  else if (/\b(halo|hai|hi|hello)\b/.test(q)) { r = 'hai juga! 👋'; act = 'wave'; }
+  else if (/joy/.test(q)) { r = 'iya? itu aku 🍓'; act = 'wave'; }
+  else if (/stroberi|strawberry/.test(q)) { r = `ketemu ${found.size}/7. ganti baju dulu! 🍓`; act = 'berry'; }
+  joySays(r); if (world) world.emote(act); blip(1046, .05);
+}
+// rahasia: pencet judul 5x → baju stroberi
+let titleN = 0, titleT;
+$('#title').addEventListener('click', () => {
+  titleN++; clearTimeout(titleT); titleT = setTimeout(() => titleN = 0, 1500); blip(700 + titleN * 120, .05);
+  if (titleN >= 5) { titleN = 0; if (world) world.emote('berry'); joySays('mode stroberi! 🍓'); rain(['🍓'], 26); }
+});
+// rahasia: diam lama → Joy kecil nyapa
+let idleT; const idleReset = () => { clearTimeout(idleT); idleT = setTimeout(() => joySays(['masih di situ? jangan lupa minum 💧', 'kamu lagi mikirin apa? 🍓', 'aku nungguin kamu scroll 👀'][Math.floor(Math.random() * 3)]), 45000); };
+['scroll', 'pointerdown', 'keydown'].forEach(ev => addEventListener(ev, idleReset, { passive: true })); idleReset();
+$('#chatGo').onclick = chat; $('#chatIn').addEventListener('keydown', e => { if (e.key === 'Enter') chat(); });
+
+/* ======== kirim (lewat Worker) ======== */
+async function sendForm(fd) {
+  if (!WORKER_URL) return { ok: false, why: 'off' };
+  try { const r = await fetch(WORKER_URL, { method: 'POST', body: fd }); const j = await r.json().catch(() => ({})); return { ok: r.ok && j.ok, why: j.error || r.status }; }
+  catch (e) { return { ok: false, why: 'net' }; }
+}
+
+/* ======== tulis ke bulan ======== */
+const MOON_R = ['bulan: oke, udah aku simpan. sekarang kamu tidur ya 🌙', 'bulan: hmm. dicatat. kamu hebat hari ini, tau.', 'bulan: aku dengerin. aku kan nggak ke mana-mana.', 'bulan: berat ya? sini, taruh di aku dulu.', 'bulan: lucu juga kamu 😌'];
+$('#moonGo').onclick = async () => {
+  const t = $('#moonTxt').value.trim(); if (!t) { $('#moonReply').textContent = 'bulan: kok kosong? 🥺'; return; }
+  const q = t.toLowerCase(); let r = MOON_R[Math.floor(Math.random() * MOON_R.length)];
+  if (/capek|lelah/.test(q)) r = 'bulan: capeknya titip ke aku ya. kamu istirahat.';
+  else if (/cowok|cowo|mantan|gebetan/.test(q)) r = 'bulan: hmm. yang ini pantas nggak? 🤨 inget standar di bab 5 ya.';
+  else if (/kangen|rindu|opung|rumah/.test(q)) r = 'bulan: aku juga lagi di atas Siantar sekarang. aku bawain kangennya.';
+  else if (/ujian|praktik|tugas/.test(q)) r = 'bulan: kamu bisa. aku liatin dari sini.';
+  else if (/senang|seneng|bahagia|yey/.test(q)) r = 'bulan: AAA ikut seneng!! ✨';
+  $('#moonReply').textContent = r; blip(1175, .05);
+  if ($('#moonSend').checked) {
+    if (!WORKER_URL) { $('#moonReply').textContent += ' (jalan ke penjaga bulan belum tersambung, jadi yang ini belum terkirim)'; return; }
+    const fd = new FormData(); fd.append('message', t);
+    const res = await sendForm(fd);
+    $('#moonReply').textContent += res.ok ? ' · sampai ke penjaga bulan 🌙' : ' · belum sampai, coba lagi nanti';
+    if (res.ok) $('#moonTxt').value = '';
+  } else $('#moonTxt').value = '';
+};
+
+/* ======== foto + filter + stiker ======== */
+const SPR = {
+  stroberi: { p: { G: '#3f9a4c', g: '#62c06f', R: '#e8475f', y: '#ffe2a8' }, r: ['..GGG..', '.GGgGG.', '.RRRRR.', 'RRyRRyR', 'RRRRRRR', '.RyRRR.', '..RRR..', '...R...'] },
+  hati: { p: { R: '#ff5a87', w: '#ffd0dc' }, r: ['.RR.RR.', 'RwRRRRR', 'RRRRRRR', '.RRRRR.', '..RRR..', '...R...'] },
+  bintang: { p: { Y: '#ffd44d' }, r: ['...Y...', '...Y...', '.YYYYY.', 'YYYYYYY', '.YYYYY.', '.YY.YY.', 'YY...YY'] },
+  bunga: { p: { P: '#ffb3c8', Y: '#ffd44d' }, r: ['.P.P.', 'PPPPP', '.PYP.', 'PPPPP', '.P.P.'] },
+  kacamata: { p: { K: '#2b2430' }, r: ['.KK...KK.', 'K..K.K..K', 'K..KKK..K', '.KK...KK.'] },
+};
+const FIL = { asli: 'asli', stroberi: '🍓 stroberi', hangat: '☀️ hangat', bw: '🎞️ b&w', pixel: '👾 pixel' };
+let pSrc = null, pFilter = 'stroberi', pStk = [], pCv = null, pCtx = null, drag = null;
+function chipsInto(el, obj, onPick, cur) {
+  el.innerHTML = ''; Object.entries(obj).forEach(([k, v]) => { const b = document.createElement('button'); b.className = 'chip' + (k === cur ? ' on' : ''); b.textContent = v;
+    b.onclick = () => { if (cur !== undefined) { [...el.children].forEach(c => c.classList.toggle('on', c === b)); } onPick(k); }; el.appendChild(b); });
+}
+chipsInto($('#pFilters'), FIL, k => { pFilter = k; renderPhoto(); }, pFilter);
+chipsInto($('#pStickers'), { stroberi: '🍓', hati: '💗', bintang: '⭐', bunga: '🌸', kacamata: '👓', hapus: '↩︎ hapus' }, k => {
+  if (!pSrc) return;
+  if (k === 'hapus') pStk.pop(); else pStk.push({ k, x: pCv.width * (.3 + Math.random() * .4), y: pCv.height * (.3 + Math.random() * .4) });
+  renderPhoto();
+});
+$('#pfile').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const url = URL.createObjectURL(f); const img = new Image();
+  img.onload = () => {
+    const s = Math.min(1, 1280 / Math.max(img.width, img.height)); const w = Math.round(img.width * s), h = Math.round(img.height * s);
+    pSrc = document.createElement('canvas'); pSrc.width = w; pSrc.height = h; pSrc.getContext('2d').drawImage(img, 0, 0, w, h); URL.revokeObjectURL(url);
+    pCv = document.createElement('canvas'); pCv.width = w; pCv.height = h; pCtx = pCv.getContext('2d', { willReadFrequently: true });
+    $('#pbox').innerHTML = ''; $('#pbox').appendChild(pCv); $('#pTools').style.display = ''; $('#pStatus').textContent = ''; pStk = [];
+    bindDrag(); renderPhoto();
+  };
+  img.onerror = () => { $('#pStatus').textContent = 'fotonya nggak bisa dibuka, coba foto lain ya'; };
+  img.src = url;
+};
+function stkSize(k) { const r = SPR[k].r; const u = Math.max(4, Math.round(Math.min(pCv.width, pCv.height) * .2 / r[0].length)); return { u, w: r[0].length * u, h: r.length * u }; }
+function renderPhoto() {
+  if (!pSrc) return; const w = pCv.width, h = pCv.height, g = pCtx;
+  g.imageSmoothingEnabled = true;
+  if (pFilter === 'pixel') { const sw = Math.max(40, Math.round(w / 9)), sh = Math.round(sw * h / w); const t = document.createElement('canvas'); t.width = sw; t.height = sh; t.getContext('2d').drawImage(pSrc, 0, 0, sw, sh); g.imageSmoothingEnabled = false; g.drawImage(t, 0, 0, w, h); }
+  else g.drawImage(pSrc, 0, 0);
+  if (pFilter !== 'asli' && pFilter !== 'pixel') {
+    const d = g.getImageData(0, 0, w, h), a = d.data;
+    for (let i = 0; i < a.length; i += 4) {
+      let r = a[i], gg = a[i + 1], b = a[i + 2];
+      if (pFilter === 'stroberi') { r = r * .92 + 34; gg = gg * .86 + 14; b = b * .9 + 28; }
+      else if (pFilter === 'hangat') { r = r * 1.04 + 16; gg = gg + 5; b = b * .9; }
+      else if (pFilter === 'bw') { const y = r * .3 + gg * .59 + b * .11; r = gg = b = y * 1.05 + 6; }
+      a[i] = r; a[i + 1] = gg; a[i + 2] = b;
+    }
+    g.putImageData(d, 0, 0);
+  }
+  pStk.forEach(s => { const { u, w: sw, h: sh } = stkSize(s.k); const sp = SPR[s.k];
+    sp.r.forEach((row, j) => [...row].forEach((c, i) => { if (c !== '.') { g.fillStyle = sp.p[c]; g.fillRect(Math.round(s.x - sw / 2 + i * u), Math.round(s.y - sh / 2 + j * u), u, u); } })); });
+}
+function bindDrag() {
+  const pos = e => { const r = pCv.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * pCv.width, y: (e.clientY - r.top) / r.height * pCv.height }; };
+  pCv.onpointerdown = e => { const p = pos(e); for (let i = pStk.length - 1; i >= 0; i--) { const s = pStk[i], z = stkSize(s.k); if (Math.abs(p.x - s.x) < z.w * .7 && Math.abs(p.y - s.y) < z.h * .7) { drag = { s, dx: s.x - p.x, dy: s.y - p.y }; pCv.setPointerCapture(e.pointerId); break; } } };
+  pCv.onpointermove = e => { if (!drag) return; const p = pos(e); drag.s.x = p.x + drag.dx; drag.s.y = p.y + drag.dy; renderPhoto(); };
+  pCv.onpointerup = pCv.onpointercancel = () => drag = null;
+}
+$('#pSave').onclick = () => { if (!pCv) return; const a = document.createElement('a'); a.download = 'joy-stroberi.jpg'; a.href = pCv.toDataURL('image/jpeg', .9); a.click(); };
+$('#pSend').onclick = async () => {
+  if (!pCv) return; const st = $('#pStatus');
+  if (!WORKER_URL) { st.textContent = 'Jalan ke bulan belum tersambung. Sementara simpan ke galeri dulu ya 🙏'; return; }
+  $('#pSend').disabled = true; st.textContent = 'lagi dikirim…';
+  const blob = await new Promise(r => pCv.toBlob(r, 'image/jpeg', .88));
+  const fd = new FormData(); fd.append('photo', blob, 'foto.jpg'); fd.append('note', $('#pNote').value.trim());
+  const res = await sendForm(fd);
+  st.textContent = res.ok ? 'Sampai di bulan 🌙 makasih udah berbagi momenmu' : 'Belum kekirim, coba lagi sebentar ya.';
+  if (res.ok) { rain(['💌', '🍓'], 16); $('#pNote').value = ''; }
+  $('#pSend').disabled = false;
+};
+
+/* ======== muncul pelan ======== */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: .15 });
+$$('.rv').forEach(el => io.observe(el));
+
+/* ======== scroll → posisi di dunia ======== */
+const secs = $$('[data-st]');
+function readScroll() {
+  const y = scrollY, vh = innerHeight; let idx = 0;
+  secs.forEach((s, i) => { if (y + vh * .5 >= s.offsetTop) idx = i; });
+  const cur = secs[idx], nx = secs[idx + 1];
+  const st = +cur.dataset.st, st2 = nx ? +nx.dataset.st : st;
+  const p = clamp((y + vh * .5 - cur.offsetTop) / Math.max(1, cur.offsetHeight));
+  return st + (st2 - st) * (cur.classList.contains('ch') ? smooth(clamp((p - .6) / .4)) : 0);
+}
+
+/* ======================================================================
+   DUNIA 3D
+   ====================================================================== */
+let world = null;
+async function init3D() {
+  let THREE;
+  try { THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'); } catch (e) { document.body.classList.add('no3d'); return; }
+  const canvas = $('#three');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !LOW, powerPreference: 'low-power' }); } catch (e) { goLite(false); return; }
+  let pr = LOW ? 1 : Math.min(2, devicePixelRatio || 1); renderer.setPixelRatio(pr);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(38, 1, .1, 260);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0xd8b8c0, 1.6); scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(6, 12, 8); scene.add(sun);
+  scene.fog = new THREE.Fog(0xffd6e4, 30, 75);
+
+  const tex = (w, h, fn, rep) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.imageSmoothingEnabled = false; fn(g, (x, y, ww, hh, col) => { g.fillStyle = col; g.fillRect(x, y, ww, hh); });
+    const t = new THREE.CanvasTexture(c); t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter; t.colorSpace = THREE.SRGBColorSpace; t.generateMipmaps = false;
+    if (rep) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep[0], rep[1]); } return t; };
+  const mats = {};
+  const mat = (c, map) => { const k = c + (map ? map.uuid : ''); if (!map && mats[k]) return mats[k]; const m = new THREE.MeshLambertMaterial({ color: c, map: map || null }); if (!map) mats[k] = m; return m; };
+  const basic = c => new THREE.MeshBasicMaterial({ color: c });
+  const box = (w, h, d, m, x = 0, y = 0, z = 0, parent) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), typeof m === 'number' || typeof m === 'string' ? mat(m) : m); b.position.set(x, y, z); if (parent) parent.add(b); return b; };
+  const studTex = (s) => tex(16, 16, (g, P) => { P(0, 0, 16, 16, '#ffffff'); P(5, 4, 6, 1, '#e6e6e6'); P(4, 5, 8, 6, '#ececec'); P(5, 11, 6, 1, '#dcdcdc'); P(5, 5, 3, 2, '#fafafa'); }, s);
+
+  const SP = 34; // jarak antar stasiun
+  const SX = i => i * SP;
+  const pickables = [], wobblers = [];
+  function tappable(obj, key) { obj.traverse(o => { if (o.isMesh || o.isSprite) { o.userData.tapKey = key; o.userData.tapObj = obj; pickables.push(o); } }); return obj; }
+
+  /* ---------- avatar Joy ---------- */
+  const SKIN = '#b97c55', HAIR = 0x1f1a24;
+  function faceTex(mode) {
+    return tex(32, 32, (g, P) => {
+      P(0, 0, 32, 32, SKIN);
+      P(0, 0, 32, 7, '#1f1a24'); P(0, 7, 11, 2, '#1f1a24'); P(0, 9, 5, 1, '#1f1a24'); P(22, 7, 10, 1, '#1f1a24'); P(26, 8, 6, 2, '#1f1a24');
+      P(0, 0, 3, 32, '#1f1a24'); P(29, 0, 3, 32, '#1f1a24');
+      P(6, 2, 5, 1, '#3d3346');
+      // jepit
+      P(21, 4, 5, 2, '#ff9ab8'); P(22, 4, 1, 1, '#ffe0ea');
+      // kacamata bulat
+      for (let y = 0; y < 32; y++) for (let x = 0; x < 32; x++) {
+        const d1 = Math.hypot(x + .5 - 11, y + .5 - 16), d2 = Math.hypot(x + .5 - 21.5, y + .5 - 16);
+        if ((d1 > 3.7 && d1 < 4.8) || (d2 > 3.7 && d2 < 4.8)) P(x, y, 1, 1, '#3a2b33');
+      }
+      P(15, 15, 3, 1, '#3a2b33');
+      if (mode === 'sleepy') { P(9, 17, 4, 1, '#2a1f25'); P(20, 17, 4, 1, '#2a1f25'); }
+      else if (mode === 'happy') { P(9, 16, 1, 1, '#2a1f25'); P(10, 15, 2, 1, '#2a1f25'); P(12, 16, 1, 1, '#2a1f25'); P(20, 16, 1, 1, '#2a1f25'); P(21, 15, 2, 1, '#2a1f25'); P(23, 16, 1, 1, '#2a1f25'); }
+      else { P(10, 15, 2, 3, '#2a1f25'); P(10, 15, 1, 1, '#fff'); P(21, 15, 2, 3, '#2a1f25'); P(21, 15, 1, 1, '#fff'); }
+      const bl = mode === 'blush' ? '#f06a78' : '#e08a86';
+      P(5, 21, mode === 'blush' ? 4 : 3, 1, bl); P(mode === 'blush' ? 23 : 24, 21, mode === 'blush' ? 4 : 3, 1, bl);
+      if (mode === 'sleepy') P(15, 23, 3, 1, '#8e3d43');
+      else { P(13, 22, 1, 1, '#8e3d43'); P(14, 23, 4, 1, '#8e3d43'); P(18, 22, 1, 1, '#8e3d43'); }
+    });
+  }
+  const FACES = { normal: faceTex('normal'), blink: faceTex('sleepy'), sleepy: faceTex('sleepy'), happy: faceTex('happy'), blush: faceTex('blush') };
+  const OUT = {
+    stripe: { t: tex(32, 32, (g, P) => { for (let y = 0; y < 32; y += 8) { P(0, y, 32, 4, '#26232b'); P(0, y + 4, 32, 4, '#f3efe9'); } P(9, 0, 2, 16, '#3b4a7a'); P(21, 0, 2, 16, '#3b4a7a'); P(11, 15, 10, 2, '#3b4a7a'); P(12, 17, 8, 9, '#e8f1ff'); P(13, 19, 6, 2, '#6fa8dc'); P(13, 22, 4, 1, '#9aa7c0'); }),
+      a: tex(16, 32, (g, P) => { for (let y = 0; y < 32; y += 8) { P(0, y, 16, 4, '#26232b'); P(0, y + 4, 16, 4, '#f3efe9'); } P(0, 28, 16, 4, SKIN); }), l: 0x3d4766 },
+    plaid: { t: tex(32, 32, (g, P) => { for (let y = 0; y < 32; y += 4) for (let x = 0; x < 32; x += 4) P(x, y, 4, 4, ((x + y) / 4) % 2 ? '#2a2730' : '#f3efe9'); P(12, 0, 8, 3, SKIN); }),
+      a: tex(16, 32, (g, P) => { P(0, 0, 16, 10, '#2a2730'); P(0, 10, 16, 22, SKIN); for (let x = 0; x < 16; x += 4) P(x, 0, 2, 10, '#f3efe9'); }), l: 0x1f1d24 },
+    scrub: { t: tex(32, 32, (g, P) => { P(0, 0, 32, 32, '#5b8fd6'); P(0, 0, 8, 32, '#b9b4bb'); P(24, 0, 8, 32, '#b9b4bb'); P(13, 0, 6, 3, SKIN); P(14, 3, 4, 2, SKIN); P(15, 5, 2, 1, SKIN); P(10, 16, 5, 5, '#4a7cc2'); P(11, 16, 1, 3, '#f5f5f5'); }),
+      a: tex(16, 32, (g, P) => { P(0, 0, 16, 28, '#b9b4bb'); P(0, 28, 16, 4, SKIN); }), l: 0x5b8fd6 },
+    pajama: { t: tex(32, 32, (g, P) => { P(0, 0, 32, 32, '#c9b6ff'); for (let y = 2; y < 32; y += 6) for (let x = (y % 12 ? 2 : 5); x < 32; x += 6) P(x, y, 2, 2, '#fff'); P(15, 4, 2, 28, '#b39ff0'); P(15, 8, 2, 2, '#fff'); P(15, 16, 2, 2, '#fff'); }),
+      a: tex(16, 32, (g, P) => { P(0, 0, 16, 28, '#c9b6ff'); P(0, 28, 16, 4, SKIN); }), l: 0xc9b6ff },
+    berry: { t: tex(32, 32, (g, P) => { P(0, 0, 32, 32, '#e8475f'); P(0, 0, 32, 5, '#3f9a4c'); for (let x = 0; x < 32; x += 6) P(x + 1, 5, 4, 3, '#3f9a4c'); for (let y = 11; y < 32; y += 6) for (let x = (y % 12 ? 3 : 6); x < 32; x += 7) P(x, y, 2, 2, '#ffe2a8'); }),
+      a: tex(16, 32, (g, P) => { P(0, 0, 16, 28, '#e8475f'); P(0, 0, 16, 4, '#3f9a4c'); P(4, 12, 2, 2, '#ffe2a8'); P(10, 20, 2, 2, '#ffe2a8'); P(0, 28, 16, 4, SKIN); }), l: 0xfff8f3 },
+  };
+  let berryMode = false;
+  const joy = new THREE.Group(); scene.add(joy);
+  const mSkin = mat(SKIN), mHair = mat(HAIR);
+  const faceM = new THREE.MeshLambertMaterial({ map: FACES.normal });
+  const torsoM = new THREE.MeshLambertMaterial({ map: OUT.stripe.t }), armM = new THREE.MeshLambertMaterial({ map: OUT.stripe.a }), legM = new THREE.MeshLambertMaterial({ color: OUT.stripe.l });
+  const body = new THREE.Group(); joy.add(body);
+  const torso = box(2, 2, 1, torsoM, 0, 3, 0, body);
+  const limb = (x, y, m) => { const g = new THREE.Group(); g.position.set(x, y, 0); body.add(g); box(.98, 2, .98, m, 0, -1, 0, g); return g; };
+  const legL = limb(-.5, 2, legM), legR = limb(.5, 2, legM);
+  const armL = limb(-1.5, 4, armM), armR = limb(1.5, 4, armM);
+  const shoeM = mat(0x4a3340); [legL, legR].forEach(l => box(1, .25, 1.06, shoeM, 0, -1.9, .03, l));
+  const headP = new THREE.Group(); headP.position.y = 4; body.add(headP);
+  box(1.3, 1.3, 1.3, [mSkin, mSkin, mSkin, mSkin, faceM, mSkin], 0, .68, 0, headP);
+  box(1.42, .3, 1.42, mHair, 0, 1.43, -.01, headP);             // atas
+  box(1.42, 2.1, .34, mHair, 0, .5, -.58, headP);               // belakang (sebahu)
+  box(.24, 1.8, 1.3, mHair, -.7, .45, -.04, headP); box(.24, 1.8, 1.3, mHair, .7, .45, -.04, headP); // samping
+  box(.3, .5, .3, mHair, -.75, -.4, .2, headP); box(.3, .5, .3, mHair, .75, -.4, .2, headP);          // ujung bergelombang
+  box(1.42, .24, .2, mHair, 0, 1.2, .62, headP);                // poni
+  box(.34, .12, .08, 0xff9ab8, .34, 1.13, .72, headP);          // jepit
+  const hat = new THREE.Group(); headP.add(hat); hat.visible = isDec;
+  box(1.5, .3, 1.5, 0xffffff, 0, 1.6, 0, hat); box(1.2, .5, 1.2, 0xe53950, 0, 1.95, -.05, hat); box(.8, .4, .8, 0xe53950, .15, 2.35, -.1, hat); box(.35, .35, .35, 0xffffff, .45, 2.6, -.1, hat);
+  joy.traverse(o => { if (o.isMesh) { o.userData.joy = true; pickables.push(o); } });
+  let outfit = 'stripe';
+  function setOutfit(k) { if (k === outfit) return; outfit = k; torsoM.map = OUT[k].t; armM.map = OUT[k].a; legM.color.set(OUT[k].l); torsoM.needsUpdate = armM.needsUpdate = true; }
+  let faceMode = 'normal';
+  function setFace(k) { if (faceMode === k) return; faceMode = k; faceM.map = FACES[k]; faceM.needsUpdate = true; }
+
+  /* ---------- teman kodok ---------- */
+  const frog = new THREE.Group(); scene.add(frog);
+  { const G = mat(0x7cc86a), D = mat(0x5aa84c), Wt = mat(0xffffff), K = mat(0x1f1a24), Pk = mat(0xff9ab8);
+    box(1.1, .55, .9, G, 0, .35, 0, frog); box(.9, .2, .7, mat(0xd9f2b0), 0, .18, .12, frog);
+    box(.3, .3, .3, D, -.42, .78, .12, frog); box(.3, .3, .3, D, .42, .78, .12, frog);
+    box(.24, .24, .06, Wt, -.42, .8, .28, frog); box(.24, .24, .06, Wt, .42, .8, .28, frog);
+    box(.1, .1, .04, K, -.4, .78, .32, frog); box(.1, .1, .04, K, .44, .78, .32, frog);
+    box(.5, .05, .04, K, 0, .45, .46, frog); box(.14, .08, .04, Pk, -.38, .5, .46, frog); box(.14, .08, .04, Pk, .38, .5, .46, frog);
+    box(.3, .14, .4, D, -.55, .07, .25, frog); box(.3, .14, .4, D, .55, .07, .25, frog); }
+  frog.traverse(o => { if (o.isMesh) { o.userData.tapKey = 'frog'; o.userData.tapObj = frog; pickables.push(o); } });
+  let frogHop = 0, frogX = 0;
+  /* ---------- pembantu dekorasi ---------- */
+  const root = new THREE.Group(); scene.add(root);
+  const islands = [], near = [[], [], [], [], [], [], [], []];
+  function island(i, w, d, top, side, stud = true) {
+    const g = new THREE.Group(); g.position.x = SX(i); root.add(g); islands[i] = g;
+    const tm = stud ? new THREE.MeshLambertMaterial({ color: top, map: studTex([w / 2, d / 2]) }) : mat(top);
+    box(w, 1, d, [mat(side), mat(side), tm, mat(side), mat(side), mat(side)], 0, -.5, 0, g);
+    box(w - 1, 3, d - 1, mat(side), 0, -2.4, 0, g);
+    return g;
+  }
+  function tree(g, x, z, s = 1, leaf = 0x4fa35c) { box(.7 * s, 2.4 * s, .7 * s, 0x7a5235, x, 1.2 * s, z, g); box(2.6 * s, 2 * s, 2.6 * s, leaf, x, 3.2 * s, z, g); box(1.6 * s, 1.2 * s, 1.6 * s, leaf, x, 4.6 * s, z, g); }
+  function berry(g, id, x, y, z) {
+    const b = new THREE.Group(); b.position.set(x, y, z); g.add(b);
+    const red = mat(0xe8475f), seed = mat(0xffe2a8);
+    box(.7, .5, .7, red, 0, 0, 0, b); box(.5, .3, .5, red, 0, -.35, 0, b); box(.25, .2, .25, red, 0, -.55, 0, b);
+    box(.8, .14, .8, 0x3f9a4c, 0, .3, 0, b); box(.14, .25, .14, 0x2e7d32, 0, .48, 0, b);
+    box(.08, .08, .02, seed, -.15, .05, .36, b); box(.08, .08, .02, seed, .15, -.1, .36, b);
+    b.userData = { berry: id, spin: Math.random() * 6 }; b.traverse(o => { if (o.isMesh) { o.userData.berryG = b; pickables.push(o); } });
+    b.visible = !found.has(id); berries.push(b); return b;
+  }
+  const berries = [];
+  function windowsTex(cols, rows, lit = '#ffd98a', wall = '#3a3560', seed = 1) {
+    let s = seed; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    return tex(cols * 4, rows * 5, (g, P) => { P(0, 0, cols * 4, rows * 5, wall); for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) P(c * 4 + 1, r * 5 + 1, 2, 3, rnd() > .38 ? lit : '#26233f'); });
+  }
+
+  /* ---------- stasiun 0: spawn ---------- */
+  { const g = island(0, 24, 16, 0xffc2d1, 0xd98aa0);
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.8, .3, 24), mat(0xffffff)); pad.position.y = .15; g.add(pad);
+    const pad2 = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, .34, 24), mat(0xff8fab)); pad2.position.y = .17; g.add(pad2);
+    // stroberi raksasa
+    const s = new THREE.Group(); s.position.set(-7, 0, -4); g.add(s);
+    box(3.6, 3, 3.6, 0xe8475f, 0, 2.6, 0, s); box(2.6, 1.2, 2.6, 0xe8475f, 0, .7, 0, s); box(4, .6, 4, 0x3f9a4c, 0, 4.3, 0, s); box(.6, 1, .6, 0x2e7d32, 0, 5, 0, s);
+    [[-1, 3, 1.81], [.8, 2.2, 1.81], [0, 1.4, 1.81], [1.81, 3, 0], [-1.81, 2, .5]].forEach(([x, y, z]) => box(.3, .3, .05, 0xffe2a8, x, y, z, s));
+    tree(g, 8, -5, 1); tree(g, -10, 3, .8, 0x62b26b);
+    berry(g, 'b1', 9.6, .6, -2.6);
+    // papan nama
+    const sign = new THREE.Mesh(new THREE.BoxGeometry(4, 1.6, .2), new THREE.MeshLambertMaterial({ map: tex(40, 16, (gg, P) => { P(0, 0, 40, 16, '#fff8f3'); P(0, 0, 40, 1, '#e8475f'); P(0, 15, 40, 1, '#e8475f');
+      const L = { J: ['111', '001', '001', '101', '111'], O: ['111', '101', '101', '101', '111'], Y: ['101', '101', '111', '010', '010'] }; let x = 11;
+      ['J', 'O', 'Y'].forEach(ch => { L[ch].forEach((r, j) => [...r].forEach((c, i) => c === '1' && P(x + i * 2, 3 + j * 2, 2, 2, '#e8475f'))); x += 7; }); }) }));
+    sign.position.set(5, 3, -5); g.add(sign); tappable(sign, 'sign'); tappable(s, 'straw'); box(.25, 2.4, .25, 0x7a5235, 5, 1.2, -5.15, g);
+  }
+  /* ---------- stasiun 1: siantar ---------- */
+  { const g = island(1, 26, 18, 0x8fd18a, 0x6a8a4a);
+    function house(x, z, wall, roof) { box(4.4, 3, 3.6, wall, x, 1.5, z, g); box(5, .5, 4.2, roof, x, 3.25, z, g); box(4, .5, 3.4, roof, x, 3.7, z, g); tappable(box(2.6, .5, 2.4, roof, x, 4.15, z, g), 'house'); tappable(g.children[g.children.length - 2], 'house'); tappable(g.children[g.children.length - 3], 'house'); tappable(g.children[g.children.length - 4], 'house');
+      box(1, 1.8, .1, 0x7b5a44, x - .8, .9, z + 1.82, g); box(.9, .8, .1, 0xffd98a, x + 1, 1.8, z + 1.82, g); }
+    house(-7, -4, 0xf1e4d0, 0x9aa3ad); house(0, -6, 0xfff1e0, 0xa9b3bd); house(7.5, -4, 0xf3d9d0, 0x8f99a3);
+    tree(g, -11, 2, .9); tree(g, 11, 3, 1.1); tree(g, 3.5, -8.5, 1.2, 0x3f8f4d);
+    // becak motor merah
+    const bk = new THREE.Group(); bk.position.set(-5.5, 0, 4); bk.rotation.y = .4; g.add(bk);
+    box(2.4, .9, 1.6, 0xc0392b, 0, 1, 0, bk); box(2.4, 1.4, .1, 0x8e2a20, 0, 2, -.75, bk); box(2.4, .1, 1.6, 0x8e2a20, 0, 2.7, -.1, bk);
+    box(1.6, .3, .3, 0x333, 1.9, .9, -.4, bk); box(.3, 1, .3, 0x333, 2.6, 1.2, -.4, bk);
+    [[-.7, .9], [.7, .9], [2.6, -.4]].forEach(([x, z]) => box(.7, .7, .25, 0x222222, x, .35, z, bk));
+    tappable(bk, 'becak');
+    // koper
+    box(1, 1.3, .55, 0xff8fab, 1.9, .9, .4, g); box(.5, .1, .1, 0x7a3b4a, 1.9, 1.7, .4, g); box(1.02, .12, .57, 0xe06c8a, 1.9, 1, .4, g);
+    berry(g, 'b2', 7.5, 4.9, -4);
+  }
+  /* ---------- stasiun 2: jakarta ---------- */
+  { const g = island(2, 26, 18, 0xb4b0c4, 0x6c6880);
+    [[-9, -5, 3, 9, 3], [-4.5, -7, 4, 13, 4], [1, -7.5, 3.5, 7, 2], [6, -6, 4, 15, 5], [10.5, -4, 3, 10, 6], [-10.5, 1, 2.6, 5, 7]].forEach(([x, z, w, h, sd]) => {
+      const t = windowsTex(Math.round(w * 1.5), Math.round(h * 1.2), '#ffd98a', '#4a4570', sd); const side = new THREE.MeshLambertMaterial({ map: t });
+      tappable(box(w, h, w, [side, side, mat(0x5a5580), mat(0x5a5580), side, side], x, h / 2, z, g), 'tower');
+    });
+    // monumen
+    const mo = new THREE.Group(); mo.position.set(-1, 0, -12); g.add(mo);
+    box(4, .8, 4, 0xf2efe8, 0, .4, 0, mo); box(1.2, 9, 1.2, 0xf2efe8, 0, 5, 0, mo); box(1.8, .5, 1.8, 0xf2efe8, 0, 9.6, 0, mo); box(.7, 1.1, .7, 0xffc93c, 0, 10.4, 0, mo); tappable(mo, 'monas');
+    // lampu jalan
+    [-6, 8].forEach(x => { box(.2, 4.2, .2, 0x55506e, x, 2.1, 3, g); box(1, .25, .5, 0x55506e, x + .4, 4.2, 3, g); box(.6, .2, .4, basic(0xffe9a8), x + .6, 4.05, 3, g); });
+    box(26, .05, 2.2, 0x55506e, 0, .03, 6.2, g); for (let x = -11; x < 12; x += 3) box(1.4, .07, .2, 0xffffff, x, .05, 6.2, g);
+    berry(g, 'b3', 1, 7.6, -7.5);
+  }
+  /* ---------- stasiun 3: klinik ---------- */
+  { const g = island(3, 24, 16, 0xeef6f2, 0x9fc7bb);
+    box(24, 6, .5, 0xdff3ee, 0, 3, -7.8, g); box(.5, 6, 8, 0xdff3ee, -11.8, 3, -4, g);
+    // poster tulang belakang
+    const pt = tex(16, 22, (gg, P) => { P(0, 0, 16, 22, '#ffffff'); P(0, 0, 16, 1, '#6cbfa9'); P(6, 2, 4, 3, '#e9d8c4'); for (let i = 0; i < 7; i++) P(7, 6 + i * 2, 2, 1, '#d9c3a8'); P(4, 8, 8, 1, '#e9d8c4'); P(4, 10, 8, 1, '#e9d8c4'); P(5, 20, 6, 1, '#d9c3a8'); });
+    const poster = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 3.2), new THREE.MeshLambertMaterial({ map: pt })); poster.position.set(-6, 3.6, -7.5); g.add(poster);
+    // bed terapi
+    tappable(box(5, .5, 2.2, 0x6fa8dc, -4.5, 1.6, -4.5, g), 'bed'); box(1.4, .3, 2, 0xffffff, -6.4, 2, -4.5, g);
+    [[-6.6, -5.4], [-2.4, -5.4], [-6.6, -3.6], [-2.4, -3.6]].forEach(([x, z]) => box(.2, 1.4, .2, 0x8a8f99, x, .7, z, g));
+    // palang sejajar
+    const bar = mat(0xc0c6cf);
+    [[4, -2], [10, -2], [4, -5], [10, -5]].forEach(([x, z]) => box(.2, 2.4, .2, bar, x, 1.2, z, g)); box(6.2, .15, .15, bar, 7, 2.4, -2, g); box(6.2, .15, .15, bar, 7, 2.4, -5, g);
+    const ball = new THREE.Mesh(new THREE.IcosahedronGeometry(1.1, 1), mat(0xff8fab)); ball.position.set(-9, 1.1, 3); g.add(ball); tappable(ball, 'ball');
+    box(1.6, .2, .2, 0x7d8597, 8, .5, 3, g); box(.4, .7, .7, 0xff8fab, 7.2, .5, 3, g); box(.4, .7, .7, 0xff8fab, 8.8, .5, 3, g);
+    berry(g, 'b4', -4.5, .55, -4.5);
+  }
+  /* ---------- stasiun 4: kamar ---------- */
+  const lamp = new THREE.PointLight(0xffc77a, 0, 18);
+  { const g = island(4, 22, 15, 0xc9a27e, 0x8a6a52, false);
+    for (let x = -10; x <= 10; x += 2) box(.05, .02, 15, 0xb38c69, x, .01, 0, g);
+    box(22, 7, .5, 0x4b4f86, 0, 3.5, -7.2, g); box(.5, 7, 14, 0x565a93, -10.8, 3.5, 0, g);
+    box(4, 3, .1, 0x1e2147, 4, 4.4, -6.9, g); box(4.4, .3, .2, 0xf1e4d0, 4, 2.8, -6.85, g); box(.15, 3, .12, 0xf1e4d0, 4, 4.4, -6.82, g);
+    for (let i = 0; i < 6; i++) box(.08, .08, .02, basic(0xfff3c0), 2.4 + Math.random() * 3.2, 3.4 + Math.random() * 2, -6.83, g);
+    // kasur
+    box(7, .9, 4, 0xfff2f5, -5, .9, -4.6, g); box(7.2, .4, 4.2, 0xc58f6a, -5, .25, -4.6, g); box(.4, 2.6, 4.2, 0xc58f6a, -8.7, 1.3, -4.6, g);
+    box(4.6, .3, 4.1, 0xff9ab8, -3.6, 1.45, -4.6, g); box(1.6, .5, 2.6, 0xffffff, -7.6, 1.5, -4.6, g);
+    // laptop dengan avatar kotak kecil di layar
+    const scr = tex(24, 16, (gg, P) => { P(0, 0, 24, 16, '#8fd3ff'); P(0, 12, 24, 4, '#5fae6e'); P(3, 9, 4, 3, '#ff8fab'); P(15, 7, 6, 5, '#ffd44d'); P(11, 3, 3, 3, '#f2c94c'); P(11, 6, 3, 3, '#e8475f'); P(11, 9, 1, 3, '#3d4766'); P(13, 9, 1, 3, '#3d4766'); });
+    box(1.8, .1, 1.3, 0xcfd4dd, -2.6, 1.65, -3.6, g);
+    const lt = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.2, .08), [mat(0xcfd4dd), mat(0xcfd4dd), mat(0xcfd4dd), mat(0xcfd4dd), new THREE.MeshBasicMaterial({ map: scr }), mat(0xcfd4dd)]);
+    lt.position.set(-2.6, 2.25, -4.2); lt.rotation.x = -.15; g.add(lt); tappable(lt, 'laptop');
+    // lampu
+    box(.2, 3, .2, 0x8a6a52, 8, 1.5, -5, g); tappable(box(1.2, .9, 1.2, basic(0xffd98a), 8, 3.3, -5, g), 'lamp');
+    lamp.position.set(SX(4) + 7, 4, -3); scene.add(lamp); near[4].push(lamp);
+    berry(g, 'b5', -7.6, 2.2, -4.6);
+  }
+  /* ---------- stasiun 5: kebun stroberi ---------- */
+  const plant = new THREE.Group(); const plantParts = [];
+  const drops = [];
+  { const g = island(5, 26, 18, 0x9ed98c, 0x6a8a4a);
+    for (let x = -11; x <= 11; x += 2.2) { box(.3, 1.6, .3, 0xf1e4d0, x, .8, -8, g); } box(26, .25, .2, 0xf1e4d0, 0, 1.3, -8, g); box(26, .25, .2, 0xf1e4d0, 0, .7, -8, g);
+    [-3, 0, 3].forEach(z => box(18, .35, 1.6, 0x8a5a3c, 2, .17, z - 2, g));
+    for (let x = -5; x <= 9; x += 2.4) [-5, -2, 1].forEach(z => { box(.9, .5, .9, 0x4fae5a, x, .55, z, g); if ((x + z) % 3 === 0) box(.25, .25, .25, 0xe8475f, x + .3, .4, z + .45, g); });
+    plant.position.set(SX(5) + 3, 0, -.6); scene.add(plant); near[5].push(plant); plant.scale.setScalar(1.3);
+    box(2.2, .5, 2.2, 0x8a5a3c, 0, .25, 0, plant);
+    box(2.6, 3.2, 2.6, new THREE.MeshBasicMaterial({ visible: false }), 0, 1.6, 0, plant);
+    const P = (st, w, h, d, c, x, y, z) => { const m = box(w, h, d, c, x, y, z, plant); m.userData.st = st; plantParts.push(m); return m; };
+    P(0, .2, 1, .2, 0x3f9a4c, 0, 1, 0); P(0, .6, .1, .3, 0x4fae5a, -.3, 1.4, 0); P(0, .6, .1, .3, 0x4fae5a, .3, 1.4, 0);
+    P(1, 1.2, .2, .9, 0x4fae5a, -.8, 1.2, .3); P(1, 1.2, .2, .9, 0x4fae5a, .8, 1.3, -.2);
+    P(2, 1.1, .2, 1, 0x62c06f, -.2, 1.9, -.6); P(2, 1, .2, 1, 0x62c06f, .5, 1.7, .7); P(2, .9, .2, .8, 0x4fae5a, -1, 1.6, -.6);
+    [[-.9, 2.1, .6], [.9, 2.2, -.3], [.1, 2.5, .1]].forEach(([x, y, z], i) => { P(3, .45, .45, .45, 0xffffff, x, y, z); P(3, .2, .2, .2, 0xffd44d, x, y + .2, z + .2); });
+    [[-1, 1.3, .9, 4, 0x9bd16a], [1, 1.2, .6, 4, 0x9bd16a], [.2, 1.1, 1.1, 4, 0x9bd16a], [-1, 1.3, .9, 5, 0xff9ab8], [1, 1.2, .6, 5, 0xff9ab8], [.2, 1.1, 1.1, 5, 0xff9ab8], [-1, 1.3, .9, 6, 0xe8475f], [1, 1.2, .6, 6, 0xe8475f], [.2, 1.1, 1.1, 6, 0xe8475f]]
+      .forEach(([x, y, z, st, c]) => { const m = P(st, .55, .55, .55, c, x, y, z); m.userData.exact = true; });
+    // ember siram
+    for (let i = 0; i < 14; i++) { const d = box(.1, .3, .1, basic(0x7cc7ff), 0, -10, 0); d.visible = false; plant.add(d); drops.push(d); }
+    tree(g, -10, -4, 1.1, 0x3f8f4d);
+    berry(g, 'b6', -9.9, 1.75, -7.9);
+  }
+  tappable(plant, 'plant');
+  function refreshPlant() { plantParts.forEach(m => { const st = m.userData.st; m.visible = m.userData.exact ? st === Math.min(6, Math.max(4, plantStage)) && plantStage >= 4 : plantStage >= st && !(st === 3 && plantStage >= 5); }); }
+  refreshPlant();
+  let waterT = -9;
+  /* ---------- stasiun 6: bukit malam ---------- */
+  const candle = new THREE.PointLight(0xffb35c, 0, 12), flame = box(.18, .35, .18, basic(0xffd166));
+  const flies = [];
+  { const g = island(6, 26, 18, 0x2f4a3a, 0x1d2c25, false);
+    box(14, 3, 10, 0x2f4a3a, -6, 1.5, -8, g); box(9, 2, 8, 0x2f4a3a, -6, 3.5, -8, g);
+    const ch = new THREE.Group(); ch.position.set(-6, 4.5, -8); g.add(ch);
+    box(4, 2.6, 3, 0xf2efe8, 0, 1.3, 0, ch); box(4.6, .5, 3.6, 0x8e3b3b, 0, 2.8, 0, ch); box(3.6, .5, 3, 0x8e3b3b, 0, 3.25, 0, ch); box(2.2, .5, 2.4, 0x8e3b3b, 0, 3.7, 0, ch);
+    box(1.4, 3, 1.4, 0xf2efe8, 1.2, 3.3, .2, ch); box(.18, 1.3, .18, basic(0xffe9a8), 1.2, 5.4, .2, ch); box(.8, .18, .18, basic(0xffe9a8), 1.2, 5.6, .2, ch);
+    [-1.2, 0, 1.2].forEach(x => box(.5, .9, .06, basic(0xffd98a), x - .3, 1.4, 1.52, ch)); tappable(ch, 'church');
+    tappable(box(.5, 1, .5, 0xf4efe6, 4.5, .5, 1.5, g), 'candle'); flame.position.set(SX(6) + 4.5, 1.2, 1.5); scene.add(flame); candle.position.set(SX(6) + 4.5, 1.6, 1.5); scene.add(candle); near[6].push(candle);
+    for (let i = 0; i < 18; i++) { const f = box(.12, .12, .12, basic(0xfff3a0), SX(6) + (Math.random() - .5) * 22, 1 + Math.random() * 4, (Math.random() - .5) * 12); f.userData.p = Math.random() * 7; scene.add(f); flies.push(f); }
+    tree(g, 9, -5, 1, 0x24392d); tree(g, 11, 2, .8, 0x24392d);
+  }
+  /* ---------- stasiun 7: atap & bulan ---------- */
+  const plane = new THREE.Group();
+  { const g = island(7, 22, 14, 0x9b5b5b, 0x6e3d3d, false);
+    for (let z = -6; z <= 6; z += 1.2) box(22, .15, .2, 0x7f4545, 0, .05, z, g);
+    box(.15, 6, .15, 0x9aa0b5, -8, 3, -4, g); box(3, .12, .12, 0x9aa0b5, -8, 5, -4, g); box(2, .12, .12, 0x9aa0b5, -8, 5.8, -4, g);
+    box(1.6, 1.4, 1.6, 0xd9d4cc, 7, .7, -4, g); box(1.2, .8, 1.2, 0x9aa0b5, 7, 1.8, -4, g);
+    const city = new THREE.Group(); scene.add(city); near[7].push(city);
+    for (let i = 0; i < (LOW ? 20 : 40); i++) { const x = (Math.random() - .5) * 80, z = -20 - Math.random() * 30, h = 3 + Math.random() * 12; box(2 + Math.random() * 3, h, 3, 0x262a52, SX(7) + x, h / 2 - 8, z, city); if (Math.random() > .4) box(.4, .4, .05, basic(0xffd98a), SX(7) + x, h - 9, z + 1.55, city); }
+    plane.position.set(SX(7), 6, -2); scene.add(plane); near[7].push(plane);
+    const pm = mat(0xffffff); box(1, .06, .5, pm, 0, 0, 0, plane); box(.8, .3, .06, pm, -.1, .15, 0, plane); box(1.6, 1, 1.2, new THREE.MeshBasicMaterial({ visible: false }), 0, .1, 0, plane); tappable(plane, 'plane');
+    berry(g, 'b7', -8, 6.5, -4);
+  }
+  // bulan dengan fase asli
+  const moonT = tex(64, 64, (g, P) => {
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+      const nx = (x + .5 - 32) / 30, ny = (y + .5 - 32) / 30; if (nx * nx + ny * ny > 1) continue;
+      const w = Math.sqrt(1 - ny * ny), k = Math.cos(2 * Math.PI * moonP);
+      const lit = moonP < .5 ? nx > w * k : nx < -w * k;
+      const crater = ((x - 22) ** 2 + (y - 24) ** 2 < 30) || ((x - 40) ** 2 + (y - 38) ** 2 < 50) || ((x - 30) ** 2 + (y - 48) ** 2 < 16);
+      P(x, y, 1, 1, lit ? (crater ? '#efdca8' : '#fff2c4') : '#3b4170');
+    }
+  });
+  moonT.magFilter = THREE.LinearFilter;
+  const moon = new THREE.Sprite(new THREE.SpriteMaterial({ map: moonT, fog: false })); moon.scale.set(6.5, 6.5, 1); moon.position.set(SX(7) + 4, 10.5, -30); scene.add(moon); near[7].push(moon); tappable(moon, 'moon');
+  // bintang
+  const starG = new THREE.BufferGeometry(); const sp = [];
+  for (let i = 0; i < 500; i++) { const x = -40 + Math.random() * (SX(7) + 100), y = 6 + Math.random() * 50, z = -45 - Math.random() * 30; sp.push(x, y, z); }
+  starG.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+  const starM = new THREE.PointsMaterial({ color: 0xffffff, size: .35, transparent: true, opacity: 0, fog: false }); scene.add(new THREE.Points(starG, starM));
+  // salju Desember
+  let snow = null;
+  if (isDec) { const sg = new THREE.BufferGeometry(), s = []; for (let i = 0; i < (LOW ? 200 : 600); i++) s.push(-20 + Math.random() * (SX(7) + 40), Math.random() * 20, -10 + Math.random() * 20); sg.setAttribute('position', new THREE.Float32BufferAttribute(s, 3)); snow = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffffff, size: .18 })); scene.add(snow); }
+  // jembatan antar pulau
+  for (let i = 0; i < 7; i++) { const x0 = SX(i) + 11, x1 = SX(i + 1) - 11; const n = Math.round((x1 - x0) / 2.2);
+    for (let k = 0; k < n; k++) box(1.8, .5, 2.6, new THREE.MeshLambertMaterial({ color: [0xffffff, 0xffc2d1][k % 2], map: studTex([1, 1]) }), x0 + 1.1 + k * (x1 - x0) / n, -.25 - Math.sin(k / (n - 1) * Math.PI) * -.6, 2, root); }
+
+  /* ---------- per stasiun: langit, kamera, baju ---------- */
+  const STN = [
+    { sky: 0xffd6e4, night: 0, cam: [0, 4.8, 14], look: [0, 3.4, 0], out: 'stripe' },
+    { sky: 0xbfe6ff, night: 0, cam: [2, 5.5, 15], look: [0, 1.6, 0], out: 'stripe' },
+    { sky: 0xd4b8ff, night: .25, cam: [-2, 5, 15], look: [0, 2, 0], out: 'plaid' },
+    { sky: 0xd5f2ea, night: 0, cam: [2, 5, 14], look: [0, 1.6, 0], out: 'scrub' },
+    { sky: 0x2e3266, night: .7, cam: [3, 4.6, 13], look: [-1, 1.6, 0], out: 'pajama' },
+    { sky: 0xc6ecff, night: 0, cam: [1, 5.5, 15], look: [1.5, 1.4, 0], out: 'stripe' },
+    { sky: 0x141a3c, night: 1, cam: [2, 4.4, 14], look: [0, 2, 0], out: 'stripe' },
+    { sky: 0x1b2150, night: 1, cam: [-3, 3.6, 13], look: [1.5, 2.6, -2], out: 'plaid' },
+  ];
+  const JOYX = [0, -2, 0, 1, 1, -3, 1.5, -1];
+  const cA = new THREE.Color(), cB = new THREE.Color(), skyC = new THREE.Color();
+  const lerpArr = (a, b, t) => a.map((v, i) => lerp(v, b[i], t));
+
+  /* ---------- emote & bubble ---------- */
+  let emote = null, emoteT = 0, bubbleT = 0, bubbleTxt = '';
+  const bubble = $('#bubble');
+  function say(t) { bubbleTxt = t; bubble.textContent = t; bubbleT = 3; }
+  function doEmote(k) { if (k === 'none') return; if (k === 'frog') { frogHop = 1; sfx('kwek'); return; } if (k === 'berry') { berryMode = !berryMode; k = 'jump'; } emote = k; emoteT = k === 'dance' ? 3 : 1.4; if (k === 'blush') { setFace('blush'); } }
+
+  /* ---------- sentuhan ---------- */
+  const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
+  let downAt = null;
+  addEventListener('pointerdown', e => { downAt = { x: e.clientX, y: e.clientY, t: performance.now() }; }, { passive: true });
+  addEventListener('pointerup', e => {
+    if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 10 || performance.now() - downAt.t > 600) return;
+    if (e.target.closest('.card,.hud,.modal,button,input,textarea,label,a')) return;
+    v2.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(v2, cam);
+    const hits = ray.intersectObjects(pickables.filter(o => { let p = o; while (p) { if (!p.visible) return false; p = p.parent; } return true; }), false);
+    if (!hits.length) return;
+    const h = hits[0].object;
+    if (h.userData.berryG) { const b = h.userData.berryG; b.userData.pop = 1; gotBerry(b.userData.berry); }
+    else if (h.userData.joy) {
+      joyTaps++; clearTimeout(joyTapT); joyTapT = setTimeout(() => joyTaps = 0, 2500);
+      if (joyTaps >= 7) { joyTaps = 0; say('PESTA DANSA! 🎉'); doEmote('dance'); rain(['🎉', '🍓', '✨', '💃'], 30); sfx('party'); return; }
+      const L = ['hehe 🍓', 'Horas!', 'semangat!', 'jangan lupa minum 💧', 'aku bisa kok 💪', '♪', 'geli ih 😆', 'iya iya, aku hebat 😌', 'jangan dipencet terus 😳', 'udah makan belum?', 'Diatei tupa! 🤍', 'kamu juga hebat!'];
+      say(L[Math.floor(Math.random() * L.length)]); doEmote(['jump', 'wave', 'dance'][Math.floor(Math.random() * 3)]); blip(880, .05);
+    }
+    else if (h.userData.tapKey) tapThing(h.userData.tapKey, h.userData.tapObj);
+  });
+
+  let joyTaps = 0, joyTapT;
+  const TAPL = {
+    straw: ['stroberi raksasa! 🍓', 'manis kayak kamu 🍓', 'jangan dimakan, ini dekorasi 😆'],
+    sign: ['JOY = aku! 🍓', 'nama paling bagus 😌'],
+    house: ['rumah… 🏡', 'kangen dapur rumah 🥺', 'atap seng, bunyinya kalau hujan 🌧️'],
+    becak: ['ngeeeng! 🛺', 'becak Siantar paling keren 😎', 'tin tin!'],
+    tower: ['lantai 20? naik tangga? nggak deh 😵', 'Jakarta nggak ada habisnya 🏙️', 'lift-nya rusak lagi…'],
+    monas: ['Jakarta! 🗼', 'tapi Siantar tetap rumah 😌', 'pernah naik ke puncaknya belum?'],
+    bed: ['pasien berikutnya… kamu! rebahan 😌', 'rebahan 5 menit boleh 🛏️'],
+    ball: ['boing! ⚽', 'latihan keseimbangan 🤸‍♀️', 'boing boing!'],
+    laptop: ['5 menit lagi… katanya 😤', 'obby-nya susah banget 😭', 'laporan praktik belum selesai 👀'],
+    lamp: ['klik 💡', 'lampu tidur ✨'],
+    church: ['semoga hatimu tenang 🤍', 'damai sejahtera buatmu 🤍'],
+    candle: null, plant: null,
+    moon: [`bulan: hai Joy 🌙 aku ${moonLit}% terang malam ini`, 'bulan: aku lihat Siantar juga dari sini 🌙', 'bulan: tidur, Joy 😤🌙'],
+    plane: ['pesawat kertas bawa salam dari Siantar ✈️', 'mendarat di hatimu ✈️💗', 'wuuush ✈️'],
+  };
+  function tapThing(k, obj) {
+    obj.userData.wob = 1; if (!wobblers.includes(obj)) wobblers.push(obj);
+    if (k === 'candle') { $('#candleBtn').click(); return; }
+    if (k === 'plant') { $('#waterBtn').click(); return; }
+    if (k === 'frog') { frogHop = 1; sfx('kwek'); toast(['kwek! 🐸', 'kwek kwek 🐸💚', 'aku temenmu di dunia ini 🐸', 'semangat Joy, kwek!'][Math.floor(Math.random() * 4)]); return; }
+    if (k === 'straw') rain(['🍓'], 18);
+    if (k === 'becak') { blip(392, .07); blip(392, .07, .18); }
+    else blip(784 + Math.random() * 400, .05);
+    const L = TAPL[k]; if (L) toast(L[Math.floor(Math.random() * L.length)]);
+  }
+  /* ---------- loop ---------- */
+  let W = 0, Hh = 0;
+  function size() { W = innerWidth; Hh = innerHeight; renderer.setSize(W, Hh, false); cam.aspect = W / Hh; cam.updateProjectionMatrix(); }
+  addEventListener('resize', size); size();
+  const camPos = new THREE.Vector3(0, 5, 30), camLook = new THREE.Vector3(), tP = new THREE.Vector3(), tL = new THREE.Vector3(), headW = new THREE.Vector3();
+  let lastStep = 0, firstFrame = true, last = performance.now(), jx = 0, jr = 0, walkPh = 0, blinkAt = 2, tm = 0;
+  let cap = LOW, stopped = false, fAcc = 0, fN = 0;
+  function frame() {
+    if (stopped) return;
+    const t = performance.now();
+    if (cap && t - last < 30) { requestAnimationFrame(frame); return; }
+    const dt = Math.min(.05, (t - last) / 1000);
+    if (tm > 3 && document.visibilityState === 'visible') { fAcc += t - last; fN++;
+      if (fN >= 50) { const avg = fAcc / fN; fAcc = fN = 0;
+        if (avg > 45 && (pr > .75 || !cap)) { cap = true; pr = Math.max(.75, pr - .25); renderer.setPixelRatio(pr); size(); }
+        else if (avg > 70 && pr <= .75) { stopped = true; goLite(true); return; } } }
+    last = t; tm += dt;
+    const S = clamp(readScroll(), 0, 7), i0 = Math.floor(S), i1 = Math.min(7, i0 + 1), f = S - i0;
+    const A = STN[i0], B = STN[i1];
+    islands.forEach((g, i) => g.visible = Math.abs(i - S) < 1.3); near.forEach((arr, i) => arr.forEach(o => o.visible = Math.abs(i - S) < 1.3));
+    // langit
+    cA.set(A.sky); cB.set(B.sky); skyC.copy(cA).lerp(cB, f); renderer.setClearColor(skyC); scene.fog.color.copy(skyC); $('#sky').style.background = '#' + skyC.getHexString();
+    const night = lerp(A.night, B.night, f); starM.opacity = night;
+    hemi.intensity = 1.6 - night * 1.05; sun.intensity = 1.6 - night * 1.25;
+    lamp.intensity = clamp(1 - Math.abs(S - 4) * 1.5) * 40;
+    candle.intensity = candleLit ? 18 + Math.sin(tm * 9) * 3 : 0; flame.visible = candleLit; flame.scale.y = 1 + Math.sin(tm * 11) * .15;
+    // Joy
+    const tx = SX(S) + lerp(JOYX[i0], JOYX[i1], f);
+    const vx = (tx - jx); jx += vx * Math.min(1, dt * 5);
+    const moving = Math.abs(vx) > .08;
+    setOutfit(berryMode ? 'berry' : f < .5 ? A.out : B.out);
+    const wantR = moving ? Math.sign(vx) * Math.PI / 2 : (S > 6.5 ? -.35 : 0);
+    jr += (wantR - jr) * Math.min(1, dt * 7);
+    walkPh += dt * (moving ? 10 : 0);
+    { const st = Math.floor(walkPh / Math.PI); if (moving && st !== lastStep) sfx('step'); lastStep = st; }
+    let sw = moving ? Math.sin(walkPh) * .8 : 0, by = 0, armRz = 0, armLz = 0, armRx = -sw, armLx = sw;
+    if (emote) {
+      emoteT -= dt; const e = emoteT;
+      if (emote === 'jump') by = Math.max(0, Math.sin((1.4 - e) / 1.4 * Math.PI)) * 1.6;
+      if (emote === 'wave') { armRz = 2.6 + Math.sin(tm * 14) * .35; }
+      if (emote === 'dance') { by = Math.abs(Math.sin(tm * 8)) * .5; armRz = 2.4 + Math.sin(tm * 8) * .5; armLz = -2.4 - Math.sin(tm * 8) * .5; body.rotation.y = Math.sin(tm * 4) * .6; }
+      if (e <= 0) { emote = null; body.rotation.y = 0; if (faceMode === 'blush') setFace('normal'); }
+    }
+    legL.rotation.x = sw; legR.rotation.x = -sw; armL.rotation.x = armLx; armR.rotation.x = armRx; armR.rotation.z = armRz; armL.rotation.z = armLz;
+    joy.position.set(jx, by + (moving ? Math.abs(Math.sin(walkPh)) * .12 : 0), 0); joy.rotation.y = jr;
+    // kodok ikut
+    frogX += (jx + 2.4 - frogX) * Math.min(1, dt * 3);
+    if (frogHop > 0) frogHop = Math.max(0, frogHop - dt * 1.6);
+    const fh = frogHop > 0 ? Math.sin((1 - frogHop) * Math.PI) * 1.3 : (Math.abs(jx + 2.4 - frogX) > .2 ? Math.abs(Math.sin(tm * 9)) * .35 : 0);
+    frog.position.set(frogX, fh, 1.2); frog.rotation.y = Math.abs(jx + 2.4 - frogX) > .2 ? Math.sign(jx + 2.4 - frogX) * Math.PI / 2 : -.3;
+    // wajah
+    blinkAt -= dt;
+    if (faceMode !== 'blush') {
+      const sleepy = Math.abs(S - 4) < .35;
+      if (blinkAt < 0) { setFace('blink'); if (blinkAt < -.13) { blinkAt = 2.5 + Math.random() * 3; } }
+      else setFace(sleepy ? 'sleepy' : (emote === 'dance' || emote === 'jump' || moving) ? 'happy' : 'normal');
+    }
+    // stroberi berputar
+    berries.forEach(b => { if (b.userData.pop) { b.userData.pop += dt * 3; b.scale.setScalar(Math.max(0, 1.4 - b.userData.pop * .5)); b.position.y += dt * 2; if (b.userData.pop > 2.8) b.visible = false; } else b.rotation.y += dt * 1.2; });
+    wobblers.forEach(o => { if (!o.userData.wob) return; o.userData.wob = Math.max(0, o.userData.wob - dt * 2); const w = Math.sin(o.userData.wob * 18) * o.userData.wob * .12; if (!o.isSprite) { o.userData.bs = o.userData.bs || o.scale.clone(); o.scale.set(o.userData.bs.x * (1 - w), o.userData.bs.y * (1 + w), o.userData.bs.z * (1 - w)); } });
+    // tanaman & siraman
+    const wt = tm - waterT;
+    drops.forEach((d, k) => { d.visible = wt < 1.4; if (d.visible) { const ph = ((wt * 2 + k / drops.length) % 1); d.position.set(((k * 37) % 10) / 10 * 2 - 1, 4 - ph * 3.5, ((k * 53) % 10) / 10 * 2 - 1); } });
+    plant.scale.setScalar(1.3 + Math.max(0, .2 - wt * .25));
+    // kunang-kunang, pesawat kertas, salju
+    flies.forEach(fl => { fl.position.y += Math.sin(tm + fl.userData.p) * .005; fl.visible = night > .5; });
+    plane.position.x = SX(7) - 14 + ((tm * 2.2) % 28); plane.position.y = 6 + Math.sin(tm) * .6;
+    if (snow) { const a = snow.geometry.attributes.position; for (let k = 0; k < a.count; k++) { let y = a.getY(k) - dt * 1.2; if (y < 0) y = 20; a.setY(k, y); } a.needsUpdate = true; }
+    // kamera
+    const portrait = Hh > W, zoom = portrait ? clamp(1.5 / cam.aspect, 1, 3.3) : 1;
+    scene.fog.near = 14 * zoom + 8; scene.fog.far = 14 * zoom + 55;
+    const c = lerpArr(A.cam, B.cam, f), l = lerpArr(A.look, B.look, f);
+    tP.set(jx + c[0], c[1] * (portrait ? zoom * .95 : 1), c[2] * zoom); tL.set(jx + l[0], l[1], l[2]);
+    if (portrait) cam.setViewOffset(W, Hh, 0, Hh * .12, W, Hh); else cam.setViewOffset(W, Hh, -W * .18, 0, W, Hh);
+    const k = firstFrame ? 1 : Math.min(1, dt * 3.5); firstFrame = false;
+    camPos.lerp(tP, k); camLook.lerp(tL, k); cam.position.copy(camPos); cam.lookAt(camLook);
+    renderer.render(scene, cam);
+    // bubble
+    if (bubbleT > 0) { bubbleT -= dt; headW.set(0, 7.2, 0); joy.localToWorld(headW); headW.project(cam);
+      bubble.style.left = ((headW.x + 1) / 2 * W) + 'px'; bubble.style.top = ((1 - headW.y) / 2 * Hh) + 'px'; bubble.classList.toggle('on', bubbleT > 0); }
+    requestAnimationFrame(frame);
+  }
+  jx = SX(clamp(readScroll(), 0, 7));
+  world = { stop() { stopped = true; }, say, emote: doEmote, water() { waterT = tm; refreshPlant(); } };
+  requestAnimationFrame(frame);
+}
+/* ======== HP spek rendah & mode ringan ======== */
+const LOW = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+const SKY = ['#ffd6e4', '#bfe6ff', '#d4b8ff', '#d5f2ea', '#2e3266', '#c6ecff', '#141a3c', '#1b2150'];
+function mixHex(a, b, t) { const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16); const c = [16, 8, 0].map(sh => Math.round(lerp((pa >> sh) & 255, (pb >> sh) & 255, t))); return 'rgb(' + c.join(',') + ')'; }
+function liteSky() { if (!document.body.classList.contains('no3d')) return; const S = clamp(readScroll(), 0, 7), i = Math.floor(S), j = Math.min(7, i + 1); $('#sky').style.background = mixHex(SKY[i], SKY[j], S - i); }
+addEventListener('scroll', liteSky, { passive: true });
+function goLite(auto) {
+  document.body.classList.add('no3d'); if (world && world.stop) world.stop(); liteSky(); $('#bubble').classList.remove('on');
+  if (auto) { store.set('lite', true); toast('HP-mu kelihatan kerja keras, jadi mode ringan dinyalain biar adem 🍃'); }
+  $('#liteBtn').textContent = '✨ nyalakan dunia 3D';
+}
+$('#liteBtn').onclick = () => { if (document.body.classList.contains('no3d')) { store.set('lite', false); location.reload(); } else { store.set('lite', true); goLite(false); } };
+if (!WORKER_URL) ['#moonSendWrap', '#moonSendNote', '#pSend', '#pSendNote'].forEach(q => { const el = $(q); if (el) el.style.display = 'none'; });
+
+/* ======== kapsul waktu (cuma di HP ini) ======== */
+let capDays = '30';
+chipsInto($('#capWhen'), { 30: 'buka 1 bulan lagi', 91: '3 bulan', 182: '6 bulan', 365: '1 tahun' }, k => capDays = k, capDays);
+const fmtD = ms => new Date(ms).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+function renderCap() {
+  const c = store.get('capsule', null), L = $('#capLocked');
+  if (!c) { $('#capWrite').style.display = ''; L.style.display = 'none'; return; }
+  $('#capWrite').style.display = 'none'; L.style.display = '';
+  if (Date.now() < c.open) { L.innerHTML = `<div class="today">🔒 Suratmu terkunci sampai <b>${fmtD(c.open)}</b>. Sampai ketemu nanti, Joy.</div><p class="small">Kalau HP-mu ganti atau datanya dihapus, suratnya ikut hilang. Kalau mau aman, tulis juga di catatan.</p>`; return; }
+  L.innerHTML = `<div class="today">💌 Surat dari Joy tanggal ${fmtD(c.made)} udah bisa dibuka!</div><div class="row" style="margin-top:8px"><button class="btn" id="capOpen">buka suratnya</button><button class="btn soft" id="capNew">tulis surat baru</button></div>`;
+  $('#capOpen').onclick = () => { openModal(`<h3>Dari Joy, ${fmtD(c.made)}</h3><p id="capBody" style="white-space:pre-wrap"></p><p class="small">Lihat, kamu udah ngelewatin semua itu. 🍓</p>`); $('#capBody').textContent = c.txt; sfx('paper'); };
+  $('#capNew').onclick = () => { store.set('capsule', null); $('#capTxt').value = ''; renderCap(); };
+}
+$('#capGo').onclick = () => {
+  const t = $('#capTxt').value.trim(); if (t.length < 5) { toast('tulis sedikit lagi ya 🙂'); return; }
+  store.set('capsule', { txt: t, made: Date.now(), open: Date.now() + +capDays * 864e5 }); renderCap(); sfx('paper'); rain(['💌', '⏳'], 14);
+  toast('Suratnya udah dikunci. Joy yang nanti pasti senang 💌');
+};
+renderCap();
+{ const c = store.get('capsule', null); if (c && Date.now() >= c.open) setTimeout(() => toast('💌 Ada surat dari Joy yang dulu! Lihat di kapsul waktu.'), 2500); }
+
+/* ======== layar loading ======== */
+const TIPS = ['Tip: stroberi suka ngumpet di tempat tinggi 🍓', 'Tip: minum air dulu sebelum main 💧', 'Tip: hampir semua benda bisa dipencet 👀', 'Tip: pencet Joy kecil berkali-kali…', 'Tip: amplop dibuka pas butuh aja, nggak usah buru-buru 💌', 'Tip: ketik "dance" ke Joy kecil 💃', 'Tip: ada kodok kecil yang ngikutin kamu 🐸', 'Tip: ketik "joyce" ke Joy kecil 😤'];
+let ti = Math.floor(Math.random() * TIPS.length); $('#ltip').textContent = TIPS[ti];
+const tipT = setInterval(() => { ti = (ti + 1) % TIPS.length; $('#ltip').textContent = TIPS[ti]; }, 1700);
+document.body.style.overflow = 'hidden';
+let lp = 0, ready = false;
+const lpT = setInterval(() => { lp = Math.min(ready ? 100 : 88, lp + (ready ? 12 : 4 + Math.random() * 8)); $('#lbar').style.width = lp + '%';
+  if (lp >= 100) { clearInterval(lpT); $('#lsub').textContent = 'dunia kecilmu udah siap ✨'; $('#lgo').classList.add('on'); } }, 120);
+function enter(withSound) {
+  clearInterval(tipT); $('#load').classList.add('out'); document.body.style.overflow = ''; setTimeout(() => $('#load').remove(), 700);
+  if (withSound) toggleMusic(true);
+  setTimeout(() => { if (world) { world.say(withSound ? 'Horas, Joy! 🎵' : 'Horas, Joy! 👋'); world.emote('wave'); } }, 700);
+}
+$('#play').onclick = () => enter(true); $('#playMute').onclick = () => enter(false);
+if (store.get('lite', false)) { goLite(false); ready = true; } else init3D().finally(() => { ready = true; });
+setTimeout(() => { ready = true; }, 6000);
+// lompat ke bab tertentu lewat alamat, mis. …/#bab5
+{ const m = location.hash.match(/^#bab(\d)$/); if (m && secs[+m[1]]) setTimeout(() => scrollTo(0, secs[+m[1]].offsetTop + innerHeight * .2), 50); }
+</script>
+</body>
+</html>
