@@ -1264,7 +1264,7 @@ async function init3D() {
   }
   const HC = {}, AC = {};
   function base(kind) {
-    if (!HC[kind]) { HC[kind] = heightCanvas(kind); AC[kind] = cvs(128, 128, g => { g.fillStyle = '#fff'; g.fillRect(0, 0, 128, 128); g.globalAlpha = kind === 'felt' ? .4 : kind === 'crochet' ? .32 : .6; g.drawImage(HC[kind], 0, 0); }); }
+    if (!HC[kind]) { HC[kind] = heightCanvas(kind); AC[kind] = cvs(128, 128, g => { g.fillStyle = '#fff'; g.fillRect(0, 0, 128, 128); g.globalAlpha = kind === 'felt' ? .4 : kind === 'crochet' ? .2 : .6; g.drawImage(HC[kind], 0, 0); }); }
     return [AC[kind], HC[kind]];
   }
   const white = new THREE.Color(0xffffff);
@@ -1361,7 +1361,7 @@ async function init3D() {
   }
 
   /* ---------- boneka Joy ---------- */
-  const SKIN = 0xd59a70;
+  const SKIN = 0xf6d2b4;
   const skinM = yarn(SKIN, 'crochet', [7, 4]), hairM = yarn(0x231c27, 'strand', [1, 5]);
   const eyeM = LOW ? new THREE.MeshLambertMaterial({ color: 0x1a1418 }) : new THREE.MeshStandardMaterial({ color: 0x1a1418, roughness: .2 });
   const OUT = {
