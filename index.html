@@ -28,13 +28,14 @@ body.no3d #three{display:none}
 .hud{position:fixed;top:calc(10px + env(safe-area-inset-top));left:10px;right:10px;z-index:20;display:flex;align-items:center;gap:8px;pointer-events:none}
 .hud > *{pointer-events:auto}
 .chip{display:inline-flex;align-items:center;gap:4px;height:38px;padding:0 12px;border-radius:999px;background:var(--cream);font-weight:600;font-size:15px;box-shadow:0 4px 14px rgba(90,30,50,.14);outline:1.5px dashed var(--stitch);outline-offset:-5px}
-#musicBtn,#styleBtn{min-width:44px;justify-content:center;padding:0 10px}
+#musicBtn,#styleBtn,.hud .chip[data-sheet]{min-width:40px;justify-content:center;padding:0 9px}
+.hud{gap:6px}
 #musicBtn.on{background:var(--berry);color:#fff;outline-color:rgba(255,255,255,.6)}
 .place{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
 .place b{font-weight:600;font-size:14px;background:rgba(255,250,243,.85);padding:3px 12px;border-radius:999px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.dots{display:flex;gap:4px}
-.dots button{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);box-shadow:0 0 0 1px rgba(75,38,50,.15);padding:0;transition:all .3s}
-.dots button.on{width:20px;border-radius:5px;background:var(--berry)}
+.dots{display:flex;gap:3px}
+.dots button{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.65);box-shadow:0 0 0 1px rgba(75,38,50,.15);padding:0;transition:all .3s}
+.dots button.on{width:14px;border-radius:5px;background:var(--berry)}
 #np{position:fixed;z-index:19;top:calc(54px + env(safe-area-inset-top));right:12px;font-size:12px;font-weight:500;color:#fff;background:rgba(75,38,50,.62);padding:4px 10px;border-radius:999px;opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .4s;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #np.on{opacity:1;transform:none}
 #np.pop{animation:np .6s}
@@ -224,6 +225,8 @@ footer .lmute{color:#fff;opacity:.85}
 <header class="hud">
   <button class="chip" id="berryPill" aria-label="stroberi tersembunyi">🍓 <span id="berryN">0</span>/7</button>
   <div class="place"><b id="placeName">Rumah Joy</b><div class="dots" id="dots"></div></div>
+  <button class="chip" data-sheet="foto" aria-label="photobooth">📸</button>
+  <button class="chip" data-sheet="menu" aria-label="menu">☰</button>
   <button class="chip" id="styleBtn" aria-label="ganti mode rajut atau blok">🧶</button>
   <button class="chip" id="musicBtn" aria-label="nyalakan musik">♪</button>
 </header>
@@ -425,6 +428,20 @@ footer .lmute{color:#fff;opacity:.85}
     <p class="small">🎵 Lagu yang lagi main di bukit ini melodi <i>Ya Tuhan, Tiap Jam</i> (KJ 457).</p>
   </div>
 
+  <div class="pane" id="p-menu">
+    <div class="kicker">☰ menu</div><h3>Mau ke mana?</h3>
+    <div class="menu">
+      <button class="act" data-sheet="foto"><span>📸</span>photobooth</button>
+      <button class="act" data-sheet="amplop"><span>💌</span>buka kalau…</button>
+      <button class="act" data-sheet="bulan"><span>🌙</span>titip ke bulan</button>
+      <button class="act" data-sheet="kapsul"><span>⏳</span>kapsul waktu</button>
+      <button class="act" data-sheet="lemari"><span>👗</span>lemari baju</button>
+      <button class="act" data-sheet="quiz"><span>🦴</span>kuis fisio</button>
+      <button class="act" data-sheet="chat"><span>💬</span>ngobrol</button>
+      <button class="act" id="menuObby"><span>🎮</span>main obby</button>
+      <button class="act wide" data-sheet="surat"><span>🍓</span>surat untuk Joy</button>
+    </div>
+  </div>
   <div class="pane" id="p-lemari">
     <div class="kicker">👗 lemari</div><h3>Mau pakai baju apa hari ini?</h3>
     <p class="small">Pilih "ikut bab" biar bajunya ganti sendiri sesuai pulau.</p>
@@ -2417,7 +2434,8 @@ function obbyOn(on) {
   document.body.classList.toggle('obbyOn', on); if (world && world.obby) world.obby(on);
   if (on) { obScroll = scrollY; document.body.style.overflow = 'hidden'; } else { document.body.style.overflow = ''; scrollTo(0, obScroll); }
 }
-$('#obStart').onclick = () => obbyOn(true); $('#obExit').onclick = () => obbyOn(false);
+$('#obStart').onclick = () => obbyOn(true);
+$('#menuObby').onclick = () => { closeSheet(); scrollTo(0, secs[12].offsetTop + innerHeight * .05); setTimeout(() => obbyOn(true), 900); }; $('#obExit').onclick = () => obbyOn(false);
 $('#obJump').onclick = () => world && world.jump && world.jump();
 addEventListener('keydown', e => { if (document.body.classList.contains('obbyOn') && (e.key === ' ' || e.key === 'ArrowUp')) { e.preventDefault(); world.jump(); } });
 
