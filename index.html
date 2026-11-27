@@ -127,7 +127,7 @@ label.ck input{width:18px;height:18px;accent-color:var(--berry)}
 .chips .chip{height:34px;font-size:14px;box-shadow:none;background:#fff;outline:0;border:2px solid #f3d6dc}
 .chips .chip.on{background:var(--berry);color:#fff;border-color:var(--berry)}
 .booth{position:relative;margin-top:10px;border-radius:16px;overflow:hidden;background:#2a1f25;aspect-ratio:4/3}
-.booth video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.booth canvas{width:100%;height:100%;display:block}
 .bShot{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:rgba(255,255,255,.9);border-radius:999px;padding:4px 12px;font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--berry);white-space:nowrap}
 .bFlip{position:absolute;right:16px;bottom:16px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.9);font-size:20px}
 .bFrame{position:absolute;inset:0;border:12px solid #ffd3dc;transition:border-color .3s;border-radius:16px;outline:3px dashed #fff;outline-offset:-16px;pointer-events:none}
@@ -510,11 +510,16 @@ footer .lmute{color:#fff;opacity:.85}
     <div class="small">gaya foto</div><div class="chips" id="bLayout"></div>
     <div class="small">bingkai</div><div class="chips" id="bTheme"></div>
     <div class="row" style="margin-top:6px"><button class="btn" id="bStart">📷 buka kamera</button><label class="btn soft" for="pfile">🖼️ dari galeri</label><input type="file" id="pfile" accept="image/*" hidden></div>
-    <div class="booth" id="booth" style="display:none"><video id="bVid" playsinline muted autoplay></video><div class="bFrame" id="bFrame"></div><div class="bShot" id="bShot"></div><div class="bCount" id="bCount"></div><div class="bFlash" id="bFlash"></div><button class="bFlip" id="bFlip" aria-label="ganti kamera">🔄</button></div>
+    <div class="booth" id="booth" style="display:none"><video id="bVid" playsinline muted autoplay style="position:absolute;width:1px;height:1px;opacity:0"></video><canvas id="bLive"></canvas><div class="bFrame" id="bFrame"></div><div class="bShot" id="bShot"></div><div class="bCount" id="bCount"></div><div class="bFlash" id="bFlash"></div><button class="bFlip" id="bFlip" aria-label="ganti kamera">🔄</button></div>
+    <div class="small" id="bHint" style="min-height:1.2em;margin-top:6px"></div>
+    <div id="bLiveOpts" style="display:none">
+      <div class="small">stiker wajah (ngikutin mukamu)</div><div class="chips" id="bAr"></div>
+      <div class="small">filter (langsung aktif)</div><div class="chips" id="bFx"></div>
+    </div>
     <div class="row" id="bCtl" style="display:none;margin-top:10px"><button class="btn" id="bSnap">📸 mulai!</button><button class="btn soft" id="bCancel">tutup kamera</button></div>
     <div class="photoBox" id="pbox"><span class="small">belum ada foto</span></div>
     <div id="pTools" style="display:none">
-      <div class="small">filter</div><div class="chips" id="pFilters"></div>
+      <div id="pGalFx"><div class="small">filter</div><div class="chips" id="pFilters"></div></div>
       <div class="small">stiker (pencet buat nambah, geser di foto, ketuk 2× buat hapus)</div><div class="chips" id="pStickers"></div>
       <div id="pCapRow"><div class="small">tulisan di bingkai</div><input class="note" id="pCap" maxlength="28" value="Hi, Joy!"></div>
       <div class="row" style="margin-top:10px"><button class="btn" id="pSave">💾 simpan</button><button class="btn soft" id="pShare">📤 bagikan</button><button class="btn soft" id="pRetake">🔁 foto ulang</button></div>
@@ -1115,22 +1120,39 @@ const SPR = {
   bulan: { p: { Y: '#ffe9a8' }, r: ['..YYY..', '.YY....', 'YY.....', 'YY.....', 'YY.....', '.YY....', '..YYY..'] },
   mahkota: { p: { Y: '#ffd44d', R: '#e8475f', B: '#6fa8dc' }, r: ['Y...Y...Y', 'YY.YYY.YY', 'YYYYYYYYY', 'YRYYBYYRY', 'YYYYYYYYY'] },
   pita: { p: { P: '#ff8fab', R: '#e8475f' }, r: ['PP.....PP', 'PPPP.PPPP', 'PPPPRPPPP', 'PPPP.PPPP', 'PP.....PP'] },
+  sedih: { p: { Y: '#ffd44d', K: '#3a2b33', B: '#7cc7ff', W: '#ffffff' }, r: ['..YYYYY..', '.YYYYYYY.', 'YYKWYKWYY', 'YYKKYKKYY', 'YBYYYYYBY', 'YBYKKKYBY', '.YYYYYYY.', '..YYYYY..'] },
+  senyum: { p: { Y: '#ffd44d', K: '#3a2b33', P: '#ff9ab8' }, r: ['..YYYYY..', '.YYYYYYY.', 'YYKYYYKYY', 'YYYYYYYYY', 'YPYYYYYPY', 'YYKYYYKYY', '.YYKKKYY.', '..YYYYY..'] },
 };
-const TXT = { horas: 'Horas! 👋', semangat: 'semangat! 💪', joy: 'Joy 🍓' };
-const FIL = { asli: 'asli', stroberi: '🍓 stroberi', hangat: '☀️ hangat', mimpi: '☁️ mimpi', bw: '🎞️ b&w', pixel: '👾 pixel' };
-const CSSF = { asli: 'none', stroberi: 'saturate(1.1) sepia(.15) hue-rotate(-12deg) brightness(1.05)', hangat: 'sepia(.28) saturate(1.2) brightness(1.03)', mimpi: 'brightness(1.1) contrast(.9) saturate(.85)', bw: 'grayscale(1) contrast(1.05)', pixel: 'none' };
+const TXT = { horas: 'Horas! 👋', semangat: 'semangat! 💪', joy: 'Joy 🍓', capek: 'capek tapi lucu 😮‍💨' };
+/* filter: warna (px) + efek tempel (ov) yang ikut kerekam */
+const FX = {
+  asli: { n: 'asli' },
+  stroberi: { n: '🍓 stroberi', css: 'saturate(1.1) sepia(.15) hue-rotate(-12deg) brightness(1.05)', px: (r, g, b) => [r * .92 + 34, g * .86 + 14, b * .9 + 28] },
+  mimpi: { n: '☁️ mimpi', css: 'brightness(1.12) contrast(.88) saturate(.85)', px: (r, g, b) => [r * .85 + 40, g * .85 + 36, b * .85 + 48], ov: 'soft' },
+  rajut: { n: '🧶 rajut', css: 'saturate(1.05) brightness(1.04)', px: (r, g, b) => [r * .95 + 14, g * .92 + 8, b * .9 + 10], ov: 'knit' },
+  vintage: { n: '📼 vintage', css: 'sepia(.45) contrast(1.05) saturate(.9)', px: (r, g, b) => { const y = r * .3 + g * .59 + b * .11; return [y * .6 + r * .4 + 22, y * .6 + g * .4 + 8, y * .5 + b * .3]; }, ov: 'film' },
+  glitter: { n: '✨ glitter', css: 'brightness(1.06) saturate(1.15)', px: (r, g, b) => [r * 1.02 + 8, g + 4, b * 1.02 + 10], ov: 'sparkle' },
+  dingin: { n: '❄️ dingin', css: 'hue-rotate(8deg) saturate(.9) brightness(1.05)', px: (r, g, b) => [r * .9, g * .98 + 6, b * 1.05 + 22] },
+  hangat: { n: '☀️ hangat', css: 'sepia(.28) saturate(1.2) brightness(1.03)', px: (r, g, b) => [r * 1.04 + 16, g + 5, b * .9] },
+  bw: { n: '🎞️ b&w', css: 'grayscale(1) contrast(1.05)', px: (r, g, b) => { const y = (r * .3 + g * .59 + b * .11) * 1.05 + 6; return [y, y, y]; }, ov: 'film' },
+  pixel: { n: '👾 pixel', ov: 'pixel' },
+};
+const FIL = Object.fromEntries(Object.entries(FX).map(([k, v]) => [k, v.n]));
+const AR = { none: '🙂 tanpa', kacamata: '👓 kacamata', hatiKaca: '😍 kacamata hati', topiRajut: '🧶 topi rajut', mahkota: '🍓 mahkota', sedih: '🥺 sedih', kodok: '🐸 kodok', bunga: '🌸 bando bunga', blush: '😊 pipi merah', bulang: '❤️ bulang', santa: '🎅 santa' };
 const LAYOUT = { strip: '🎞️ strip 3', grid: '🟦 kotak 4', pola: '🖼️ polaroid' };
 const THEME = { stroberi: '🍓 stroberi', rajut: '🧶 rajut', hiou: '❤️ hiou', malam: '🌙 malam', natal: '🎄 natal', kodok: '🐸 kodok' };
-let pSrc = null, pFilter = 'stroberi', pStk = [], pCv = null, pCtx = null, drag = null, pBooth = false, pShots = [], bLayout = 'strip', bTheme = isDec ? 'natal' : 'stroberi';
+let pSrc = null, pFilter = 'stroberi', pStk = [], pCv = null, pCtx = null, drag = null, pBooth = false, pShots = [], bLayout = 'strip', bTheme = isDec ? 'natal' : 'stroberi', bAR = 'kacamata';
 function chipsInto(el, obj, onPick, cur) {
   el.innerHTML = ''; Object.entries(obj).forEach(([k, v]) => { const b = document.createElement('button'); b.className = 'chip' + (k === cur ? ' on' : ''); b.textContent = v;
     b.onclick = () => { if (cur !== undefined) { [...el.children].forEach(c => c.classList.toggle('on', c === b)); } onPick(k); }; el.appendChild(b); });
 }
 const recompose = (keep = true) => { if (pBooth && pShots.length) useCanvas(compose(pShots), keep); };
-chipsInto($('#pFilters'), FIL, k => { pFilter = k; if (pBooth) recompose(); else renderPhoto(); if (bStream) bVid.style.filter = CSSF[k]; }, pFilter);
-chipsInto($('#bLayout'), LAYOUT, k => { bLayout = k; if (pBooth && pShots.length) { toast('foto ulang biar pas sama gaya baru 📸'); } }, bLayout);
+chipsInto($('#pFilters'), FIL, k => { pFilter = k; [...$('#bFx').children].forEach((c, i) => c.classList.toggle('on', Object.keys(FIL)[i] === k)); if (!pBooth && pSrc) renderPhoto(); }, pFilter);
+chipsInto($('#bFx'), FIL, k => { pFilter = k; blip(988, .04); if (!pBooth && pSrc) renderPhoto(); }, pFilter);
+chipsInto($('#bAr'), AR, k => { bAR = k; blip(1046, .04); if (k !== 'none') loadFace(); }, bAR);
+chipsInto($('#bLayout'), LAYOUT, k => { bLayout = k; }, bLayout);
 chipsInto($('#bTheme'), THEME, k => { bTheme = k; paintFramePreview(); recompose(); }, bTheme);
-chipsInto($('#pStickers'), { stroberi: '🍓', hati: '💗', bintang: '⭐', bunga: '🌸', kacamata: '👓', kodok: '🐸', bulan: '🌙', mahkota: '👑', pita: '🎀', horas: '“Horas!”', semangat: '“semangat!”', hapus: '↩︎ hapus' }, k => {
+chipsInto($('#pStickers'), { stroberi: '🍓', hati: '💗', bintang: '⭐', bunga: '🌸', kacamata: '👓', kodok: '🐸', bulan: '🌙', mahkota: '👑', pita: '🎀', sedih: '🥺', senyum: '😊', horas: '“Horas!”', semangat: '“semangat!”', capek: '“capek tapi lucu”', hapus: '↩︎ hapus' }, k => {
   if (!pSrc) return;
   if (k === 'hapus') pStk.pop(); else pStk.push({ k, x: pCv.width * (.3 + Math.random() * .4), y: pCv.height * (.3 + Math.random() * .4) });
   renderPhoto(); blip(1046, .04);
@@ -1148,28 +1170,40 @@ function useCanvas(c, keep) {
   const same = keep && pCv && pCv.width === w && pCv.height === h;
   pSrc = document.createElement('canvas'); pSrc.width = w; pSrc.height = h; pSrc.getContext('2d').drawImage(c, 0, 0, w, h);
   if (!same) { pCv = document.createElement('canvas'); pCv.width = w; pCv.height = h; pCtx = pCv.getContext('2d', { willReadFrequently: true }); $('#pbox').innerHTML = ''; $('#pbox').appendChild(pCv); bindDrag(); if (!keep) pStk = []; }
-  $('#pbox').style.display = ''; $('#pTools').style.display = ''; $('#pStatus').textContent = ''; $('#pCapRow').style.display = pBooth ? '' : 'none'; $('#pRetake').style.display = pBooth ? '' : 'none';
+  $('#pbox').style.display = ''; $('#pTools').style.display = ''; $('#pStatus').textContent = '';
+  $('#pCapRow').style.display = pBooth ? '' : 'none'; $('#pRetake').style.display = pBooth ? '' : 'none'; $('#pGalFx').style.display = pBooth ? 'none' : '';
   renderPhoto();
 }
-function filterCanvas(src, f) {
-  const w = src.width, h = src.height, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d', { willReadFrequently: true });
-  if (f === 'pixel') { const sw = Math.max(40, Math.round(w / 9)), sh = Math.round(sw * h / w), t = document.createElement('canvas'); t.width = sw; t.height = sh; t.getContext('2d').drawImage(src, 0, 0, sw, sh); g.imageSmoothingEnabled = false; g.drawImage(t, 0, 0, w, h); return c; }
-  g.drawImage(src, 0, 0); if (f === 'asli') return c;
-  const d = g.getImageData(0, 0, w, h), a = d.data;
-  for (let i = 0; i < a.length; i += 4) {
-    let r = a[i], gg = a[i + 1], b = a[i + 2];
-    if (f === 'stroberi') { r = r * .92 + 34; gg = gg * .86 + 14; b = b * .9 + 28; }
-    else if (f === 'hangat') { r = r * 1.04 + 16; gg = gg + 5; b = b * .9; }
-    else if (f === 'mimpi') { r = r * .85 + 40; gg = gg * .85 + 36; b = b * .85 + 48; }
-    else if (f === 'bw') { const y = r * .3 + gg * .59 + b * .11; r = gg = b = y * 1.05 + 6; }
-    a[i] = r; a[i + 1] = gg; a[i + 2] = b;
+/* efek tempel */
+let knitPat = null;
+function overlay(g, w, h, kind, t) {
+  if (kind === 'knit') {
+    if (!knitPat) { const c = document.createElement('canvas'); c.width = c.height = 24; const q = c.getContext('2d'); q.strokeStyle = 'rgba(120,40,60,.22)'; q.lineWidth = 3; q.lineCap = 'round'; q.beginPath(); q.moveTo(2, 4); q.lineTo(12, 18); q.lineTo(22, 4); q.stroke(); q.strokeStyle = 'rgba(255,255,255,.18)'; q.lineWidth = 1.5; q.beginPath(); q.moveTo(4, 3); q.lineTo(12, 14); q.lineTo(20, 3); q.stroke(); knitPat = c; }
+    const s = Math.max(1, w / 520); g.save(); g.scale(s, s); g.fillStyle = g.createPattern(knitPat, 'repeat'); g.fillRect(0, 0, w / s, h / s); g.restore();
+    g.save(); g.setLineDash([w * .025, w * .018]); g.lineWidth = w * .008; g.strokeStyle = 'rgba(255,255,255,.85)'; g.strokeRect(w * .035, h * .045, w * .93, h * .91); g.restore();
+  } else if (kind === 'soft') {
+    const gr = g.createRadialGradient(w / 2, h / 2, h * .3, w / 2, h / 2, h * .8); gr.addColorStop(0, 'rgba(255,220,235,0)'); gr.addColorStop(1, 'rgba(255,205,225,.55)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  } else if (kind === 'film') {
+    const gr = g.createRadialGradient(w / 2, h / 2, h * .35, w / 2, h / 2, h * .85); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(30,15,10,.5)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    g.fillStyle = 'rgba(255,255,255,.06)'; for (let i = 0; i < 260; i++) g.fillRect(Math.random() * w, Math.random() * h, 1.5, 1.5);
+    g.fillStyle = 'rgba(255,170,90,.9)'; g.font = `700 ${Math.round(h * .05)}px monospace`; g.textAlign = 'right'; g.fillText(new Date().toLocaleDateString('id-ID').replace(/\//g, ' ') + "  '" + String(new Date().getFullYear()).slice(2), w * .95, h * .93);
+  } else if (kind === 'sparkle') {
+    for (let i = 0; i < 26; i++) { const x = (Math.sin(i * 12.9898 + t * .0007 * (1 + i % 3)) * .5 + .5) * w, y = (Math.cos(i * 78.233 + t * .0005) * .5 + .5) * h, r = (2 + (i % 4) * 2) * w / 600 * (.6 + .4 * Math.sin(t * .006 + i));
+      g.fillStyle = ['#fff', '#fff1a8', '#ffd3e6'][i % 3]; g.beginPath(); for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, rr = k % 2 ? r * .3 : r * 1.6; g.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } g.fill(); }
+  } else if (kind === 'pixel') {
+    const sw = Math.max(40, Math.round(w / 9)), sh = Math.round(sw * h / w), c = document.createElement('canvas'); c.width = sw; c.height = sh; c.getContext('2d').drawImage(g.canvas, 0, 0, sw, sh); g.imageSmoothingEnabled = false; g.drawImage(c, 0, 0, w, h); g.imageSmoothingEnabled = true;
   }
-  g.putImageData(d, 0, 0); return c;
 }
-function stkSize(k) { if (TXT[k]) { const u = Math.max(18, Math.round(Math.min(pCv.width, pCv.height) * .06)); return { u, w: u * 7, h: u * 1.9 }; } const r = SPR[k].r; const u = Math.max(4, Math.round(Math.min(pCv.width, pCv.height) * .2 / r[0].length)); return { u, w: r[0].length * u, h: r.length * u }; }
+function filterCanvas(src, f) {
+  const fx = FX[f] || FX.asli, w = src.width, h = src.height, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(src, 0, 0);
+  if (fx.px) { const d = g.getImageData(0, 0, w, h), a = d.data; for (let i = 0; i < a.length; i += 4) { const o = fx.px(a[i], a[i + 1], a[i + 2]); a[i] = o[0]; a[i + 1] = o[1]; a[i + 2] = o[2]; } g.putImageData(d, 0, 0); }
+  return c;
+}
+function stkSize(k) { if (TXT[k]) { const u = Math.max(18, Math.round(Math.min(pCv.width, pCv.height) * .06)); return { u, w: u * (TXT[k].length * .55 + 1.5), h: u * 1.9 }; } const r = SPR[k].r; const u = Math.max(4, Math.round(Math.min(pCv.width, pCv.height) * .2 / r[0].length)); return { u, w: r[0].length * u, h: r.length * u }; }
 function renderPhoto() {
   if (!pSrc) return; const g = pCtx;
-  if (pBooth) g.drawImage(pSrc, 0, 0); else g.drawImage(filterCanvas(pSrc, pFilter), 0, 0);
+  if (pBooth) g.drawImage(pSrc, 0, 0); else { g.drawImage(filterCanvas(pSrc, pFilter), 0, 0); const ov = (FX[pFilter] || {}).ov; if (ov) overlay(g, pCv.width, pCv.height, ov, 0); }
   pStk.forEach(s => { const z = stkSize(s.k);
     if (TXT[s.k]) { g.save(); g.fillStyle = '#fff'; g.strokeStyle = '#e8475f'; g.lineWidth = z.u * .14; const x = s.x - z.w / 2, y = s.y - z.h / 2, r = z.h / 2; g.beginPath(); g.roundRect ? g.roundRect(x, y, z.w, z.h, r) : g.rect(x, y, z.w, z.h); g.fill(); g.stroke(); g.fillStyle = '#e8475f'; g.font = `700 ${Math.round(z.u * 1.05)}px Fredoka, system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(TXT[s.k], s.x, s.y + z.u * .05); g.restore(); return; }
     const sp = SPR[s.k]; sp.r.forEach((row, j) => [...row].forEach((c, i) => { if (c !== '.') { g.fillStyle = sp.p[c]; g.fillRect(Math.round(s.x - z.w / 2 + i * z.u), Math.round(s.y - z.h / 2 + j * z.u), z.u, z.u); } })); });
@@ -1200,30 +1234,108 @@ $('#pSend').onclick = async () => {
   $('#pSend').disabled = false;
 };
 
-/* ---------- kamera ---------- */
-let bStream = null, bBusy = false, bFacing = 'user';
-const bVid = $('#bVid');
+/* ---------- stiker wajah (MediaPipe, dimuat pas kamera dibuka) ---------- */
+let faceLM = null, faceLoading = false, lastFace = null, faceTick = 0;
+async function loadFace() {
+  if (faceLM || faceLoading || bAR === 'none') return; faceLoading = true; $('#bHint').textContent = 'nyiapin stiker wajah… ✨';
+  try {
+    const v = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs');
+    const fs = await v.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+    faceLM = await v.FaceLandmarker.createFromOptions(fs, { baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate: 'GPU' }, runningMode: 'VIDEO', numFaces: 1 });
+    $('#bHint').textContent = '';
+  } catch (e) { $('#bHint').textContent = 'stiker wajah nggak bisa dimuat di HP ini, tapi filternya tetap jalan 🙂'; }
+  faceLoading = false;
+}
+function facePts(lm, map, mirror) {
+  const P = i => { let x = map.ox + lm[i].x * map.dw; const y = map.oy + lm[i].y * map.dh; if (mirror) x = map.cw - x; return { x, y }; };
+  const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+  const L = P(234), R = P(454), top = P(10), chin = P(152), e1 = mid(P(33), P(133)), e2 = mid(P(362), P(263)), c1 = P(50), c2 = P(280), nose = P(1), m = mid(P(13), P(14));
+  const eL = e1.x < e2.x ? e1 : e2, eR = e1.x < e2.x ? e2 : e1, cL = c1.x < c2.x ? c1 : c2, cR = c1.x < c2.x ? c2 : c1;
+  const fw = Math.hypot(R.x - L.x, R.y - L.y), ang = Math.atan2(eR.y - eL.y, eR.x - eL.x), fh = Math.hypot(chin.x - top.x, chin.y - top.y);
+  return { eL, eR, cL, cR, top, chin, nose, m, fw, fh, ang };
+}
+function heart(g, x, y, s) { g.beginPath(); g.moveTo(x, y + s * .35); g.bezierCurveTo(x - s * 1.1, y - s * .35, x - s * .5, y - s * 1.1, x, y - s * .45); g.bezierCurveTo(x + s * .5, y - s * 1.1, x + s * 1.1, y - s * .35, x, y + s * .35); g.fill(); }
+function berry(g, x, y, s) { g.save(); g.translate(x, y); g.fillStyle = '#e8475f'; g.beginPath(); g.moveTo(0, s); g.bezierCurveTo(-s, s * .2, -s * .8, -s * .6, 0, -s * .5); g.bezierCurveTo(s * .8, -s * .6, s, s * .2, 0, s); g.fill(); g.fillStyle = '#ffe6a6'; [[-.3, -.1], [.25, 0], [-.05, .35], [.3, .4]].forEach(([a, b]) => { g.beginPath(); g.ellipse(a * s, b * s, s * .07, s * .1, 0, 0, 6.3); g.fill(); }); g.fillStyle = '#4fae5a'; g.beginPath(); g.ellipse(-s * .25, -s * .6, s * .3, s * .14, -.4, 0, 6.3); g.ellipse(s * .25, -s * .6, s * .3, s * .14, .4, 0, 6.3); g.fill(); g.restore(); }
+function drawAR(g, f, t) {
+  const { eL, eR, top, fw, ang } = f, u = fw;
+  const at = (p, fn) => { g.save(); g.translate(p.x, p.y); g.rotate(ang); fn(); g.restore(); };
+  const crown = { x: top.x - Math.sin(ang) * u * .1, y: top.y + Math.cos(ang) * u * .1 };
+  switch (bAR) {
+    case 'kacamata': { const mid = { x: (eL.x + eR.x) / 2, y: (eL.y + eR.y) / 2 }, d = Math.hypot(eR.x - eL.x, eR.y - eL.y);
+      at(mid, () => { g.strokeStyle = '#2b2430'; g.lineWidth = u * .028; [-1, 1].forEach(sd => { g.beginPath(); g.arc(sd * d / 2, 0, u * .16, 0, 6.3); g.stroke(); g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = u * .012; g.beginPath(); g.arc(sd * d / 2, 0, u * .12, 3.6, 4.4); g.stroke(); g.strokeStyle = '#2b2430'; g.lineWidth = u * .028; });
+        g.beginPath(); g.moveTo(-d / 2 + u * .16, -u * .02); g.quadraticCurveTo(0, -u * .07, d / 2 - u * .16, -u * .02); g.stroke(); }); break; }
+    case 'hatiKaca': { const mid = { x: (eL.x + eR.x) / 2, y: (eL.y + eR.y) / 2 }, d = Math.hypot(eR.x - eL.x, eR.y - eL.y);
+      at(mid, () => { [-1, 1].forEach(sd => { g.fillStyle = 'rgba(255,90,135,.92)'; heart(g, sd * d / 2, u * .04, u * .19); g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.ellipse(sd * d / 2 - u * .06, -u * .05, u * .04, u * .025, -.5, 0, 6.3); g.fill(); }); g.strokeStyle = '#ff5a87'; g.lineWidth = u * .03; g.beginPath(); g.moveTo(-d / 2 + u * .12, -u * .03); g.lineTo(d / 2 - u * .12, -u * .03); g.stroke(); }); break; }
+    case 'topiRajut': at(crown, () => {
+      g.fillStyle = '#ff8fab'; g.beginPath(); g.ellipse(0, -u * .05, u * .62, u * .52, 0, Math.PI, 0); g.fill();
+      g.strokeStyle = 'rgba(160,40,70,.35)'; g.lineWidth = u * .018; for (let x = -u * .55; x < u * .55; x += u * .1) for (let y = -u * .5; y < -u * .06; y += u * .09) { if ((x * x) / (u * u * .38) + ((y + u * .05) ** 2) / (u * u * .27) > 1) continue; g.beginPath(); g.moveTo(x - u * .035, y); g.lineTo(x, y + u * .05); g.lineTo(x + u * .035, y); g.stroke(); }
+      g.fillStyle = '#fff4ea'; g.beginPath(); g.roundRect ? g.roundRect(-u * .66, -u * .1, u * 1.32, u * .2, u * .1) : g.rect(-u * .66, -u * .1, u * 1.32, u * .2); g.fill();
+      g.strokeStyle = 'rgba(200,150,140,.5)'; g.lineWidth = u * .015; for (let x = -u * .6; x < u * .62; x += u * .06) { g.beginPath(); g.moveTo(x, -u * .08); g.lineTo(x, u * .08); g.stroke(); }
+      g.fillStyle = '#fff'; for (let k = 0; k < 14; k++) { const a = k / 14 * 6.28; g.beginPath(); g.arc(Math.cos(a) * u * .1, -u * .62 + Math.sin(a) * u * .1, u * .07, 0, 6.3); g.fill(); } }); break;
+    case 'mahkota': at(crown, () => { for (let k = -3; k <= 3; k++) berry(g, k * u * .17, -u * .08 - Math.cos(k * .45) * u * .1, u * (k === 0 ? .16 : .12)); }); break;
+    case 'sedih': {
+      [eL, eR].forEach((e, i) => { g.fillStyle = 'rgba(124,199,255,.85)'; const ph = ((t * .0009) + i * .5) % 1; for (let k = 0; k < 2; k++) { const p = (ph + k * .5) % 1, x = e.x + Math.sin(ang) * -0 + (i ? 1 : -1) * u * .04, y = e.y + u * .12 + p * u * .55; g.globalAlpha = 1 - p; g.beginPath(); g.moveTo(x, y - u * .06); g.quadraticCurveTo(x + u * .045, y + u * .02, x, y + u * .045); g.quadraticCurveTo(x - u * .045, y + u * .02, x, y - u * .06); g.fill(); } g.globalAlpha = 1;
+        g.fillStyle = 'rgba(255,255,255,.75)'; g.beginPath(); g.arc(e.x + u * .03, e.y - u * .03, u * .035, 0, 6.3); g.fill(); g.beginPath(); g.arc(e.x - u * .02, e.y + u * .02, u * .018, 0, 6.3); g.fill(); });
+      at(crown, () => { g.font = `${Math.round(u * .34)}px system-ui`; g.textAlign = 'center'; g.fillText('🥺', u * .55, -u * .05); }); break; }
+    case 'kodok': at(crown, () => { [-1, 1].forEach(sd => { g.fillStyle = '#7cc86a'; g.beginPath(); g.arc(sd * u * .26, -u * .12, u * .18, 0, 6.3); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(sd * u * .26, -u * .12, u * .12, 0, 6.3); g.fill(); g.fillStyle = '#1f1a24'; g.beginPath(); g.arc(sd * u * .26, -u * .1, u * .06, 0, 6.3); g.fill(); }); });
+      [f.cL, f.cR].forEach(c => { g.fillStyle = 'rgba(255,140,170,.45)'; g.beginPath(); g.ellipse(c.x, c.y, u * .09, u * .055, ang, 0, 6.3); g.fill(); }); break;
+    case 'bunga': at(crown, () => { for (let k = -4; k <= 4; k++) { const x = k * u * .14, y = u * .05 - Math.cos(k * .32) * u * .08, c = ['#ffb3c8', '#fff', '#ffd44d', '#c9b6ff'][(k + 8) % 4]; g.fillStyle = c; for (let p = 0; p < 5; p++) { const a = p / 5 * 6.28; g.beginPath(); g.arc(x + Math.cos(a) * u * .045, y + Math.sin(a) * u * .045, u * .04, 0, 6.3); g.fill(); } g.fillStyle = '#ffd44d'; g.beginPath(); g.arc(x, y, u * .025, 0, 6.3); g.fill(); } g.fillStyle = '#4fae5a'; [-.62, .62].forEach(x => { g.beginPath(); g.ellipse(x * u, u * .02, u * .07, u * .03, x > 0 ? .5 : -.5, 0, 6.3); g.fill(); }); }); break;
+    case 'blush': [f.cL, f.cR].forEach((c, i) => { const gr = g.createRadialGradient(c.x, c.y, 0, c.x, c.y, u * .13); gr.addColorStop(0, 'rgba(255,110,150,.55)'); gr.addColorStop(1, 'rgba(255,110,150,0)'); g.fillStyle = gr; g.beginPath(); g.arc(c.x, c.y, u * .13, 0, 6.3); g.fill();
+      g.fillStyle = '#fff'; const s = u * .035 * (1 + .3 * Math.sin(t * .008 + i)); g.beginPath(); for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, rr = k % 2 ? s * .35 : s * 1.4; g.lineTo(c.x + (i ? 1 : -1) * u * .12 + Math.cos(a) * rr, c.y - u * .1 + Math.sin(a) * rr); } g.fill(); }); break;
+    case 'bulang': at(crown, () => {
+      g.fillStyle = '#c8262f'; g.beginPath(); g.moveTo(-u * .75, u * .02); g.lineTo(0, -u * .5); g.lineTo(u * .75, u * .02); g.closePath(); g.fill();
+      g.save(); g.clip(); for (let k = 0; k < 7; k++) { g.fillStyle = k % 2 ? '#f2e6d6' : '#e6b24a'; g.fillRect(-u, -u * .44 + k * u * .07, u * 2, u * .022); } g.restore();
+      [-1, 1].forEach(sd => { for (let k = 0; k < 6; k++) { g.strokeStyle = ['#c8262f', '#f2e6d6', '#e6b24a'][k % 3]; g.lineWidth = u * .016; g.beginPath(); g.moveTo(sd * (u * .7 - k * u * .02), 0); g.quadraticCurveTo(sd * (u * .74 + k * u * .015), u * .2, sd * (u * .72 + k * u * .02), u * (.36 + .02 * Math.sin(t * .004 + k))); g.stroke(); } }); }); break;
+    case 'santa': at(crown, () => {
+      g.fillStyle = '#e03c4a'; g.beginPath(); g.moveTo(-u * .55, 0); g.quadraticCurveTo(-u * .1, -u * .75, u * .55, -u * .45); g.quadraticCurveTo(u * .3, -u * .2, u * .55, 0); g.closePath(); g.fill();
+      g.fillStyle = '#fff'; g.beginPath(); g.roundRect ? g.roundRect(-u * .6, -u * .08, u * 1.2, u * .17, u * .08) : g.rect(-u * .6, -u * .08, u * 1.2, u * .17); g.fill(); g.beginPath(); g.arc(u * .58, -u * .45, u * .1, 0, 6.3); g.fill(); }); break;
+  }
+}
+
+/* ---------- kamera live (filter + stiker wajah ikut kerekam) ---------- */
+let bStream = null, bBusy = false, bFacing = 'user', bLoop = false;
+const bVid = $('#bVid'), bLive = $('#bLive'), bLg = bLive.getContext('2d');
 function paintFramePreview() { const c = { stroberi: '#ffd3dc', rajut: '#f6e7d4', hiou: '#b4232c', malam: '#1f2552', natal: '#2f6b3a', kodok: '#bfe8b0' }[bTheme]; $('#bFrame').style.borderColor = c; }
 paintFramePreview();
-function stopBooth() { if (bStream) { bStream.getTracks().forEach(t => t.stop()); bStream = null; } $('#booth').style.display = 'none'; $('#bCtl').style.display = 'none'; }
+function stopBooth() { bLoop = false; if (bStream) { bStream.getTracks().forEach(t => t.stop()); bStream = null; } $('#booth').style.display = 'none'; $('#bCtl').style.display = 'none'; $('#bLiveOpts').style.display = 'none'; }
+function drawLive(g, w, h, now) {
+  const vw = bVid.videoWidth, vh = bVid.videoHeight; if (!vw) return;
+  const r = Math.max(w / vw, h / vh), dw = vw * r, dh = vh * r, ox = (w - dw) / 2, oy = (h - dh) / 2, mirror = bFacing === 'user';
+  g.save(); if (mirror) { g.translate(w, 0); g.scale(-1, 1); } g.drawImage(bVid, ox, oy, dw, dh); g.restore();
+  if (bAR !== 'none' && lastFace) drawAR(g, facePts(lastFace, { ox, oy, dw, dh, cw: w }, mirror), now);
+}
+function liveLoop() {
+  if (!bLoop) return;
+  const now = performance.now();
+  if (faceLM && bAR !== 'none' && bVid.readyState >= 2 && (faceTick++ % (LOW ? 3 : 2) === 0)) { try { const r = faceLM.detectForVideo(bVid, now); lastFace = r.faceLandmarks && r.faceLandmarks[0] || null; } catch (e) {} }
+  drawLive(bLg, bLive.width, bLive.height, now);
+  const fx = FX[pFilter] || {}; bLive.style.filter = fx.css || 'none';
+  if (fx.ov && fx.ov !== 'pixel') overlay(bLg, bLive.width, bLive.height, fx.ov, now); else if (fx.ov === 'pixel') overlay(bLg, bLive.width, bLive.height, 'pixel', now);
+  requestAnimationFrame(liveLoop);
+}
 async function openCam() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $('#pStatus').textContent = 'Kamera nggak bisa dibuka di browser ini. Pakai "dari galeri" aja ya.'; return; }
   try {
     if (bStream) bStream.getTracks().forEach(t => t.stop());
     bStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: bFacing, width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false });
-    bVid.srcObject = bStream; await bVid.play(); bVid.style.transform = bFacing === 'user' ? 'scaleX(-1)' : 'none';
-    $('#booth').style.display = ''; $('#bCtl').style.display = ''; $('#pbox').style.display = 'none'; $('#pTools').style.display = 'none';
-    bVid.style.filter = CSSF[pFilter] || 'none'; $('#bShot').textContent = LAYOUT[bLayout]; $('#pStatus').textContent = '';
+    bVid.srcObject = bStream; await bVid.play();
+    bLive.width = LOW ? 640 : 800; bLive.height = LOW ? 480 : 600;
+    $('#booth').style.display = ''; $('#bCtl').style.display = ''; $('#bLiveOpts').style.display = ''; $('#pbox').style.display = 'none'; $('#pTools').style.display = 'none';
+    $('#bShot').textContent = LAYOUT[bLayout]; $('#pStatus').textContent = '';
+    if (!bLoop) { bLoop = true; liveLoop(); }
+    loadFace();
+    $('#booth').scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (e) { $('#pStatus').textContent = 'Izin kamera ditolak atau kameranya lagi dipakai. Bisa pilih "dari galeri".'; }
 }
 $('#bStart').onclick = openCam; $('#pRetake').onclick = openCam;
 $('#bFlip').onclick = () => { bFacing = bFacing === 'user' ? 'environment' : 'user'; openCam(); };
 $('#bCancel').onclick = () => { stopBooth(); if (pSrc) { $('#pbox').style.display = ''; $('#pTools').style.display = ''; } };
 function grab() {
-  const vw = bVid.videoWidth, vh = bVid.videoHeight, tw = 800, th = 600, r = Math.max(tw / vw, th / vh), sw = tw / r, sh = th / r;
-  const c = document.createElement('canvas'); c.width = tw; c.height = th; const g = c.getContext('2d');
-  if (bFacing === 'user') { g.translate(tw, 0); g.scale(-1, 1); }
-  g.drawImage(bVid, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, tw, th); return c;
+  const w = 800, h = 600, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  drawLive(g, w, h, performance.now());
+  const fx = FX[pFilter] || {}; const out = fx.px ? filterCanvas(c, pFilter) : c;
+  if (fx.ov) overlay(out.getContext('2d'), w, h, fx.ov, performance.now());
+  return out;
 }
 async function countdown() { const el = $('#bCount'); for (const n of ['3', '2', '1']) { el.textContent = n; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); blip(880, .05); await new Promise(r => setTimeout(r, 800)); } el.textContent = ''; }
 function flash() { const f = $('#bFlash'); f.style.transition = 'none'; f.style.opacity = .95; requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transition = 'opacity .45s'; f.style.opacity = 0; })); blip(1568, .06); }
@@ -1233,6 +1345,7 @@ async function shoot() {
   for (let i = 0; i < n; i++) { $('#bShot').textContent = `${i + 1}/${n} · ${pose[i % 4]}`; await countdown(); flash(); shots.push(grab()); await new Promise(r => setTimeout(r, 450)); }
   stopBooth(); pShots = shots; pBooth = true; useCanvas(compose(shots), false); rain(['📸', '🍓', '✨'], 18); sfx('party');
   bBusy = false; $('#bSnap').disabled = false;
+  $('#pbox').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 $('#bSnap').onclick = shoot;
 
@@ -1265,7 +1378,7 @@ function deco(g, x, y, s, th) {
   else drawBerry(g, x, y, 1.3 * s);
 }
 function compose(shots) {
-  const th = bTheme, t = TH[th], f = s => filterCanvas(s, pFilter), cap = ($('#pCap').value || 'Hi, Joy!').slice(0, 28), date = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  const th = bTheme, t = TH[th], f = s => s, cap = ($('#pCap').value || 'Hi, Joy!').slice(0, 28), date = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
   let c, g, w, h, footY;
   const photo = (s, x, y, pw, ph, crop) => { g.fillStyle = '#fff'; g.fillRect(x - 10, y - 10, pw + 20, ph + 20); const sw = crop ? s.height : s.width, sx = crop ? (s.width - s.height) / 2 : 0; g.drawImage(f(s), sx, 0, sw, s.height, x, y, pw, ph); };
   if (bLayout === 'grid') { const pw = 520, ph = 390, pad = 46, gap = 26, foot = 170; w = pad * 2 + pw * 2 + gap; h = pad + ph * 2 + gap + foot; c = document.createElement('canvas'); c.width = w; c.height = h; g = c.getContext('2d'); paintBg(g, w, h, th); shots.forEach((s, i) => photo(s, pad + (i % 2) * (pw + gap), pad + Math.floor(i / 2) * (ph + gap), pw, ph)); footY = h - foot + 24; }
