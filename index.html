@@ -128,7 +128,9 @@ label.ck input{width:18px;height:18px;accent-color:var(--berry)}
 .chips .chip.on{background:var(--berry);color:#fff;border-color:var(--berry)}
 .booth{position:relative;margin-top:10px;border-radius:16px;overflow:hidden;background:#2a1f25;aspect-ratio:4/3}
 .booth video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
-.bFrame{position:absolute;inset:0;border:10px solid #ffd3dc;border-radius:16px;outline:3px dashed #fff;outline-offset:-16px;pointer-events:none}
+.bShot{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:rgba(255,255,255,.9);border-radius:999px;padding:4px 12px;font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--berry);white-space:nowrap}
+.bFlip{position:absolute;right:16px;bottom:16px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.9);font-size:20px}
+.bFrame{position:absolute;inset:0;border:12px solid #ffd3dc;transition:border-color .3s;border-radius:16px;outline:3px dashed #fff;outline-offset:-16px;pointer-events:none}
 .bCount{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-size:96px;font-weight:700;color:#fff;text-shadow:0 4px 0 #e8475f}
 .bCount.go{animation:cnt .8s}
 @keyframes cnt{from{transform:scale(1.6);opacity:0}30%{opacity:1}}
@@ -146,6 +148,17 @@ label.ck input{width:18px;height:18px;accent-color:var(--berry)}
 .letter p{margin:0 0 30px;line-height:30px}
 .sign{text-align:right;font-size:20px}
 
+/* ---------- obby ---------- */
+#obUI{position:fixed;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;display:none;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
+#obUI > *{pointer-events:auto}
+body.obbyOn #obUI{display:flex}
+body.obbyOn .cap,body.obbyOn .place,body.obbyOn #np{opacity:0;pointer-events:none}
+.obTop{display:flex;gap:10px;align-items:center}
+#obProg{font-family:'Fredoka';font-weight:700;background:var(--cream);border-radius:999px;padding:6px 14px;box-shadow:var(--shadow)}
+#obExit{background:rgba(255,255,255,.85);border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px}
+#obJump{width:min(320px,80vw);height:74px;border-radius:24px;background:var(--berry);color:#fff;font-family:'Fredoka';font-weight:700;font-size:28px;box-shadow:0 6px 0 var(--berry2),0 12px 30px rgba(90,30,50,.25)}
+#obJump:active{transform:translateY(4px);box-shadow:0 2px 0 var(--berry2)}
+.obHint{font-size:13px;color:#fff;background:rgba(75,38,50,.6);padding:4px 12px;border-radius:999px}
 /* ---------- modal, toast, bubble ---------- */
 .modal{position:fixed;inset:0;z-index:60;background:rgba(60,20,35,.45);display:none;align-items:center;justify-content:center;padding:16px}
 .modal.on{display:flex}
@@ -229,7 +242,7 @@ footer .lmute{color:#fff;opacity:.85}
         <p class="lead today"><b>Pesan hari ini:</b> <span id="daily"></span></p>
         <div class="acts"><button class="act" id="affBtn">🍓 kasih semangat</button><button class="act" data-sheet="chat">💬 ngobrol</button><button class="act" data-sheet="lemari">👗 lemari</button></div>
         <div class="moods" id="moods"><span>hari ini aku lagi…</span><button data-m="capek">😮‍💨</button><button data-m="kangen">🥺</button><button data-m="sedih">😢</button><button data-m="kesel">😤</button><button data-m="senang">😊</button></div>
-        <div class="hint">geser ke atas pelan-pelan ↑ ada 12 pulau</div>
+        <div class="hint">geser ke atas pelan-pelan ↑ ada 13 pulau</div>
       </div>
     </div>
   </section>
@@ -314,8 +327,15 @@ footer .lmute{color:#fff;opacity:.85}
     <div class="acts"><button class="act main" id="togaBtn">🎓 lempar topi</button><button class="act" data-sheet="wisuda">baca ✨</button></div>
   </div></div></section>
 
-  <section class="ch last" data-st="12"><div class="stick"><div class="cap">
-    <div class="kicker">bab 12 · di bawah bulan</div>
+  <section class="ch" data-st="12"><div class="stick"><div class="cap">
+    <div class="kicker">bab 12 · taman obby</div>
+    <h2>Jatuh, bangun, lompat lagi</h2>
+    <p class="diary">"Kadang hidup kayak obby di Roblox. Jatuh berkali-kali, balik ke checkpoint, coba lagi."</p>
+    <div class="acts"><button class="act main" id="obStart">🎮 main obby</button><button class="act" data-sheet="obby">baca ✨</button></div>
+  </div></div></section>
+
+  <section class="ch last" data-st="13"><div class="stick"><div class="cap">
+    <div class="kicker">bab 13 · di bawah bulan</div>
     <h2>Atap, bulan, dan kamu</h2>
     <p class="diary">"Malam ini aku naik ke atap. Bulannya sama dengan yang di atas Siantar."</p>
     <div class="menu">
@@ -329,6 +349,7 @@ footer .lmute{color:#fff;opacity:.85}
 </main>
 <footer><button id="liteBtn" class="lmute">⚡ mode ringan (buat HP yang ngos-ngosan)</button></footer>
 
+<div id="obUI"><div class="obTop"><span id="obProg">🚩 0/9</span><button id="obExit">keluar</button></div><button id="obJump">LOMPAT ⬆️</button><div class="obHint">tunggu platform yang berkedip muncul dulu ✨</div></div>
 <div id="sheetBg"></div>
 <div id="sheet" role="dialog" aria-modal="true"><button id="sheetX" aria-label="tutup">✕</button><div id="sheetBody"></div></div>
 
@@ -460,6 +481,13 @@ footer .lmute{color:#fff;opacity:.85}
     <a class="btn soft" style="margin-top:6px" href="https://www.youtube.com/results?search_query=Dalam+Nama+Yesus+ada+kemenangan" target="_blank" rel="noopener">🎧 dengar "Dalam Nama Yesus"</a>
   </div>
 
+  <div class="pane" id="p-obby">
+    <div class="kicker">bab 12 · taman obby</div><h3>Jatuh, bangun, lompat lagi</h3>
+    <p><i>Kadang hidup kayak obby di Roblox. Jatuh berkali-kali, balik ke checkpoint, coba lagi.</i></p>
+    <p>Dan itu nggak apa-apa, Joy. <b>Jatuh bukan berarti kalah.</b> Checkpoint itu ada justru karena semua orang pasti jatuh.</p>
+    <p>Kamu udah sampai di banyak checkpoint: berangkat dari Siantar, bertahan di Jakarta, KKN, skripsi, kehilangan, dan tetap jalan. Lompatan berikutnya juga pasti bisa.</p>
+    <p class="small">Cara main: pencet <b>LOMPAT</b>. Platform yang berkedip kadang ngilang, jadi tunggu sampai muncul. Ada checkpoint di tengah. 🚩</p>
+  </div>
   <div class="pane" id="p-amplop">
     <div class="kicker">kotak surat</div><h3>Buka kalau…</h3>
     <p class="small">Simpan buat nanti. Buka pas kamu butuh, nggak harus sekarang semua.</p>
@@ -478,17 +506,23 @@ footer .lmute{color:#fff;opacity:.85}
 
   <div class="pane" id="p-foto">
     <div class="kicker">📸 photobooth</div><h3>Photobooth stroberi</h3>
-    <p class="small">Ambil 3 foto pakai kamera depan, jadi satu strip lucu. Atau pilih foto dari galeri. Fotonya tetap di HP-mu sampai kamu simpan.</p>
-    <div class="row"><button class="btn" id="bStart">📷 buka kamera</button><label class="btn soft" for="pfile">🖼️ dari galeri</label><input type="file" id="pfile" accept="image/*" hidden></div>
-    <div class="booth" id="booth" style="display:none"><video id="bVid" playsinline muted autoplay></video><div class="bFrame"></div><div class="bCount" id="bCount"></div><div class="bFlash" id="bFlash"></div></div>
-    <div class="row" id="bCtl" style="display:none;margin-top:10px"><button class="btn" id="bSnap">📸 ambil 3 foto</button><button class="btn soft" id="bOne">1 foto aja</button></div>
+    <p class="small">Pilih gaya & bingkai, buka kamera, senyum! Fotonya tetap di HP-mu sampai kamu simpan atau kirim.</p>
+    <div class="small">gaya foto</div><div class="chips" id="bLayout"></div>
+    <div class="small">bingkai</div><div class="chips" id="bTheme"></div>
+    <div class="row" style="margin-top:6px"><button class="btn" id="bStart">📷 buka kamera</button><label class="btn soft" for="pfile">🖼️ dari galeri</label><input type="file" id="pfile" accept="image/*" hidden></div>
+    <div class="booth" id="booth" style="display:none"><video id="bVid" playsinline muted autoplay></video><div class="bFrame" id="bFrame"></div><div class="bShot" id="bShot"></div><div class="bCount" id="bCount"></div><div class="bFlash" id="bFlash"></div><button class="bFlip" id="bFlip" aria-label="ganti kamera">🔄</button></div>
+    <div class="row" id="bCtl" style="display:none;margin-top:10px"><button class="btn" id="bSnap">📸 mulai!</button><button class="btn soft" id="bCancel">tutup kamera</button></div>
     <div class="photoBox" id="pbox"><span class="small">belum ada foto</span></div>
     <div id="pTools" style="display:none">
       <div class="small">filter</div><div class="chips" id="pFilters"></div>
-      <div class="small">stiker (pencet buat nambah, geser di foto)</div><div class="chips" id="pStickers"></div>
-      <input class="note" id="pNote" maxlength="200" placeholder="catatan kecil (boleh kosong)">
-      <div class="row" style="margin-top:10px"><button class="btn" id="pSave">simpan ke galeri</button><button class="btn soft" id="pSend">kirim ke bulan 🌙</button></div>
-      <p class="small" id="pSendNote" style="margin:8px 0 0">Kalau dikirim ke bulan, foto & catatanmu sampai ke penjaga bulan (orang yang bikin dunia kecil ini). Cuma dia, nggak dipajang di mana-mana.</p>
+      <div class="small">stiker (pencet buat nambah, geser di foto, ketuk 2× buat hapus)</div><div class="chips" id="pStickers"></div>
+      <div id="pCapRow"><div class="small">tulisan di bingkai</div><input class="note" id="pCap" maxlength="28" value="Hi, Joy!"></div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="pSave">💾 simpan</button><button class="btn soft" id="pShare">📤 bagikan</button><button class="btn soft" id="pRetake">🔁 foto ulang</button></div>
+      <div id="pSendBox" style="margin-top:12px">
+        <input class="note" id="pNote" maxlength="200" placeholder="catatan kecil buat bulan (boleh kosong)">
+        <div class="row" style="margin-top:8px"><button class="btn soft" id="pSend">kirim ke bulan 🌙</button></div>
+        <p class="small" id="pSendNote" style="margin:8px 0 0">Kalau dikirim ke bulan, foto & catatanmu sampai ke penjaga bulan (orang yang bikin dunia kecil ini). Cuma dia, nggak dipajang di mana-mana.</p>
+      </div>
       <div class="status" id="pStatus"></div>
     </div>
   </div>
@@ -525,8 +559,8 @@ footer .lmute{color:#fff;opacity:.85}
 
 <script type="module">
 /* ======== PENGATURAN ======== */
-const NST = 13, LAST = NST - 1;
-const WORKER_URL = '';        // isi setelah Cloudflare Worker dipasang, mis. 'https://kotak-joy.namamu.workers.dev'
+const NST = 14, LAST = NST - 1;
+const WORKER_URL = 'https://kotak-pos-lentera.horosphoibos.workers.dev';        // isi setelah Cloudflare Worker dipasang, mis. 'https://kotak-joy.namamu.workers.dev'
 const BIRTHDAY = null;        // ulang tahun Joy, format 'MM-DD', mis. '04-17'
 
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
@@ -799,8 +833,11 @@ const SONGS = [
   { name: 'Ya Tuhan, Tiap Jam (KJ 457)', bpm: 64, beats: 3, key: 'Ab', oct: 68, ch: ['Ab', 'Ab', 'Ab', 'Db', 'Ab', 'Eb', 'Ab', 'Eb', 'Ab', 'Ab', 'Eb', 'Eb', 'Ab', 'Db', 'Ab', 'Eb', 'Ab'],
     mel: "r/2 1/1 | 3/1.5 2/.5 1/.5 7,/.5 | 1/2 1/1 | 1/1.5 2/.5 1/.5 6,/.5 | 5,/2 5,/1 | 2/1.5 3/.5 2/.5 5,/.5 | 3/2 1/1 | 7,/1.5 1/.5 7,/.5 6,/.5 | 5,/2 3/1 | 3/1.5 1/.5 4/.5 3/.5 | 3/1 2/2 | 2/1.5 1/.5 3/.5 2/.5 | 2/1 1/1 1/1 | 1/1.5 2/.5 1/.5 6,/.5 | 5,/1 1/1 2/1 | 3/1.5 1/.5 2/1 | 1/3",
     lead: 'box', harm: 'celesta', pad: true, bass: 'long' },
+  { name: 'Obby Ceria', bpm: 120, beats: 4, key: 'C', oct: 72, ch: ['C', 'F', 'G', 'C', 'C', 'F', 'G', 'C'],
+    mel: "1/.5 3/.5 5/.5 1'/.5 7/1 5/1 | 4/.5 6/.5 1'/.5 6/.5 5/2 | 2/.5 4/.5 5/.5 7/.5 2'/1 7/1 | 1'/2 5/2 | 3/.5 5/.5 1'/.5 3'/.5 2'/1 1'/1 | 6/.5 1'/.5 4'/.5 1'/.5 6/2 | 5/.5 7/.5 2'/.5 5'/.5 4'/1 2'/1 | 1'/2 r/2",
+    lead: 'box', harm: 'pluck', acc: 'pluck', bass: 'bounce', perc: 'shaker' },
 ];
-const SONG_OF = [isDec ? 13 : 0, 1, 8, 2, 3, 12, 4, 9, 5, 14, 10, 11, 7];
+const SONG_OF = [isDec ? 13 : 0, 1, 8, 2, 3, 12, 4, 9, 5, 14, 10, 11, 15, 7];
 function buildSong(S, idx) {
   if (S.ev) return S;
   const ev = [];
@@ -1042,6 +1079,7 @@ $('#chatGo').onclick = chat; $('#chatIn').addEventListener('keydown', e => { if 
 /* ======== kirim (lewat Worker) ======== */
 async function sendForm(fd) {
   if (!WORKER_URL) return { ok: false, why: 'off' };
+  fd.append('site', 'joy');
   try { const r = await fetch(WORKER_URL, { method: 'POST', body: fd }); const j = await r.json().catch(() => ({})); return { ok: r.ok && j.ok, why: j.error || r.status }; }
   catch (e) { return { ok: false, why: 'net' }; }
 }
@@ -1066,131 +1104,178 @@ $('#moonGo').onclick = async () => {
   } else $('#moonTxt').value = '';
 };
 
-/* ======== foto + filter + stiker ======== */
+/* ======== photobooth & editor foto ======== */
 const SPR = {
   stroberi: { p: { G: '#3f9a4c', g: '#62c06f', R: '#e8475f', y: '#ffe2a8' }, r: ['..GGG..', '.GGgGG.', '.RRRRR.', 'RRyRRyR', 'RRRRRRR', '.RyRRR.', '..RRR..', '...R...'] },
   hati: { p: { R: '#ff5a87', w: '#ffd0dc' }, r: ['.RR.RR.', 'RwRRRRR', 'RRRRRRR', '.RRRRR.', '..RRR..', '...R...'] },
   bintang: { p: { Y: '#ffd44d' }, r: ['...Y...', '...Y...', '.YYYYY.', 'YYYYYYY', '.YYYYY.', '.YY.YY.', 'YY...YY'] },
   bunga: { p: { P: '#ffb3c8', Y: '#ffd44d' }, r: ['.P.P.', 'PPPPP', '.PYP.', 'PPPPP', '.P.P.'] },
   kacamata: { p: { K: '#2b2430' }, r: ['.KK...KK.', 'K..K.K..K', 'K..KKK..K', '.KK...KK.'] },
+  kodok: { p: { W: '#ffffff', K: '#1f1a24', G: '#7cc86a', P: '#ff9ab8', R: '#3f8f45' }, r: ['.WW...WW.', 'WKWGGGWKW', '.GGGGGGG.', 'GGPGGGPGG', 'GGGRRRGGG', '.GGGGGGG.', '..G...G..'] },
+  bulan: { p: { Y: '#ffe9a8' }, r: ['..YYY..', '.YY....', 'YY.....', 'YY.....', 'YY.....', '.YY....', '..YYY..'] },
+  mahkota: { p: { Y: '#ffd44d', R: '#e8475f', B: '#6fa8dc' }, r: ['Y...Y...Y', 'YY.YYY.YY', 'YYYYYYYYY', 'YRYYBYYRY', 'YYYYYYYYY'] },
+  pita: { p: { P: '#ff8fab', R: '#e8475f' }, r: ['PP.....PP', 'PPPP.PPPP', 'PPPPRPPPP', 'PPPP.PPPP', 'PP.....PP'] },
 };
-const FIL = { asli: 'asli', stroberi: '🍓 stroberi', hangat: '☀️ hangat', bw: '🎞️ b&w', pixel: '👾 pixel' };
-let pSrc = null, pFilter = 'stroberi', pStk = [], pCv = null, pCtx = null, drag = null;
+const TXT = { horas: 'Horas! 👋', semangat: 'semangat! 💪', joy: 'Joy 🍓' };
+const FIL = { asli: 'asli', stroberi: '🍓 stroberi', hangat: '☀️ hangat', mimpi: '☁️ mimpi', bw: '🎞️ b&w', pixel: '👾 pixel' };
+const CSSF = { asli: 'none', stroberi: 'saturate(1.1) sepia(.15) hue-rotate(-12deg) brightness(1.05)', hangat: 'sepia(.28) saturate(1.2) brightness(1.03)', mimpi: 'brightness(1.1) contrast(.9) saturate(.85)', bw: 'grayscale(1) contrast(1.05)', pixel: 'none' };
+const LAYOUT = { strip: '🎞️ strip 3', grid: '🟦 kotak 4', pola: '🖼️ polaroid' };
+const THEME = { stroberi: '🍓 stroberi', rajut: '🧶 rajut', hiou: '❤️ hiou', malam: '🌙 malam', natal: '🎄 natal', kodok: '🐸 kodok' };
+let pSrc = null, pFilter = 'stroberi', pStk = [], pCv = null, pCtx = null, drag = null, pBooth = false, pShots = [], bLayout = 'strip', bTheme = isDec ? 'natal' : 'stroberi';
 function chipsInto(el, obj, onPick, cur) {
   el.innerHTML = ''; Object.entries(obj).forEach(([k, v]) => { const b = document.createElement('button'); b.className = 'chip' + (k === cur ? ' on' : ''); b.textContent = v;
     b.onclick = () => { if (cur !== undefined) { [...el.children].forEach(c => c.classList.toggle('on', c === b)); } onPick(k); }; el.appendChild(b); });
 }
-chipsInto($('#pFilters'), FIL, k => { pFilter = k; renderPhoto(); }, pFilter);
-chipsInto($('#pStickers'), { stroberi: '🍓', hati: '💗', bintang: '⭐', bunga: '🌸', kacamata: '👓', hapus: '↩︎ hapus' }, k => {
+const recompose = (keep = true) => { if (pBooth && pShots.length) useCanvas(compose(pShots), keep); };
+chipsInto($('#pFilters'), FIL, k => { pFilter = k; if (pBooth) recompose(); else renderPhoto(); if (bStream) bVid.style.filter = CSSF[k]; }, pFilter);
+chipsInto($('#bLayout'), LAYOUT, k => { bLayout = k; if (pBooth && pShots.length) { toast('foto ulang biar pas sama gaya baru 📸'); } }, bLayout);
+chipsInto($('#bTheme'), THEME, k => { bTheme = k; paintFramePreview(); recompose(); }, bTheme);
+chipsInto($('#pStickers'), { stroberi: '🍓', hati: '💗', bintang: '⭐', bunga: '🌸', kacamata: '👓', kodok: '🐸', bulan: '🌙', mahkota: '👑', pita: '🎀', horas: '“Horas!”', semangat: '“semangat!”', hapus: '↩︎ hapus' }, k => {
   if (!pSrc) return;
   if (k === 'hapus') pStk.pop(); else pStk.push({ k, x: pCv.width * (.3 + Math.random() * .4), y: pCv.height * (.3 + Math.random() * .4) });
-  renderPhoto();
+  renderPhoto(); blip(1046, .04);
 });
-$('#pfile').onchange = async e => {
+$('#pCap').oninput = () => recompose();
+$('#pfile').onchange = e => {
   const f = e.target.files[0]; if (!f) return;
   const url = URL.createObjectURL(f); const img = new Image();
-  img.onload = () => {
-    const s = Math.min(1, 1280 / Math.max(img.width, img.height)); const w = Math.round(img.width * s), h = Math.round(img.height * s);
-    pSrc = document.createElement('canvas'); pSrc.width = w; pSrc.height = h; pSrc.getContext('2d').drawImage(img, 0, 0, w, h); URL.revokeObjectURL(url);
-    pCv = document.createElement('canvas'); pCv.width = w; pCv.height = h; pCtx = pCv.getContext('2d', { willReadFrequently: true });
-    $('#pbox').innerHTML = ''; $('#pbox').appendChild(pCv); $('#pTools').style.display = ''; $('#pStatus').textContent = ''; pStk = [];
-    bindDrag(); renderPhoto();
-  };
+  img.onload = () => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); URL.revokeObjectURL(url); pBooth = false; useCanvas(c, false); };
   img.onerror = () => { $('#pStatus').textContent = 'fotonya nggak bisa dibuka, coba foto lain ya'; };
-  img.src = url;
+  img.src = url; e.target.value = '';
 };
-function stkSize(k) { const r = SPR[k].r; const u = Math.max(4, Math.round(Math.min(pCv.width, pCv.height) * .2 / r[0].length)); return { u, w: r[0].length * u, h: r.length * u }; }
-function renderPhoto() {
-  if (!pSrc) return; const w = pCv.width, h = pCv.height, g = pCtx;
-  g.imageSmoothingEnabled = true;
-  if (pFilter === 'pixel') { const sw = Math.max(40, Math.round(w / 9)), sh = Math.round(sw * h / w); const t = document.createElement('canvas'); t.width = sw; t.height = sh; t.getContext('2d').drawImage(pSrc, 0, 0, sw, sh); g.imageSmoothingEnabled = false; g.drawImage(t, 0, 0, w, h); }
-  else g.drawImage(pSrc, 0, 0);
-  if (pFilter !== 'asli' && pFilter !== 'pixel') {
-    const d = g.getImageData(0, 0, w, h), a = d.data;
-    for (let i = 0; i < a.length; i += 4) {
-      let r = a[i], gg = a[i + 1], b = a[i + 2];
-      if (pFilter === 'stroberi') { r = r * .92 + 34; gg = gg * .86 + 14; b = b * .9 + 28; }
-      else if (pFilter === 'hangat') { r = r * 1.04 + 16; gg = gg + 5; b = b * .9; }
-      else if (pFilter === 'bw') { const y = r * .3 + gg * .59 + b * .11; r = gg = b = y * 1.05 + 6; }
-      a[i] = r; a[i + 1] = gg; a[i + 2] = b;
-    }
-    g.putImageData(d, 0, 0);
-  }
-  pStk.forEach(s => { const { u, w: sw, h: sh } = stkSize(s.k); const sp = SPR[s.k];
-    sp.r.forEach((row, j) => [...row].forEach((c, i) => { if (c !== '.') { g.fillStyle = sp.p[c]; g.fillRect(Math.round(s.x - sw / 2 + i * u), Math.round(s.y - sh / 2 + j * u), u, u); } })); });
+function useCanvas(c, keep) {
+  const s = Math.min(1, 1280 / Math.max(c.width, c.height)), w = Math.round(c.width * s), h = Math.round(c.height * s);
+  const same = keep && pCv && pCv.width === w && pCv.height === h;
+  pSrc = document.createElement('canvas'); pSrc.width = w; pSrc.height = h; pSrc.getContext('2d').drawImage(c, 0, 0, w, h);
+  if (!same) { pCv = document.createElement('canvas'); pCv.width = w; pCv.height = h; pCtx = pCv.getContext('2d', { willReadFrequently: true }); $('#pbox').innerHTML = ''; $('#pbox').appendChild(pCv); bindDrag(); if (!keep) pStk = []; }
+  $('#pbox').style.display = ''; $('#pTools').style.display = ''; $('#pStatus').textContent = ''; $('#pCapRow').style.display = pBooth ? '' : 'none'; $('#pRetake').style.display = pBooth ? '' : 'none';
+  renderPhoto();
 }
+function filterCanvas(src, f) {
+  const w = src.width, h = src.height, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d', { willReadFrequently: true });
+  if (f === 'pixel') { const sw = Math.max(40, Math.round(w / 9)), sh = Math.round(sw * h / w), t = document.createElement('canvas'); t.width = sw; t.height = sh; t.getContext('2d').drawImage(src, 0, 0, sw, sh); g.imageSmoothingEnabled = false; g.drawImage(t, 0, 0, w, h); return c; }
+  g.drawImage(src, 0, 0); if (f === 'asli') return c;
+  const d = g.getImageData(0, 0, w, h), a = d.data;
+  for (let i = 0; i < a.length; i += 4) {
+    let r = a[i], gg = a[i + 1], b = a[i + 2];
+    if (f === 'stroberi') { r = r * .92 + 34; gg = gg * .86 + 14; b = b * .9 + 28; }
+    else if (f === 'hangat') { r = r * 1.04 + 16; gg = gg + 5; b = b * .9; }
+    else if (f === 'mimpi') { r = r * .85 + 40; gg = gg * .85 + 36; b = b * .85 + 48; }
+    else if (f === 'bw') { const y = r * .3 + gg * .59 + b * .11; r = gg = b = y * 1.05 + 6; }
+    a[i] = r; a[i + 1] = gg; a[i + 2] = b;
+  }
+  g.putImageData(d, 0, 0); return c;
+}
+function stkSize(k) { if (TXT[k]) { const u = Math.max(18, Math.round(Math.min(pCv.width, pCv.height) * .06)); return { u, w: u * 7, h: u * 1.9 }; } const r = SPR[k].r; const u = Math.max(4, Math.round(Math.min(pCv.width, pCv.height) * .2 / r[0].length)); return { u, w: r[0].length * u, h: r.length * u }; }
+function renderPhoto() {
+  if (!pSrc) return; const g = pCtx;
+  if (pBooth) g.drawImage(pSrc, 0, 0); else g.drawImage(filterCanvas(pSrc, pFilter), 0, 0);
+  pStk.forEach(s => { const z = stkSize(s.k);
+    if (TXT[s.k]) { g.save(); g.fillStyle = '#fff'; g.strokeStyle = '#e8475f'; g.lineWidth = z.u * .14; const x = s.x - z.w / 2, y = s.y - z.h / 2, r = z.h / 2; g.beginPath(); g.roundRect ? g.roundRect(x, y, z.w, z.h, r) : g.rect(x, y, z.w, z.h); g.fill(); g.stroke(); g.fillStyle = '#e8475f'; g.font = `700 ${Math.round(z.u * 1.05)}px Fredoka, system-ui`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(TXT[s.k], s.x, s.y + z.u * .05); g.restore(); return; }
+    const sp = SPR[s.k]; sp.r.forEach((row, j) => [...row].forEach((c, i) => { if (c !== '.') { g.fillStyle = sp.p[c]; g.fillRect(Math.round(s.x - z.w / 2 + i * z.u), Math.round(s.y - z.h / 2 + j * z.u), z.u, z.u); } })); });
+}
+let lastTap = { t: 0, s: null };
 function bindDrag() {
   const pos = e => { const r = pCv.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * pCv.width, y: (e.clientY - r.top) / r.height * pCv.height }; };
-  pCv.onpointerdown = e => { const p = pos(e); for (let i = pStk.length - 1; i >= 0; i--) { const s = pStk[i], z = stkSize(s.k); if (Math.abs(p.x - s.x) < z.w * .7 && Math.abs(p.y - s.y) < z.h * .7) { drag = { s, dx: s.x - p.x, dy: s.y - p.y }; pCv.setPointerCapture(e.pointerId); break; } } };
+  pCv.onpointerdown = e => { const p = pos(e); for (let i = pStk.length - 1; i >= 0; i--) { const s = pStk[i], z = stkSize(s.k); if (Math.abs(p.x - s.x) < z.w * .6 && Math.abs(p.y - s.y) < z.h * .7) {
+    const now = performance.now(); if (lastTap.s === s && now - lastTap.t < 350) { pStk.splice(i, 1); renderPhoto(); lastTap = { t: 0, s: null }; return; } lastTap = { t: now, s };
+    drag = { s, dx: s.x - p.x, dy: s.y - p.y }; pCv.setPointerCapture(e.pointerId); break; } } };
   pCv.onpointermove = e => { if (!drag) return; const p = pos(e); drag.s.x = p.x + drag.dx; drag.s.y = p.y + drag.dy; renderPhoto(); };
   pCv.onpointerup = pCv.onpointercancel = () => drag = null;
 }
-$('#pSave').onclick = () => { if (!pCv) return; const a = document.createElement('a'); a.download = 'joy-stroberi.jpg'; a.href = pCv.toDataURL('image/jpeg', .9); a.click(); };
+const blobOf = () => new Promise(r => pCv.toBlob(r, 'image/jpeg', .9));
+$('#pSave').onclick = () => { if (!pCv) return; const a = document.createElement('a'); a.download = 'joy-photobooth.jpg'; a.href = pCv.toDataURL('image/jpeg', .92); a.click(); toast('tersimpan 💾'); };
+$('#pShare').onclick = async () => {
+  if (!pCv) return; const f = new File([await blobOf()], 'joy-photobooth.jpg', { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [f] })) { try { await navigator.share({ files: [f], title: 'Hi, Joy! 🍓' }); } catch (e) {} } else $('#pSave').click();
+};
 $('#pSend').onclick = async () => {
   if (!pCv) return; const st = $('#pStatus');
-  if (!WORKER_URL) { st.textContent = 'Jalan ke bulan belum tersambung. Sementara simpan ke galeri dulu ya 🙏'; return; }
-  $('#pSend').disabled = true; st.textContent = 'lagi dikirim…';
-  const blob = await new Promise(r => pCv.toBlob(r, 'image/jpeg', .88));
-  const fd = new FormData(); fd.append('photo', blob, 'foto.jpg'); fd.append('note', $('#pNote').value.trim());
+  if (!WORKER_URL) { st.textContent = 'Jalan ke bulan belum tersambung. Sementara simpan dulu ya 🙏'; return; }
+  $('#pSend').disabled = true; st.textContent = 'lagi terbang ke bulan… 🚀';
+  const fd = new FormData(); fd.append('photo', await blobOf(), 'foto.jpg'); fd.append('note', $('#pNote').value.trim());
   const res = await sendForm(fd);
-  st.textContent = res.ok ? 'Sampai di bulan 🌙 makasih udah berbagi momenmu' : 'Belum kekirim, coba lagi sebentar ya.';
-  if (res.ok) { rain(['💌', '🍓'], 16); $('#pNote').value = ''; }
+  st.textContent = res.ok ? 'Sampai di bulan 🌙 makasih udah berbagi momenmu' : 'Belum sampai, coba lagi sebentar ya.';
+  if (res.ok) { rain(['💌', '🍓', '🌙'], 18); $('#pNote').value = ''; }
   $('#pSend').disabled = false;
 };
 
-/* ======== photobooth kamera (strip 3 foto) ======== */
-let bStream = null, bBusy = false;
+/* ---------- kamera ---------- */
+let bStream = null, bBusy = false, bFacing = 'user';
 const bVid = $('#bVid');
-const CSSF = { asli: 'none', stroberi: 'saturate(1.1) sepia(.15) hue-rotate(-12deg) brightness(1.05)', hangat: 'sepia(.28) saturate(1.2) brightness(1.03)', bw: 'grayscale(1) contrast(1.05)', pixel: 'none' };
-function useCanvas(c) {
-  const s = Math.min(1, 1280 / Math.max(c.width, c.height)), w = Math.round(c.width * s), h = Math.round(c.height * s);
-  pSrc = document.createElement('canvas'); pSrc.width = w; pSrc.height = h; pSrc.getContext('2d').drawImage(c, 0, 0, w, h);
-  pCv = document.createElement('canvas'); pCv.width = w; pCv.height = h; pCtx = pCv.getContext('2d', { willReadFrequently: true });
-  $('#pbox').innerHTML = ''; $('#pbox').appendChild(pCv); $('#pbox').style.display = ''; $('#pTools').style.display = ''; $('#pStatus').textContent = ''; pStk = [];
-  bindDrag(); renderPhoto();
-}
+function paintFramePreview() { const c = { stroberi: '#ffd3dc', rajut: '#f6e7d4', hiou: '#b4232c', malam: '#1f2552', natal: '#2f6b3a', kodok: '#bfe8b0' }[bTheme]; $('#bFrame').style.borderColor = c; }
+paintFramePreview();
 function stopBooth() { if (bStream) { bStream.getTracks().forEach(t => t.stop()); bStream = null; } $('#booth').style.display = 'none'; $('#bCtl').style.display = 'none'; }
-$('#bStart').onclick = async () => {
+async function openCam() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { $('#pStatus').textContent = 'Kamera nggak bisa dibuka di browser ini. Pakai "dari galeri" aja ya.'; return; }
   try {
-    bStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 960 }, height: { ideal: 720 } }, audio: false });
-    bVid.srcObject = bStream; await bVid.play();
+    if (bStream) bStream.getTracks().forEach(t => t.stop());
+    bStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: bFacing, width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false });
+    bVid.srcObject = bStream; await bVid.play(); bVid.style.transform = bFacing === 'user' ? 'scaleX(-1)' : 'none';
     $('#booth').style.display = ''; $('#bCtl').style.display = ''; $('#pbox').style.display = 'none'; $('#pTools').style.display = 'none';
-    bVid.style.filter = CSSF[pFilter] || 'none';
+    bVid.style.filter = CSSF[pFilter] || 'none'; $('#bShot').textContent = LAYOUT[bLayout]; $('#pStatus').textContent = '';
   } catch (e) { $('#pStatus').textContent = 'Izin kamera ditolak atau kameranya lagi dipakai. Bisa pilih "dari galeri".'; }
-};
+}
+$('#bStart').onclick = openCam; $('#pRetake').onclick = openCam;
+$('#bFlip').onclick = () => { bFacing = bFacing === 'user' ? 'environment' : 'user'; openCam(); };
+$('#bCancel').onclick = () => { stopBooth(); if (pSrc) { $('#pbox').style.display = ''; $('#pTools').style.display = ''; } };
 function grab() {
-  const vw = bVid.videoWidth, vh = bVid.videoHeight, tw = 600, th = 450, r = Math.max(tw / vw, th / vh), sw = tw / r, sh = th / r;
+  const vw = bVid.videoWidth, vh = bVid.videoHeight, tw = 800, th = 600, r = Math.max(tw / vw, th / vh), sw = tw / r, sh = th / r;
   const c = document.createElement('canvas'); c.width = tw; c.height = th; const g = c.getContext('2d');
-  g.translate(tw, 0); g.scale(-1, 1); g.drawImage(bVid, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, tw, th); return c;
+  if (bFacing === 'user') { g.translate(tw, 0); g.scale(-1, 1); }
+  g.drawImage(bVid, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, tw, th); return c;
 }
 async function countdown() { const el = $('#bCount'); for (const n of ['3', '2', '1']) { el.textContent = n; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); blip(880, .05); await new Promise(r => setTimeout(r, 800)); } el.textContent = ''; }
 function flash() { const f = $('#bFlash'); f.style.transition = 'none'; f.style.opacity = .95; requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transition = 'opacity .45s'; f.style.opacity = 0; })); blip(1568, .06); }
-function feltBg(g, w, h) {
-  g.fillStyle = '#ffd3dc'; g.fillRect(0, 0, w, h);
-  g.fillStyle = 'rgba(255,255,255,.35)'; for (let y = 8; y < h; y += 18) for (let x = (y / 18 % 2) * 9 + 4; x < w; x += 18) { g.beginPath(); g.arc(x, y, 2, 0, 6.3); g.fill(); }
-  g.save(); g.setLineDash([14, 10]); g.lineWidth = 4; g.strokeStyle = '#fff'; g.strokeRect(14, 14, w - 28, h - 28); g.restore();
+async function shoot() {
+  if (bBusy || !bStream) return; bBusy = true; $('#bSnap').disabled = true;
+  const n = { strip: 3, grid: 4, pola: 1 }[bLayout], shots = [], pose = ['senyum! 😊', 'gaya lucu! 😜', 'peace ✌️', 'love 🫶'];
+  for (let i = 0; i < n; i++) { $('#bShot').textContent = `${i + 1}/${n} · ${pose[i % 4]}`; await countdown(); flash(); shots.push(grab()); await new Promise(r => setTimeout(r, 450)); }
+  stopBooth(); pShots = shots; pBooth = true; useCanvas(compose(shots), false); rain(['📸', '🍓', '✨'], 18); sfx('party');
+  bBusy = false; $('#bSnap').disabled = false;
 }
+$('#bSnap').onclick = shoot;
+
+/* ---------- bingkai ---------- */
 function drawBerry(g, x, y, s) { g.save(); g.translate(x, y); g.scale(s, s); g.fillStyle = '#e8475f'; g.beginPath(); g.moveTo(0, 26); g.bezierCurveTo(-24, 6, -20, -14, 0, -12); g.bezierCurveTo(20, -14, 24, 6, 0, 26); g.fill(); g.fillStyle = '#ffe6a6'; [[-7, -2], [6, 0], [-2, 8], [8, 10], [-9, 10]].forEach(([a, b]) => { g.beginPath(); g.ellipse(a, b, 1.6, 2.4, 0, 0, 6.3); g.fill(); }); g.fillStyle = '#4fae5a'; g.beginPath(); for (let k = 0; k < 5; k++) { const a = -Math.PI / 2 + (k - 2) * .5; g.ellipse(Math.cos(a) * 7, -13 + Math.sin(a) * 3, 6, 3, a, 0, 6.3); } g.fill(); g.restore(); }
+function drawStar(g, x, y, r, c) { g.save(); g.fillStyle = c; g.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * .45 : r; g.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } g.fill(); g.restore(); }
+function drawFrog(g, x, y, s) { g.save(); g.translate(x, y); g.scale(s, s); g.fillStyle = '#7cc86a'; g.beginPath(); g.ellipse(0, 8, 26, 18, 0, 0, 6.3); g.fill(); [-12, 12].forEach(dx => { g.beginPath(); g.arc(dx, -8, 9, 0, 6.3); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(dx, -8, 6, 0, 6.3); g.fill(); g.fillStyle = '#1f1a24'; g.beginPath(); g.arc(dx, -7, 3, 0, 6.3); g.fill(); g.fillStyle = '#7cc86a'; }); g.strokeStyle = '#3f8f45'; g.lineWidth = 2.5; g.beginPath(); g.arc(0, 8, 9, .2, Math.PI - .2); g.stroke(); g.fillStyle = '#ff9ab8'; [-16, 16].forEach(dx => { g.beginPath(); g.ellipse(dx, 10, 4, 2.5, 0, 0, 6.3); g.fill(); }); g.restore(); }
+const TH = {
+  stroberi: { bg: '#ffd3dc', ink: '#e8475f', sub: '#7d5b64', line: '#fff' },
+  rajut: { bg: '#f6e7d4', ink: '#c9344c', sub: '#7d5b64', line: '#e8475f' },
+  hiou: { bg: '#fff4ea', ink: '#b4232c', sub: '#4b2632', line: '#b4232c' },
+  malam: { bg: '#1f2552', ink: '#ffe9a8', sub: '#d9dcff', line: '#ffe9a8' },
+  natal: { bg: '#2f6b3a', ink: '#fff4ea', sub: '#ffd3dc', line: '#fff' },
+  kodok: { bg: '#bfe8b0', ink: '#2f6b3a', sub: '#4b6b45', line: '#fff' },
+};
+function paintBg(g, w, h, th) {
+  const t = TH[th]; g.fillStyle = t.bg; g.fillRect(0, 0, w, h);
+  if (th === 'stroberi') { g.fillStyle = 'rgba(255,255,255,.4)'; for (let y = 8; y < h; y += 18) for (let x = (y / 18 % 2) * 9 + 4; x < w; x += 18) { g.beginPath(); g.arc(x, y, 2, 0, 6.3); g.fill(); } }
+  if (th === 'rajut') { g.strokeStyle = 'rgba(201,52,76,.18)'; g.lineWidth = 3; for (let y = 6; y < h; y += 14) for (let x = 0; x < w; x += 14) { g.beginPath(); g.moveTo(x, y); g.lineTo(x + 7, y + 8); g.lineTo(x + 14, y); g.stroke(); } }
+  if (th === 'hiou') { const band = (yy) => { for (let x = 0; x < w; x += 24) { g.fillStyle = '#b4232c'; g.beginPath(); g.moveTo(x, yy); g.lineTo(x + 12, yy + 14); g.lineTo(x + 24, yy); g.fill(); g.fillStyle = '#221c22'; g.beginPath(); g.moveTo(x, yy + 28); g.lineTo(x + 12, yy + 14); g.lineTo(x + 24, yy + 28); g.fill(); } }; band(0); band(h - 28); }
+  if (th === 'malam') { for (let k = 0; k < 70; k++) { g.fillStyle = `rgba(255,255,255,${.3 + Math.random() * .6})`; g.beginPath(); g.arc(Math.random() * w, Math.random() * h, Math.random() * 2 + .5, 0, 6.3); g.fill(); } }
+  if (th === 'natal') { g.fillStyle = 'rgba(255,255,255,.7)'; for (let k = 0; k < 60; k++) { g.beginPath(); g.arc(Math.random() * w, Math.random() * h, Math.random() * 3 + 1, 0, 6.3); g.fill(); } }
+  if (th === 'kodok') { g.fillStyle = 'rgba(255,255,255,.35)'; for (let y = 20; y < h; y += 46) for (let x = (y / 46 % 2) * 23 + 10; x < w; x += 46) { g.beginPath(); g.ellipse(x, y, 9, 6, 0, 0, 6.3); g.fill(); } }
+  g.save(); g.setLineDash([14, 10]); g.lineWidth = 4; g.strokeStyle = t.line; g.strokeRect(14, 14, w - 28, h - 28); g.restore();
+}
+function deco(g, x, y, s, th) {
+  if (th === 'malam') { g.save(); g.fillStyle = '#ffe9a8'; g.beginPath(); g.arc(x, y, 22 * s, 0, 6.3); g.fill(); g.fillStyle = TH.malam.bg; g.beginPath(); g.arc(x + 10 * s, y - 6 * s, 20 * s, 0, 6.3); g.fill(); g.restore(); }
+  else if (th === 'natal') drawStar(g, x, y, 24 * s, '#ffd44d');
+  else if (th === 'kodok') drawFrog(g, x, y, s);
+  else drawBerry(g, x, y, 1.3 * s);
+}
 function compose(shots) {
-  const tw = 600, th = 450, pad = 40, gap = 22, foot = 150, w = tw + pad * 2, h = pad + shots.length * th + (shots.length - 1) * gap + foot;
-  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
-  feltBg(g, w, h);
-  shots.forEach((s, i) => { const y = pad + i * (th + gap); g.fillStyle = '#fff'; g.fillRect(pad - 8, y - 8, tw + 16, th + 16); g.drawImage(s, pad, y); });
-  const fy = h - foot + 20;
-  g.textAlign = 'center'; g.fillStyle = '#e8475f'; g.font = '700 54px Fredoka, system-ui'; g.fillText('Hi, Joy!', w / 2, fy + 52);
-  g.fillStyle = '#7d5b64'; g.font = '600 22px Nunito, system-ui'; g.fillText(new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) + ' · joy\'s world', w / 2, fy + 92);
-  drawBerry(g, 70, fy + 40, 1.3); drawBerry(g, w - 70, fy + 40, 1.3);
+  const th = bTheme, t = TH[th], f = s => filterCanvas(s, pFilter), cap = ($('#pCap').value || 'Hi, Joy!').slice(0, 28), date = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  let c, g, w, h, footY;
+  const photo = (s, x, y, pw, ph, crop) => { g.fillStyle = '#fff'; g.fillRect(x - 10, y - 10, pw + 20, ph + 20); const sw = crop ? s.height : s.width, sx = crop ? (s.width - s.height) / 2 : 0; g.drawImage(f(s), sx, 0, sw, s.height, x, y, pw, ph); };
+  if (bLayout === 'grid') { const pw = 520, ph = 390, pad = 46, gap = 26, foot = 170; w = pad * 2 + pw * 2 + gap; h = pad + ph * 2 + gap + foot; c = document.createElement('canvas'); c.width = w; c.height = h; g = c.getContext('2d'); paintBg(g, w, h, th); shots.forEach((s, i) => photo(s, pad + (i % 2) * (pw + gap), pad + Math.floor(i / 2) * (ph + gap), pw, ph)); footY = h - foot + 24; }
+  else if (bLayout === 'pola') { const pw = 760, pad = 56, foot = 230; w = pw + pad * 2; h = pad + pw + foot; c = document.createElement('canvas'); c.width = w; c.height = h; g = c.getContext('2d'); paintBg(g, w, h, th); photo(shots[0], pad, pad, pw, pw, true); footY = h - foot + 50; }
+  else { const pw = 600, ph = 450, pad = 42, gap = 24, foot = 160; w = pw + pad * 2; h = pad + shots.length * ph + (shots.length - 1) * gap + foot; c = document.createElement('canvas'); c.width = w; c.height = h; g = c.getContext('2d'); paintBg(g, w, h, th); shots.forEach((s, i) => photo(s, pad, pad + i * (ph + gap), pw, ph)); footY = h - foot + 22; }
+  g.textAlign = 'center'; g.fillStyle = t.ink; g.font = '700 58px Fredoka, system-ui'; g.fillText(cap, w / 2, footY + 56);
+  g.fillStyle = t.sub; g.font = '600 24px Nunito, system-ui'; g.fillText(date + ' · joy\'s world', w / 2, footY + 98);
+  deco(g, 78, footY + 44, 1, th); deco(g, w - 78, footY + 44, 1, th);
   return c;
 }
-async function shoot(n) {
-  if (bBusy || !bStream) return; bBusy = true; $('#bSnap').disabled = $('#bOne').disabled = true;
-  const shots = [];
-  for (let i = 0; i < n; i++) { await countdown(); flash(); shots.push(grab()); await new Promise(r => setTimeout(r, 350)); }
-  stopBooth(); useCanvas(compose(shots)); rain(['📸', '🍓', '✨'], 18);
-  bBusy = false; $('#bSnap').disabled = $('#bOne').disabled = false;
-}
-$('#bSnap').onclick = () => shoot(3); $('#bOne').onclick = () => shoot(1);
 
 /* ======== muncul pelan ======== */
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: .15 });
@@ -1799,26 +1884,64 @@ async function init3D() {
       p[1] -= p[4] * dt; p[0] += Math.sin(t * 2 + p[6]) * dt * .6; oc.position.set(p[0], p[1], p[2]); oc.rotation.set(t * 3 + p[6], t * 2 + p[6], 0); oc.updateMatrix(); confIM.setMatrixAt(i, oc.matrix); });
       confIM.instanceMatrix.needsUpdate = true; }
   });
-  /* ---------- 12: atap & bulan ---------- */
+  /* ---------- 12: taman obby ---------- */
+  const OBP = [], obPlat = [], OBBLINK = [3, 6, 8];
+  const ob = { active: false, i: 0, from: 0, to: 0, t: 1, fall: 0, won: store.get('obby', false) };
+  { const g = island(12, 26, 18, 0xc9f0ff, 0x7fb3d9);
+    const cols = [0xffffff, 0xff8fab, 0xffd44d, 0xa8e6cf, 0xc9b6ff, 0x6fa8dc, 0xff8fab, 0xffd44d, 0xa8e6cf, 0xffe9a8];
+    for (let i = 0; i < 10; i++) {
+      const x = -9 + i * 2.05, y = .5 + i * .62, z = i % 2 ? -1.6 : .6; OBP.push([x, y, z]);
+      const p = new THREE.Group(); p.position.set(x, 0, z); g.add(p);
+      Cy(.9, .95, .4, cols[i], 'knit', 0, y - .2, 0, p); if (i) Cy(.12, .16, y - .4, 0xfff4ea, 'knit', 0, (y - .4) / 2, 0, p);
+      if (OBBLINK.includes(i)) Glow(0xfff2a8, 2.6, 0, y, 0, p, .35);
+      obPlat.push(p);
+    }
+    const tr = new THREE.Group(); tr.position.set(OBP[9][0], OBP[9][1], OBP[9][2] - 1.4); g.add(tr);
+    Cy(.35, .5, .5, 0xffd44d, 'knit', 0, .25, 0, tr); Cy(.12, .12, .5, 0xffd44d, 'knit', 0, .75, 0, tr); Sp(.55, 0xffd44d, 'felt', 0, 1.3, 0, tr, 1, .9, 1); Glow(0xffe9a8, 3, 0, 1.3, 0, tr, .6);
+    tappable(tr, 'trophy');
+    const sign = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), new THREE.MeshBasicMaterial({ map: labelTex('OBBY JOY 🎮', 320, 80, '700 46px Fredoka, system-ui', '#6fa8dc', '#fff4ea') })); sign.position.set(-8, 3.2, -5); g.add(sign);
+    Cy(.1, .1, 3, 0xc9a27e, 'knit', -9.6, 1.5, -5.05, g); Cy(.1, .1, 3, 0xc9a27e, 'knit', -6.4, 1.5, -5.05, g);
+    tree(g, 10.5, 4, .8, 0x8ccf7e); tree(g, -11, 4.5, .7);
+    for (let k = 0; k < 4; k++) flower(g, -10 + k * 6, 6.8, [0xff8fab, 0xffd44d, 0xc9b6ff, 0xffffff][k]);
+  }
+  const blinkOn = (i, t) => !OBBLINK.includes(i) || Math.sin(t * 2.2 + i) > -.2;
+  upd(12, (dt, t) => obPlat.forEach((p, i) => { const on = blinkOn(i, t); p.visible = on || !OBBLINK.includes(i) ? true : false; p.scale.setScalar(on ? 1 : .001); }));
+  const obPos = () => { const a = OBP[ob.from], b = OBP[ob.to], u = Math.min(1, ob.t); return [lerp(a[0], b[0], u), lerp(a[1], b[1], u) + Math.sin(u * Math.PI) * 1.6 - ob.fall * ob.fall * 6, lerp(a[2], b[2], u)]; };
+  function obJump() {
+    if (!ob.active || ob.t < 1 || ob.fall > 0) return;
+    if (ob.i >= 9) return;
+    ob.from = ob.i; ob.to = ob.i + 1; ob.t = 0; sfx('step'); blip(660 + ob.i * 60, .05);
+  }
+  function obUpdate(dt) {
+    if (ob.fall > 0) { ob.fall += dt; if (ob.fall > 1) { ob.fall = 0; const cp = ob.from >= 5 ? 5 : 0; ob.i = ob.from = ob.to = cp; ob.t = 1; obUI(); } return; }
+    if (ob.t < 1) { ob.t += dt / .55; if (ob.t >= 1) { ob.t = 1;
+      if (!blinkOn(ob.to, tm)) { ob.fall = .001; toast(['oops! platformnya ngilang 😆', 'jatuh! coba lagi, pasti bisa 💪', 'hampir! tunggu platformnya muncul ✨'][Math.floor(Math.random() * 3)]); sfx('kwek'); return; }
+      ob.i = ob.to; ob.from = ob.i; obUI();
+      if (ob.i === 5) toast('checkpoint! 🚩');
+      if (ob.i === 9) { ob.won = true; store.set('obby', true); confT = tm; fwUntil = tm + 5; sfx('party'); rain(['🏆', '🎉', '🍓', '⭐'], 36); toast('JOY JUARA OBBY! 🏆 Kamu nggak nyerah, dan lihat hasilnya.'); }
+    } }
+  }
+  function obUI() { const el = $('#obProg'); if (el) el.textContent = ob.i >= 9 ? '🏆 sampai puncak!' : `🚩 ${ob.i}/9`; }
+  /* ---------- 13: atap & bulan ---------- */
   const plane = new THREE.Group(), fairy7 = [];
-  { const g = island(12, 22, 14, 0xc77b68, 0x7e4a42);
+  { const g = island(13, 22, 14, 0xc77b68, 0x7e4a42);
     B(20.6, .22, 12.6, 0xc0705f, 'ridge', 0, .1, 0, g, .1);
     Cy(.08, .1, 6, 0x9aa0b5, 'knit', -8, 3, -4, g); [5, 5.8].forEach((y, k) => { const r = Cy(.05, .05, 3 - k, 0x9aa0b5, 'knit', -8, y, -4, g); r.rotation.z = Math.PI / 2; });
     Cy(.8, .8, 1.4, 0xd9d4cc, 'knit', 7, .9, -4, g); Cy(.9, .2, .5, 0x9aa0b5, 'knit', 7, 1.85, -4, g);
     [[-4, 4], [9, 3]].forEach(([x, z]) => { Cy(.5, .38, .7, 0xc97b5a, 'knit', x, .45, z, g); Sp(.55, 0x5fb865, 'felt', x, 1.1, z, g, 1, .8, 1); });
     for (let k = 0; k <= 14; k++) { const x = -9 + k * 1.3, y = 3.2 - Math.sin(k / 14 * Math.PI) * 1.1; fairy7.push(Sp(.12, lit([0xffd98a, 0xff9ab8, 0xfff7d6][k % 3]), null, x, y, -5.8, g)); }
     Cy(.05, .05, 18.5, 0x55506e, 'knit', 0, 3.2, -5.8, g).rotation.z = Math.PI / 2;
-    const city = new THREE.Group(); g.add(city); near[12].push(city);
+    const city = new THREE.Group(); g.add(city); near[13].push(city);
     const cw = [], cwin = [];
     for (let i = 0; i < (LOW ? 18 : 34); i++) { const x = (rnd() - .5) * 70, z = -18 - rnd() * 20, h = 4 + rnd() * 12; cw.push([x, h, z, 2 + rnd() * 3]); for (let k = 0; k < 3; k++) if (rnd() > .3) cwin.push([x + (rnd() - .5) * 1.5, -9 + h * (.3 + rnd() * .6), z + 1.6]); }
     cw.forEach(([x, h, z, w]) => B(w, h, 3, 0x2c3266, 'felt', x, h / 2 - 9, z, city, .3));
     const im = new THREE.InstancedMesh(rgeo(.4, .5, .05, .05), lit(0xffd98a), cwin.length), o = new THREE.Object3D(); cwin.forEach((p, k) => { o.position.set(...p); o.updateMatrix(); im.setMatrixAt(k, o.matrix); }); city.add(im);
-    plane.position.set(SX(12), 6, -2); scene.add(plane); near[12].push(plane);
+    plane.position.set(SX(13), 6, -2); scene.add(plane); near[13].push(plane);
     const pm = yarn(0xffffff, 'felt'); const pw = B(1, .06, .6, pm, null, 0, 0, 0, plane, .02); B(.9, .3, .06, pm, null, -.05, .14, 0, plane, .02);
     add(new THREE.BoxGeometry(1.8, 1.2, 1.4), new THREE.MeshBasicMaterial({ visible: false }), 0, .1, 0, plane, false); tappable(plane, 'plane');
     hiddenBerry(g, 'b7', -8, 6.4, -4);
   }
-  upd(12, (dt, t) => fairy7.forEach((b, k) => b.scale.setScalar(.12 * (.75 + .35 * Math.sin(t * 2.2 + k)))));
+  upd(13, (dt, t) => fairy7.forEach((b, k) => b.scale.setScalar(.12 * (.75 + .35 * Math.sin(t * 2.2 + k)))));
   // bulan fase asli
   const moonT = texOf(cvs(128, 128, (g) => {
     const im = g.createImageData(128, 128), d = im.data, k = Math.cos(2 * Math.PI * moonP);
@@ -1832,15 +1955,15 @@ async function init3D() {
     }
     g.putImageData(im, 0, 0);
   }));
-  const moon = new THREE.Sprite(new THREE.SpriteMaterial({ map: moonT, fog: false, transparent: true })); moon.scale.set(6.5, 6.5, 1); moon.position.set(SX(12) + 4, 10.5, -30); scene.add(moon); tappable(moon, 'moon'); near[12].push(moon);
-  const moonHalo = Glow(0xfff2c4, 16, SX(12) + 4, 10.5, -30.5, scene, .35); near[12].push(moonHalo);
+  const moon = new THREE.Sprite(new THREE.SpriteMaterial({ map: moonT, fog: false, transparent: true })); moon.scale.set(6.5, 6.5, 1); moon.position.set(SX(13) + 4, 10.5, -30); scene.add(moon); tappable(moon, 'moon'); near[13].push(moon);
+  const moonHalo = Glow(0xfff2c4, 16, SX(13) + 4, 10.5, -30.5, scene, .35); near[13].push(moonHalo);
   // bintang
   const starG = new THREE.BufferGeometry(), sp = [];
-  for (let i = 0; i < (LOW ? 250 : 600); i++) sp.push(-40 + rnd() * (SX(12) + 100), 6 + rnd() * 50, -45 - rnd() * 30);
+  for (let i = 0; i < (LOW ? 250 : 600); i++) sp.push(-40 + rnd() * (SX(13) + 100), 6 + rnd() * 50, -45 - rnd() * 30);
   starG.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
   const starM = new THREE.PointsMaterial({ color: 0xffffff, size: .35, transparent: true, opacity: 0, fog: false, depthWrite: false }); scene.add(new THREE.Points(starG, starM));
   let snow = null;
-  if (isDec) { const sg = new THREE.BufferGeometry(), s = []; for (let i = 0; i < (LOW ? 200 : 600); i++) s.push(-20 + rnd() * (SX(12) + 40), rnd() * 20, -10 + rnd() * 20); sg.setAttribute('position', new THREE.Float32BufferAttribute(s, 3)); snow = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffffff, size: .2, transparent: true, opacity: .9 })); scene.add(snow); }
+  if (isDec) { const sg = new THREE.BufferGeometry(), s = []; for (let i = 0; i < (LOW ? 200 : 600); i++) s.push(-20 + rnd() * (SX(13) + 40), rnd() * 20, -10 + rnd() * 20); sg.setAttribute('position', new THREE.Float32BufferAttribute(s, 3)); snow = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffffff, size: .2, transparent: true, opacity: .9 })); scene.add(snow); }
   // batu loncatan antar pulau
   for (let i = 0; i < LAST; i++) { const x0 = SX(i) + 11.5, x1 = SX(i + 1) - 11.5, n = Math.round((x1 - x0) / 2); for (let k = 0; k <= n; k++) { const u = k / n; const st = Cy(.85, .95, .4, [0xffffff, 0xffc2d1][k % 2], 'knit', x0 + (x1 - x0) * u, -.2 + Math.sin(u * Math.PI) * .6, 2, root); st.userData.ph = k; } }
 
@@ -1897,9 +2020,10 @@ async function init3D() {
     { night: 1, cam: [2, 4.4, 14], look: [0, 2.2, 0], out: 'stripe' },
     { night: .1, cam: [-1, 5, 15], look: [0, 2, -2], out: 'adat' },
     { night: 0, cam: [0, 5, 14], look: [0, 2.4, 0], out: 'toga' },
+    { night: 0, cam: [1, 5.5, 16], look: [0, 2.4, 0], out: 'berry' },
     { night: 1, cam: [-3, 3.6, 13], look: [1.5, 2.8, -2], out: 'plaid' },
   ];
-  const JOYX = [0, -2, -1, 0, 1, 1, 1, 0, -3, 1.5, -2, 0, -1];
+  const JOYX = [0, -2, -1, 0, 1, 1, 1, 0, -3, 1.5, -2, 0, -7, -1];
   const cTop = new THREE.Color(), cBot = new THREE.Color(), cT2 = new THREE.Color(), cB2 = new THREE.Color();
   const dayC = new THREE.Color(0xfff1e0), nightC = new THREE.Color(0xaab8ff);
   const lerpArr = (a, b, t) => a.map((v, i) => lerp(v, b[i], t));
@@ -1966,6 +2090,7 @@ async function init3D() {
     crowd: ['SELAMAT JOY! 👏', 'bangga banget! 🎓', 'yeeey! 🎉'],
     rasi: ['✨ Rasi Joyce: bintang-bintang yang dirajut jadi stroberi', '✨ bintang paling terang di situ namanya Tulus', '✨ kelihatan dari Siantar, kelihatan juga dari Jakarta'],
     xmas: ['Selamat Natal, Joy 🎄', 'kado buat kamu 🎁', 'jingle jingle 🔔'],
+    trophy: ['piala buat yang nggak nyerah 🏆', 'main obby dulu yuk 🎮'],
     cake: ['tiup lilinnya! 🎂', 'selamat ulang tahun, Joy! 🎉'],
   };
   function tapThing(k, obj) {
@@ -2036,6 +2161,7 @@ async function init3D() {
     hair.rotation.x = moving ? Math.sin(walkPh * 2) * .03 : Math.sin(tm * 1.3) * .015;
     body.scale.set(1, 1 + breathe, 1);
     joy.position.set(jx, by + (moving ? Math.abs(Math.sin(walkPh)) * .12 : 0), 0); joy.rotation.y = jr;
+    if (ob.active) { obUpdate(dt); const q = obPos(); joy.position.set(SX(12) + q[0], q[1], q[2]); jx = SX(12) + q[0]; joy.rotation.y = ob.t < 1 ? Math.PI / 2 : .25; if (ob.t < 1 || ob.fall > 0) { armR.rotation.z = 2.4; armL.rotation.z = -2.4; legL.rotation.x = .5; legR.rotation.x = -.3; } }
     if (joyBlob) { joyBlob.position.set(jx, .04, 0); joyBlob.scale.setScalar(1 - by * .25); }
     if (SHADOW) { sun.position.set(jx + 8, 16, 10); sun.target.position.set(jx, 0, 0); }
     // kodok
@@ -2067,13 +2193,13 @@ async function init3D() {
     if (rasiT >= 0 && rasiT < 3) { rasiT += dt; rg.setDrawRange(0, Math.floor(Math.min(1, rasiT / 2.5) * segs.length / 3 / 2) * 2); }
     if (tm < fwUntil) { fwT -= dt; if (fwT < 0) { fwT = .7 + Math.random() * .9; burst(jx - 8 + Math.random() * 16, 10 + Math.random() * 5, -14 - Math.random() * 6); } }
     fw.forEach(s2 => { const u = s2.userData; if (u.life <= 0) return; u.life -= dt; u.v.y -= dt * 3; s2.position.addScaledVector(u.v, dt); u.v.multiplyScalar(1 - dt * .9); s2.material.opacity = Math.max(0, u.life / 1.6); if (u.life <= 0) s2.position.y = -99; });
-    if (plane.visible) { plane.position.x = SX(12) - 14 + ((tm * 2.2) % 28); plane.position.y = 6 + Math.sin(tm) * .6; plane.rotation.z = Math.sin(tm) * .15; }
+    if (plane.visible) { plane.position.x = SX(13) - 14 + ((tm * 2.2) % 28); plane.position.y = 6 + Math.sin(tm) * .6; plane.rotation.z = Math.sin(tm) * .15; }
     if (snow) { const a = snow.geometry.attributes.position; for (let k = 0; k < a.count; k++) { let y = a.getY(k) - dt * 1.1; if (y < 0) y = 20; a.setY(k, y); } a.needsUpdate = true; }
     // kamera
     const portrait = Hh > W, zoom = (portrait ? clamp(1.5 / cam.aspect, 1, 3.3) : 1) * (DEKAT ? .32 : 1);
     scene.fog.near = 14 * zoom + 10; scene.fog.far = 14 * zoom + 70;
     const c = lerpArr(A.cam, Bn.cam, f), l = lerpArr(A.look, Bn.look, f);
-    tP.set(jx + c[0] + Math.sin(tm * .25) * .6, c[1] * (portrait ? zoom * .95 : 1) + Math.sin(tm * .33) * .2, c[2] * zoom); tL.set(jx + l[0], l[1], l[2]);
+    tP.set(jx + c[0] + Math.sin(tm * .25) * .6, c[1] * (portrait ? zoom * .95 : 1) + Math.sin(tm * .33) * .2, c[2] * zoom); tL.set(jx + l[0], l[1], l[2]); if (ob.active) { tP.y += joy.position.y * .8; tL.y += joy.position.y; tL.z = joy.position.z; }
     if (portrait) cam.setViewOffset(W, Hh, 0, Hh * .1, W, Hh); else cam.setViewOffset(W, Hh, -W * .16, 0, W, Hh);
     const kk = firstFrame ? 1 : Math.min(1, dt * 3.2); firstFrame = false;
     camPos.lerp(tP, kk); camLook.lerp(tL, kk); cam.position.copy(camPos); cam.lookAt(camLook);
@@ -2087,6 +2213,7 @@ async function init3D() {
   { const w = store.get('wear', 'auto'); if (w !== 'auto') forceOut = w; }
   const frogLv = Math.min(20, visits); frog.scale.setScalar(.8 + frogLv * .025);
   world = { stop() { stopped = true; }, say, emote: doEmote, setStyle, getStyle: () => style,
+    obby(on) { ob.active = on; if (on) { ob.i = ob.from = ob.to = 0; ob.t = 1; ob.fall = 0; obUI(); } }, jump: obJump,
     wear(k) { forceOut = k; berryMode = false; emote = 'jump'; emoteT = 1.4; },
     siantarRain(on) { sRain = on; },
     rasi() { if (rasiT < 0 || rasiT >= 3) { rasiT = 0; rg.setDrawRange(0, 0); } store.set('rasi', true); sfx('berry'); },
@@ -2095,7 +2222,7 @@ async function init3D() {
 }
 /* ======== HP spek rendah & mode ringan ======== */
 const LOW = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-const SKY = [['#ffc8da', '#fff0e6'], ['#9fd8ff', '#e8f7ff'], ['#ffb48f', '#ffe6cc'], ['#a98be0', '#ffc9b5'], ['#bfeee0', '#f3fff9'], ['#cdeaff', '#f5fbff'], ['#1f2552', '#4b4f8a'], ['#8d9ab0', '#cfd7e2'], ['#aee4ff', '#fff6dc'], ['#0b1030', '#26305e'], ['#ffb98a', '#ffe9c2'], ['#ffd1e6', '#fff7d6'], ['#121842', '#3a3f7a']];
+const SKY = [['#ffc8da', '#fff0e6'], ['#9fd8ff', '#e8f7ff'], ['#ffb48f', '#ffe6cc'], ['#a98be0', '#ffc9b5'], ['#bfeee0', '#f3fff9'], ['#cdeaff', '#f5fbff'], ['#1f2552', '#4b4f8a'], ['#8d9ab0', '#cfd7e2'], ['#aee4ff', '#fff6dc'], ['#0b1030', '#26305e'], ['#ffb98a', '#ffe9c2'], ['#ffd1e6', '#fff7d6'], ['#8fd3ff', '#fff6dc'], ['#121842', '#3a3f7a']];
 let rainStop = false;
 const NIGHT_SKY = ['#10153a', '#2f3770'];
 const skyOf = i => { const b = (i === 7 && rainStop) ? ['#a6dcff', '#fff2d6'] : SKY[i], n = todNight() * .85; return n <= 0 ? b : [mixHex(b[0], NIGHT_SKY[0], n), mixHex(b[1], NIGHT_SKY[1], n)]; };
@@ -2108,7 +2235,7 @@ function goLite(auto) {
   $('#liteBtn').textContent = '✨ nyalakan dunia 3D';
 }
 $('#liteBtn').onclick = () => { if (document.body.classList.contains('no3d')) { store.set('lite', false); location.reload(); } else { store.set('lite', true); goLite(false); } };
-if (!WORKER_URL) ['#moonSendWrap', '#moonSendNote', '#pSend', '#pSendNote'].forEach(q => { const el = $(q); if (el) el.style.display = 'none'; });
+if (!WORKER_URL) ['#moonSendWrap', '#moonSendNote', '#pSendBox'].forEach(q => { const el = $(q); if (el) el.style.display = 'none'; });
 
 /* ======== kapsul waktu (cuma di HP ini) ======== */
 let capDays = '30';
@@ -2170,6 +2297,17 @@ function quizRender() {
 }
 quizStart();
 
+/* ======== obby ======== */
+let obScroll = 0;
+function obbyOn(on) {
+  if (on && (!world || !world.obby || document.body.classList.contains('no3d'))) { toast('Obby butuh dunia 3D. Matikan mode ringan dulu ya 🎮'); return; }
+  document.body.classList.toggle('obbyOn', on); if (world && world.obby) world.obby(on);
+  if (on) { obScroll = scrollY; document.body.style.overflow = 'hidden'; } else { document.body.style.overflow = ''; scrollTo(0, obScroll); }
+}
+$('#obStart').onclick = () => obbyOn(true); $('#obExit').onclick = () => obbyOn(false);
+$('#obJump').onclick = () => world && world.jump && world.jump();
+addEventListener('keydown', e => { if (document.body.classList.contains('obbyOn') && (e.key === ' ' || e.key === 'ArrowUp')) { e.preventDefault(); world.jump(); } });
+
 /* ======== tombol-tombol bab ======== */
 $('#helpBtn').onclick = () => { if (world && world.help) world.help(); rain(['👏', '🦵', '✨'], 18); toast(['Pak Pasien: makasih, bu terapis! 🙏', 'Langkahnya makin mantap! 👏', 'Satu langkah lagi… berhasil! 🎉'][Math.floor(Math.random() * 3)]); };
 $('#rainBtn').onclick = () => { if (rainStop) { toast('Pelanginya masih di sini 🌈'); return; } rainStop = true; liteSky(); toast('Hujannya reda pelan-pelan… 🌈'); setTimeout(() => rain(['🌈', '☀️', '✨'], 18), 900); sfx('berry'); };
@@ -2226,7 +2364,7 @@ document.addEventListener('click', e => {
 });
 $('#sheetX').onclick = closeSheet; $('#sheetBg').onclick = closeSheet;
 addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
-const PLACES = ['Rumah Joy', 'Siantar', 'Bandara', 'Jakarta', 'Kampus & KKN', 'Klinik', 'Kamar Kos', 'Hari Hujan', 'Kebun Stroberi', 'Bukit Malam', 'Danau Toba', 'Hari Wisuda', 'Atap & Bulan'];
+const PLACES = ['Rumah Joy', 'Siantar', 'Bandara', 'Jakarta', 'Kampus & KKN', 'Klinik', 'Kamar Kos', 'Hari Hujan', 'Kebun Stroberi', 'Bukit Malam', 'Danau Toba', 'Hari Wisuda', 'Taman Obby', 'Atap & Bulan'];
 PLACES.forEach((n, i) => { const b = document.createElement('button'); b.setAttribute('aria-label', n); b.onclick = () => scrollTo({ top: secs[i].offsetTop + innerHeight * .05, behavior: 'smooth' }); $('#dots').appendChild(b); });
 let placeI = -1;
 function updPlace() { const i = Math.round(clamp(readScroll(), 0, LAST)); if (i === placeI) return; placeI = i; $('#placeName').textContent = PLACES[i]; $$('#dots button').forEach((b, k) => b.classList.toggle('on', k === i)); }
